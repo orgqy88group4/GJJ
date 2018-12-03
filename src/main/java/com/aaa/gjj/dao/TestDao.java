@@ -7,4 +7,7 @@ package com.aaa.gjj.dao;
  * createTime:2018-12-03 19:58
  */
 public class TestDao {
+    public static void main(String[] args) {
+        System.out.println("kfdsfdsf");
+    }
 }
