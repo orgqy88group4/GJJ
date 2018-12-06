@@ -1,9 +1,11 @@
+package com.aaa.gjj;
+
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * className:Application
+ * className:com.aaa.gjj.Application
  * discription:
  * author:qcm
  * createTime:2018-12-03 13:41
