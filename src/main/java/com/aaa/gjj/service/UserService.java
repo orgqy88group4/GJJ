@@ -1,18 +1,25 @@
 package com.aaa.gjj.service;
 
-import java.util.List;
-import java.util.Map;
+import com.aaa.gjj.entity.User;
+
 
 /**
  * className:UserService
  * discription:
- * author:luRuiHua
- * createTime:2018-12-01 14:51
+ * author:fhm
+ * createTime:2018-12-06 21:24
  */
 public interface UserService {
     /**
-     * 查询用户
+     * 根据用户名找用户
+     * @param ename
      * @return
      */
-    public List<Map> selectUserList(String userName);
+    User getUserByuserName(String ename);
+
+    /**
+     * 通过id找用户
+     * @return
+     */
+    User getUserById(Integer empNo);
 }

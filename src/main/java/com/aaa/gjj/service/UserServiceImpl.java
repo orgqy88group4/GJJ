@@ -2,29 +2,41 @@ package com.aaa.gjj.service;
 
 
 import com.aaa.gjj.dao.UserDao;
+import com.aaa.gjj.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
+
 
 /**
  * className:UserServiceImpl
  * discription:
- * author:luRuiHua
- * createTime:2018-12-01 14:51
+ * author:fhm
+ * createTime:2018-12-06 21:24
  */
 @Service
 public class UserServiceImpl implements UserService {
+    //依赖注入
     @Autowired
     private UserDao userDao;
 
-    /**
-     * 查询用户
-     * @return
-     */
     @Override
-    public List<Map> selectUserList(String userName) {
-        return userDao.selectUserList(userName);
+    public User getUserByuserName(String ename) {
+        List<User> userList = userDao.getUserByuserName(ename);
+        //System.out.println(userList.get(0).getEmpNo()+"----------"+userList.get(0).getEname());
+        if (userList!=null&&userList.size()>0){
+            return userList.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public User getUserById(Integer empNo) {
+        List<User> userList = userDao.getUserById(empNo);
+        if (userList!=null&&userList.size()>0){
+            return userList.get(0);
+        }
+        return null;
     }
 }
