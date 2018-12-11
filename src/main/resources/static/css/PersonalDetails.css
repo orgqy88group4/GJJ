@@ -1,0 +1,191 @@
+* {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+	font-style: normal;
+	text-decoration: none;
+}
+
+#all {
+	width: 1650px;
+	height: 900px;
+	background: #ffffff;
+	float: left;
+}
+
+#all_a {
+	width: 1610px;
+	height: 860px;
+	margin: 20px;
+}
+
+#top {
+	width: 1610px;
+	height: 70px;
+}
+
+.span {
+	font-size: 28px;
+	line-height: 63px;
+	color: #555555;
+}
+
+#top_t {
+	width: 1610px;
+	background: #EEEEEE;
+	height: 35px;
+}
+
+.img1 {
+	line-height: 42px;
+	margin: 0px 3px 0px 6px;
+	float: left;
+	height: 35px;
+	padding-top: 9px;
+}
+
+.img {
+	line-height: 45px;
+	margin: 0px 3px 0px 3px;
+	float: left;
+	padding-top: 6px;
+}
+
+.sp {
+	float: left;
+	line-height: 35px;
+}
+
+.sp a {
+	color: #303030;
+}
+
+.input {
+	height: 27px;
+	line-height: 27px;
+	border: 1px solid #0099cc;
+	color: #9b9b9b;
+	margin-left: 25px
+}
+
+.input2 {
+	height: 27px;
+	line-height: 27px;
+	border: 1px solid #0099cc;
+	color: #9b9b9b;
+	margin-left: 5px
+}
+
+.input1 {
+	background: #5EA6EB;
+	border: 1px solid #0099cc;
+	height: 30px;
+	width: 40px;
+	color: #ffffff;
+}
+
+#in {
+	margin-left: 800px;
+	line-height: 32px;
+	float: left;
+}
+
+.int {
+	line-height: 32px;
+	float: left;
+}
+
+.qwe {
+	text-align: center;
+	width: 220px;
+	height: 60px;
+	float: left;
+	margin: 30px 0px 0px 60px
+}
+
+.qwe1 {
+	float: center;
+	margin-top: 210px;
+	margin-left: 500px;
+}
+
+.an {
+	width: 180px;
+	height: 40px;
+	background: #ffcc00;
+	border: 1px solid #ffcc00;
+	color: #ffffff;
+	font-size: 17px;
+}
+
+#p_left {
+	margin-top: 30px;
+}
+
+#dg {
+	text-align: center;
+}
+
+#fengcun {
+	width: 50px;
+	height: 26px;
+	background-color: #48D1CC;
+	border: none;
+	color: white;
+}
+
+#fengcun:HOVER {
+	background-color: #1D943B;
+}
+
+#table1 td {
+	text-align: center;
+	height: 45px;
+	width: 500px;
+	background-color: #E6E6E6;
+	border: 0px solid;
+	border-color: white;
+	font-size: 14px;
+}
+
+#table1 .inputa {
+	color: #808080;
+	height: 27px;
+	width: 200px;
+	font-size: 15px;
+	height: 27px;
+}
+
+#table1 .inputc {
+	color: #808080;
+	height: 27px;
+	width: 200px;
+	font-size: 15px;
+	height: 27px;
+}
+
+.relieve {
+	width: 50px;
+	height: 26px;
+	background-color: #48D1CC;
+	border: none;
+	color: white;
+	font-size: 8px;
+}
+
+.relieves {
+	width: 50px;
+	height: 26px;
+	background-color: #D84A38;
+	border: none;
+	color: white;
+	font-size: 8px;
+}
+
+.relieve:HOVER {
+	background-color: #1D943B;
+}
+
+.relieves:HOVER {
+	background-color: #BB2413;
+}
