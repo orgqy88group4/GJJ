@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>单位开户</title>
+    <link rel="stylesheet" type="text/css" href="/sb/css/unitRegister.css">
+    <link rel="stylesheet" type="text/css" href="/sb/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/sb/easyui/themes/icon.css">
+    <link rel="stylesheet" type="text/css" href="/sb/easyui/themes/demo.css">
+    <script type="text/javascript" src="/sb/easyui/jquery.min.js"></script>
+    <script type="text/javascript" src="/sb/easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript">
+        //日期框
+        function onSelect(date){
+            $('#result').text(date)
+        }
+        //校验
+        //公司名称
+        function bluryue1(){
+            $("#p").progressbar("setValue", 50);
+            var uname=$("#uname").val();
+            var reg=/^[\u4e00-\u9fa5]{0,}$/;
+            if(uname!=null&&uname!=""){
+                if(reg.test(uname)){
+                    $.ajax({
+                        url:"unitCheckout",
+                        type:"post",
+                        data:{uName:uname},
+                        dataType:"json",
+                        success:function(data){
+                            if(data.issc==false){
+                                confirm(data.error);
+                                $("#right1").html("×").css("color","red");
+                                $('#uname').val("");
+                                $("#sub").attr("disabled","true");
+                            }else{
+                                $("#right1").html("√").css("color","green");
+                                $("#sub").removeAttr("disabled");
+                            }
+                        }
+                    });
+                }else{
+                    $("#right1").html("×").css("color","red");
+                }
+            }else{
+                $("#right1").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+            }
+        }
+        //法人姓名
+        function bluryue2(){
+            var uLegalPerson=$("#uLegalPerson").val();
+            var reg=/^[\u4E00-\u9FA5A-Za-z0-9]+$/;
+            if(uLegalPerson!=""&&reg.test(uLegalPerson)){
+                $("#right2").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right2").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#uLegalPerson").focus();
+            }
+        }
+        //开户银行名称
+        function bluryue3(){
+            $("#p").progressbar("setValue", 100);
+            var uaBankName=$("#uaBankName").val();
+            $("#number1").css("background-color","#1D943B");
+            if(uaBankName!="--请选择--"){
+                $("#right3").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right3").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#uaBankName").focus();
+            }
+        }
+        //上传营业执照
+        function bluryue4(){
+            var bcapplyicome=$("#YYZZ").val();
+            $("#number1").css("background-color","#1D943B");
+            if(bcapplyicome!=""){
+                $("#right4").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right4").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#YYZZ").focus();
+            }
+        }
+        //公司地址
+        function bluryue5(){
+            var uAddress=$("#uAddress").val();
+            var reg=/^.{3,20}$/;
+            if(uAddress!=""&&reg.test(uAddress)){
+                $("#right5").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right5").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#uAddress").focus();
+            }
+        }
+        //证件类型
+        function bluryue6(){
+            var bcapplyicome=$("#ULegalType").val();
+            if(bcapplyicome!="--请选择--"){
+                $("#right6").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right6").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#ULegalType").focus();
+            }
+        }
+        //开户银行账号
+        function bluryue7(){
+            var uaBankNumber=$("#uaBankNumber").val();
+            var reg=/([\d]{4})([\d]{4})([\d]{4})([\d]{4})([\d]{0,})?/;
+            $("#number1").css("background-color","#1D943B");
+            if(uaBankNumber!=""&&reg.test(uaBankNumber)){
+                $("#right7").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right7").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#uaBankNumber").focus();
+            }
+        }
+        //公司类型
+        function bluryue9(){
+            var GSLX=$("#GSLX").val();
+            if(GSLX!="--请选择--"){
+                $("#right9").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right9").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#GSLX").focus();
+            }
+        }
+        //证件号码
+        function bluryue10(){
+            var ULegalCard=$("#ULegalCard").val();
+            var reg=/^\d{15}|\d{18}$$/;
+            if(ULegalCard!=""&&reg.test(ULegalCard)){
+                $("#right10").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right10").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#ULegalCard").focus();
+            }
+        }
+        //单位缴存比例
+        function bluryue11(){
+            var uDepositRatio=$("#uDepositRatio").val();
+            var uPersonRatio=$("#uPersonRatio").val();//得到个人缴存比例
+            $("#number1").css("background-color","#1D943B");
+            if(uDepositRatio!=""){
+                if(uDepositRatio>=5&&uDepositRatio<=12&&uDepositRatio>=uPersonRatio){
+                    $("#right11").html("√").css("color","green");
+                    $("#sub").removeAttr("disabled");
+                }else{
+                    $("#right11").html("×").css("color","red");
+                    $("#sub").attr("disabled","true");
+                }
+            }else{
+                $("#right11").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#uDepositRatio").focus();
+            }
+        }
+        //所属行业
+        function bluryue12(){
+            var SSHY=$("#SSHY").val();
+            if(SSHY!="--请选择--"){
+                $("#right12").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right12").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#SSHY").focus();
+            }
+        }
+        //经办人姓名
+        function bluryue13(){
+            var uOperator=$("#uOperator").val();
+            var reg=/^[\u4E00-\u9FA5A-Za-z0-9]+$/;
+            if(uOperator!=""&&reg.test(uOperator)){
+                $("#right13").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right13").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#uOperator").focus();
+            }
+        }
+        //个人缴存比例
+        function bluryue14(){
+            var uPersonRatio=$("#uPersonRatio").val();//得到个人缴存比例
+            var uDepositRatio=$("#uDepositRatio").val();//得到单位缴存比例
+            $("#number1").css("background-color","#1D943B");
+            if(uPersonRatio!=""){
+                if(uPersonRatio>=5&&uPersonRatio<=12){
+                    $("#right14").html("√").css("color","green");
+                    $("#sub").removeAttr("disabled");
+                }else{
+                    $("#right14").html("×").css("color","red");
+                    $("#sub").attr("disabled","true");
+                }
+            }else{
+                $("#right14").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#uPersonRatio").focus();
+            }
+        }
+        //隶属关系
+        function bluryue15(){
+            var LSGX=$("#LSGX").val();
+            if(LSGX!="--请选择--"){
+                $("#right15").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right15").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#LSGX").focus();
+            }
+        }
+        //经办人电话
+        function bluryue16(){
+            var uOpIphone=$("#uOpIphone").val();
+            var reg=/^(13[0-9]|14[5|7]|15[0|1|2|3|5|6|7|8|9]|18[0|1|2|3|5|6|7|8|9])\d{8}$/;
+            if(uOpIphone!=""&&reg.test(uOpIphone)){
+                $("#right16").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right16").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#uOpIphone").focus();
+            }
+        }
+        //受托银行
+        function bluryue17(){
+            var STYH=$("#STYH").val();
+            $("#number1").css("background-color","#1D943B");
+            if(STYH!="--请选择--"){
+                $("#right17").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right17").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#STYH").focus();
+            }
+        }
+        //经济类型
+        function bluryue18(){
+            var JJLX=$("#JJLX").val();
+            if(JJLX!="--请选择--"){
+                $("#right18").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right18").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#JJLX").focus();
+            }
+        }
+        //证件类型
+        function bluryue19(){
+            var JBRZJLX=$("#JBRZJLX").val();
+            if(JBRZJLX!="--请选择--"){
+                $("#right19").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right19").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#JBRZJLX").focus();
+            }
+        }
+        //开户状态
+        function bluryue20(){
+            var uaState=$("#uaState").val();
+            $("#number1").css("background-color","#1D943B");
+            if(uaState!="--请选择--"){
+                $("#right20").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right20").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#uaState").focus();
+            }
+        }
+
+        //机构代码
+        function bluryue21(){
+            var uNetworkCode=$("#uNetworkCode").val();
+            if(uNetworkCode!=null&&uNetworkCode!=""&&!isNaN(uNetworkCode)){
+                $.ajax({
+                    url:"unitCheckout1",
+                    type:"post",
+                    data:{uNetworkCode:uNetworkCode},
+                    dataType:"json",
+                    success:function(data){
+                        if(data.issc==false){
+                            confirm(data.error1);
+                            $("#right21").html("×").css("color","red");
+                            $("#sub").attr("disabled","true");
+                        }else{
+                            $("#right21").html("√").css("color","green");
+                            $("#sub").removeAttr("disabled");
+                        }
+                    }
+                });
+            }else{
+                $("#right21").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+            }
+        }
+
+        //证件号码
+        function bluryue22(){
+            var JBRZJHM=$("#JBRZJHM").val();
+            var reg=/^\d{15}|\d{18}$$/;
+            if(JBRZJHM!=""&&reg.test(JBRZJHM)){
+                $("#right22").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right22").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#JBRZJHM").focus();
+            }
+        }
+
+        //月发薪日
+        function bluryue23(){
+            var uPayDate=$("#uPayDate").val();
+            var reg = /^[0-9]{1,2}$/;
+            if(uPayDate>=1&&uPayDate<=31&&!isNaN(uPayDate)&&reg.test(uPayDate)){
+                $("#right23").html("√").css("color","green");
+                $("#sub").removeAttr("disabled");
+            }else{
+                $("#right23").html("×").css("color","red");
+                $("#sub").attr("disabled","true");
+                $("#uPayDate").focus();
+            }
+        }
+
+        //收展
+        function show(){
+            $("#form").hide();
+        }
+        function hide(){
+            $("#form").show();
+        }
+    </script>
+</head>
+<body>
+<div id="all">
+    <div  id="all_a">
+        <div id="top">
+            <span class="span">单位开户</span>
+            <span style="color:#c0c0c0">&nbsp;资料信息务必填写正确</span>
+        </div>
+        <div id="top_t">
+            <div class="img1"><img src="images/60551.png"  style="width:20px;height20px;"/></div> <!--  图片现需要改路径 -->
+            <span class="sp"><a>首页</a></span>
+            <div class="img"><img src="images/02.png" style="width:20px; height20px; "/></div>  <!--  图片  -->
+            <span class="sp"><a>表单</a></span>
+            <div class="img"><img src="images/02.png" style="width:20px; height20px; "/></div>  <!--  图片  -->
+            <span class="sp"><a>单位开户功能</a></span>
+        </div>
+        <div id = "form_head">
+            <span>单位开户</span>
+            <span id="tupian">
+						<a id="xiahua" onclick = "show()"><img src="/sb/images/shou.png"/></a>
+						<a id="shezhi"onclick = "hide()"><img src="/sb/images/zhan.png"/></a>
+						<a id="shuaxin" href = "UnitRegister"><img src="/sb/images/shuaxin.png"/></a>
+					</span>
+        </div>
+        <div id = "unit_register_center_line"></div>
+
+        <div id ="form">
+            <!-- 进度条开始 -->
+            <!-- <div id="p" class="easyui-progressbar" style="width:1600px;height:28px;margin:auto;"></div> -->
+            <!-- 进度条结束 -->
+            <form action ="registerInfo"  method ="post"  id = "fm"   enctype ="multipart/form-data" >
+                <table id="table">
+                    <tr>
+                        <td id= "td">*公司名称：</td>
+                        <td id= "td1">
+                            <input type="text" name="uname" onblur = "bluryue1()" id = "uname"/>
+                            <span id = "right1"></span>
+                        </td>
+                        <td id= "td">*法人名字：</td>
+                        <td id= "td1">
+                            <input type ="text" name  = "uLegalPerson" onblur = "bluryue2()" id = "uLegalPerson"/>
+                            <span id = "right2"></span>
+                        </td>
+                        <td id= "td">*开户银行名称：</td>
+                        <td id= "td1">
+                            <select name = "uaBankName" onblur = "bluryue3()" id = "uaBankName" >
+                                <option>--请选择--</option>
+                                <option value = "中国银行">中国银行</option>
+                                <option value = "中国工商银行">中国工商银行</option>
+                                <option value = "中国建设银行">中国建设银行</option>
+                                <option value = "中国交通银行">中国交通银行</option>
+                                <option value = "中国农业银行">中国农业银行</option>
+                                <option value = "中国邮政银行">中国邮政银行</option>
+                            </select>
+                            <span id = "right3"></span>
+                        </td>
+                        <td id= "td" >*上传单位营业执照：</td>
+                        <td id= "td1">
+                            <input type ="file" name = "YYZZ" onblur = "bluryue4()" id = "YYZZ"/>
+                            <span id = "right4"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id= "td">*公司地址：</td>
+                        <td id= "td1" >
+                            <input type ="text" name  = "uAddress"onblur = "bluryue5()" id = "uAddress"/>
+                            <span id = "right5"></span>
+                        </td>
+                        <td id= "td">*证件类型：</td>
+                        <td id= "td1">
+                            <select name ="ULegalType" onblur = "bluryue6()" id = "ULegalType">
+                                <option>--请选择--</option>
+                                <option value = "身份证">身份证</option>
+                                <option value = "户口本">户口本</option>
+                            </select>
+                            <span id = "right6"></span>
+                        </td>
+                        <td id= "td">*开户银行账号：</td>
+                        <td id= "td1">
+                            <input type ="text" name  = "uaBankNumber"onblur = "bluryue7()" id = "uaBankNumber"/>
+                            <span id = "right7"></span>
+                        </td>
+                        <td id= "td">催缴人：</td>
+                        <td style ="text-align:left;">
+                            <input type = "text" name = "YWBLR"onclick = "progress()" value = "${name}" style="cursor:not-allowed"readonly="readonly"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id= "td">*公司类型：</td>
+                        <td id= "td1">
+                            <select  name = "GSLX"onblur = "bluryue9()" id = "GSLX">
+                                <option>--请选择--</option>
+                                <option value = "国有企业">国有企业</option>
+                                <option value = "有限责任公司">有限责任公司</option>
+                                <option value = "股份有限责任公司">股份有限责任公司</option>
+                                <option value = "外资企业">外资企业</option>
+                                <option value = "中外合资企业">中外合资企业</option>
+                                <option value = "集体所有制企业">集体所有制企业</option>
+                            </select>
+                            <span id = "right9"></span>
+                        </td>
+                        <td id= "td">*证件号码：</td>
+                        <td id= "td1">
+                            <input type = "text" name = "ULegalCard"onblur = "bluryue10()" id = "ULegalCard"/>
+                            <span id = "right10"></span>
+                        </td>
+                        <td id= "td">*单位缴存比例：</td>
+                        <td id= "td1">
+                            <input type = "text" name = "uDepositRatio"onblur = "bluryue11()" id = "uDepositRatio"/>
+                            <span id = "right11"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id= "td">*所属行业：</td>
+                        <td id= "td1">
+                            <select name = "SSHY"onblur = "bluryue12()" id = "SSHY">
+                                <option>--请选择--</option>
+                                <option value = "农、林、牧、渔业">农、林、牧、渔业</option>
+                                <option value = "制造业">制造业</option>
+                                <option value = "环境和公共设施管理业">环境和公共设施管理业</option>
+                                <option value = "交通运输、仓储业和邮政业">交通运输、仓储业和邮政业</option>
+                                <option value = "批发和零售业">批发和零售业</option>
+                                <option value = "房地产">房地产</option>
+                                <option value = "科技">科技</option>
+                            </select>
+                            <span id = "right12"></span>
+                        </td>
+                        <td id= "td">*经办人姓名：</td>
+                        <td id= "td1">
+                            <input type = "text" name = "uOperator"onblur = "bluryue13()" id = "uOperator"/>
+                            <span id = "right13"></span>
+                        </td>
+                        <td id= "td">*个人缴存比例：</td>
+                        <td id= "td1">
+                            <input type = "text" name = "uPersonRatio"onblur = "bluryue14()" id = "uPersonRatio"/>
+                            <span id = "right14"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id= "td">*隶属关系：</td>
+                        <td id= "td1">
+                            <select name = "LSGX"onblur = "bluryue15()" id = "LSGX">
+                                <option>--请选择--</option>
+                                <option value = "中央">中央</option>
+                                <option value = "省">省</option>
+                                <option value = "地区">地区</option>
+                                <option value = "县">县</option>
+                                <option value = "乡">乡</option>
+                                <option value = "街道">街道</option>
+                            </select>
+                            <span id = "right15"></span>
+                        </td>
+                        <td id= "td">*经办人电话：</td>
+                        <td id= "td1">
+                            <input type = "text" name = "uOpIphone"onblur = "bluryue16()" id = "uOpIphone"/>
+                            <span id = "right16"></span>
+                        </td>
+                        <td id= "td">*受托银行名称：</td>
+                        <td id= "td1">
+                            <select name = "STYH"onblur = "bluryue17()" id = "STYH">
+                                <option>--请选择--</option>
+                                <option value = "中国银行">中国银行</option>
+                                <option value = "中国工商银行">中国工商银行</option>
+                                <option value = "中国建设银行">中国建设银行</option>
+                                <option value = "中国交通银行">中国交通银行</option>
+                                <option value = "中国农业银行">中国农业银行</option>
+                                <option value = "中国邮政银行">中国邮政银行</option>
+                            </select>
+                            <span id = "right17"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id= "td">*经济类型：</td>
+                        <td id= "td1">
+                            <select name = "JJLX"onblur = "bluryue18()" id = "JJLX">
+                                <option >--请选择--</option>
+                                <option value = "国有经济">国有经济</option>
+                                <option value = "集体经济">集体经济</option>
+                                <option value = "私营经济">私营经济</option>
+                                <option value = "个体经济">个体经济</option>
+                                <option value = "联营经济">联营经济</option>
+                                <option value = "股份制">股份制</option>
+                                <option value = "外商投资">外商投资</option>
+                                <option value = "港澳台投资">港澳台投资</option>
+                                <option value = "其他经济" >其他经济</option>
+                            </select>
+                            <span id = "right18"></span>
+                        </td>
+                        <td id= "td">*证件类型：</td>
+                        <td id= "td1">
+                            <select name = "JBRZJLX"onblur = "bluryue19()" id = "JBRZJLX">
+                                <option>--请选择--</option>
+                                <option value = "身份证">身份证</option>
+                                <option value = "户口本">户口本</option>
+                            </select>
+                            <span id = "right19"></span>
+                        </td>
+                        <td id= "td">*账号开户状态：</td>
+                        <td id= "td1">
+                            <select name = "uaState"onblur = "bluryue20()" id = "uaState">
+                                <option>--请选择--</option>
+                                <option value = "正常">正常</option>
+                                <option value = "封存">封存</option>
+                            </select>
+                            <span id = "right20"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id= "td">*机构代码：</td>
+                        <td id= "td1">
+                            <input type = "text" name = "uNetworkCode" onblur = "bluryue21()" id = "uNetworkCode"/>
+                            <span id = "right21"></span>
+                        </td>
+                        <td id= "td">*证件号码：</td>
+                        <td id= "td1">
+                            <input type = "text" name = "JBRZJHM"onblur = "bluryue22()" id = "JBRZJHM"/>
+                            <span id = "right22"></span>
+                        </td>
+
+                        <td id= "td">单位开户日期：</td>
+                        <td id= "td1">
+                            <input type="text"  value = "<%=today%>"name = "KHRQ" style="cursor:not-allowed" readonly="readonly"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id= "td">月发薪日：</td>
+                        <td id= "td1">
+                            <input type = "text" name = "uPayDate" onblur = "bluryue23()" id = "uPayDate"/>
+                            <span id = "right23"></span>
+                        </td>
+                        <td id= "td">公司成立日期：</td>
+                        <td id= "td1">
+                            <input class="easyui-datebox" data-options="onSelect:onSelect" name = "UnitBeginDate" style ="width:200px;height:30px;line-heigth:30px;"/>
+                        </td>
+                        <td id= "td">业务操作人员：</td>
+                        <td id= "td1">
+                            <input type = "text" name = "uCreater" value = "${name}" style="cursor:not-allowed" readonly="readonly"/>
+                        </td>
+                    </tr>
+                </table>
+                <div id ="submit"><input type = "button" id = "sub" value = "保存"/></div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    //点击‘提交’事件
+    $("#sub").click(function(){
+        //$("#fm").submit(function(){
+        var i= 0;
+        $("form input").each(function(){
+            var value = $.trim($(this).val());
+            if(value == ''|| value == null){
+                //alert($(this).attr("name"));
+                i = 1;
+                $(this).focus();
+            }
+        });
+        if(i==1){
+            alert("请完善未填写的信息");
+            return;
+        }else{
+            $("#fm").submit();
+        }
+    });
+</script>
+</body>
+</html>

@@ -22,51 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class UserController {
 
     /**
-     * 测试方法
-     *
-     * @return
-     */
-    @ResponseBody
-    @RequestMapping("/hello")
-    public Object hello() {
-        System.out.println("Hello SpringBootMybatisShiro");
-        return "Hello world";
-    }
-
-    /**
-     * 测试thymeleaf
-     *
-     * @return
-     */
-    @RequestMapping("/testThymeleaf")
-    public String testThymeleaf(Model model) {
-        //把数据存入model
-        model.addAttribute("name", "AAA软件教育");
-        //返回test.html
-        return "test";
-    }
-
-    /**
-     * 跳转到添加页面
-     *
-     * @return
-     */
-    @RequestMapping("/toAdd")
-    public String toAdd() {
-        return "user/add";
-    }
-
-    /**
-     * 跳转到更新页面
-     *
-     * @return
-     */
-    @RequestMapping("/toUpdate")
-    public String toUpdate() {
-        return "user/update";
-    }
-
-    /**
      * 跳转到登陆页面
      *
      * @return
@@ -107,7 +62,7 @@ public class UserController {
         try {
             subject.login(token);
             //登陆成功,跳转到主页
-            return "redirect:/user/testThymeleaf";
+            return "redirect:/Page/toTree";
 
         } catch (UnknownAccountException e) {
             //e.printStackTrace();

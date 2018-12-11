@@ -1,6 +1,5 @@
 package com.aaa.gjj.shiro;
 
-
 import com.aaa.gjj.entity.User;
 import com.aaa.gjj.service.UserService;
 import org.apache.shiro.SecurityUtils;
@@ -19,7 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * author:fhm
  * createTime:2018-12-04 20:26
  */
-public class UserRealm extends AuthorizingRealm {
+public class UserRealm extends AuthorizingRealm{
     //注入业务层
     @Autowired
     private UserService userService;

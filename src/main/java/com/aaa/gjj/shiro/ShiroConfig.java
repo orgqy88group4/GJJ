@@ -33,20 +33,19 @@ public class ShiroConfig {
         //            4.perms:该资源必须得到资源权限才可以访问
         //            5.role:该资源必须得到角色权限才可以访问
         Map<String,String> filterMap=new LinkedHashMap<String,String>();
-        /*filterMap.put("/user/toAdd","authc");
-        filterMap.put("/user/toUpdate","authc");*/
-        //某些页面放行
-        filterMap.put("/user/testThymeleaf","anon");
         //放行user/login
         filterMap.put("/user/login","anon");
 
         //授权过滤器
         //注意：当授权拦截后，shiro会自动跳转到未授权页面
-        filterMap.put("/user/toAdd","perms[user:add]");
-        filterMap.put("/user/toUpdate","perms[user:update]");
+        filterMap.put("/Page/RefundInformationMap","perms[user:add]");
+        filterMap.put("/Page/PersonaInfo","perms[user:add]");
+        filterMap.put("/Page/UnitInfo","perms[user:add]");
+        filterMap.put("/Page/LoanInfoMap","perms[user:add]");
+        //filterMap.put("/user/toUpdate","perms[user:update]");
 
         //拦截
-        filterMap.put("/user/*","authc");
+        filterMap.put("/back/*","authc");
 
         //设置未授权提示页面
         shiroFilterFactoryBean.setUnauthorizedUrl("/user/unAuth");

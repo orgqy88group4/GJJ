@@ -1,13 +1,11 @@
 package com.aaa.gjj.service;
 
-
 import com.aaa.gjj.dao.UserDao;
 import com.aaa.gjj.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-
 
 /**
  * className:UserServiceImpl

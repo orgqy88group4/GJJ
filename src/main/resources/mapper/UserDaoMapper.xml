@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?> <!DOCTYPE mapper
-        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.aaa.gjj.dao.UserDao">
-    <select id="selectUserList" resultType="map">
-        select * from tbq_user1 where username = #{value}
-    </select>
-</mapper>
