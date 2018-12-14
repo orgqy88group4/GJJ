@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * className:PowerServiceImpl
@@ -61,5 +62,37 @@ public class PowerServiceImpl implements PowerService {
                 bindChildren(node,list);
             }
         }
+    }
+    @Override
+    public int add(Map map) {
+        return powerDao.add(map);
+    }
+
+    @Override
+    public int update(Map map) {
+        return powerDao.update(map);
+    }
+
+    @Override
+    public int delete(Integer id) {
+        return powerDao.delete(id);
+    }
+
+    @Override
+    public Map<String, Object> getParent(int id) {
+        Map<String,Object> powerList = powerDao.getParent(id);
+        if(powerList!=null&&powerList.size()>0){
+            return powerList;
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String,Object> getById(int id) {
+        Map<String,Object> powerList = powerDao.getById(id);
+        if(powerList!=null&&powerList.size()>0){
+            return powerList;
+        }
+        return null;
     }
 }

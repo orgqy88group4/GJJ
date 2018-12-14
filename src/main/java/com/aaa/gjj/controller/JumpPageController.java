@@ -1,7 +1,15 @@
 package com.aaa.gjj.controller;
 
+import com.aaa.gjj.service.PowerService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * className:JumpPageController
@@ -12,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/Page")
 public class JumpPageController {
+
+    @Autowired
+    private PowerService powerService;
+
     //个人信息页面
     @RequestMapping("/PersonaInfo")
     public String PersonaInfo(){
@@ -47,4 +59,43 @@ public class JumpPageController {
     public String toTree(){
         return "back/power/tree";
     }
+
+    /**
+     * 跳转权限树页面
+     * @return
+     */
+    @RequestMapping("/toadd")
+    public String toadd(){
+        return "back/power/add";
+    }
+    /**
+     * 跳转更新页面
+     * @param powerId
+     * @return
+     */
+    //@ResponseBody
+    @RequestMapping("/toupdate")
+    public String toUpdate(Integer powerId,Model model){
+        //model.addAttribute("power", powerService.getById(powerId));
+        return "back/power/update";
+    }
+
+    /**
+     * 权限菜单修改
+     * @param paramMap
+     * @param response
+     * @throws IOException
+     */
+    @RequestMapping("/update")
+    public void update(@RequestParam Map paramMap,HttpServletResponse response) throws IOException{
+        int update = powerService.update(paramMap);
+        System.out.println("更新了。。。。。。。。。。。。。。。。。");
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("text/html");
+        if(update==-1)
+            response.getWriter().print("修改失败！");
+        else
+            response.getWriter().print("<script>window.parent.parent.location.href=window.parent.parent.location.href; </script>");
+    }
+
 }
