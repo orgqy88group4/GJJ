@@ -53,15 +53,17 @@ public class PowerController {
      * @throws IOException
      */
     @RequestMapping("/add")
-    public void add(@RequestParam Map paramMap, HttpServletResponse response) throws IOException {
+    public void add(@RequestBody Map paramMap, HttpServletResponse response) throws IOException {
+        System.out.println(paramMap);
         int update = powerService.add(paramMap);
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html");
-        if(update==0)
-            response.getWriter().print("添加失败！");
-        else
-            //相当于刷新
-            response.getWriter().print("<script>window.parent.parent.location.href=window.parent.parent.location.href; </script>");
+        if(update==-1) {
+            response.getWriter().print(0);
+        }else {
+            //response.getWriter().print("<script>window.parent.parent.location.href=window.parent.parent.location.href; </script>");
+            response.getWriter().print(1);
+        }
     }
 
     /**
@@ -73,11 +75,6 @@ public class PowerController {
     @RequestMapping("/toUpdate")
     public Object toUpdate(int id){
         Map<String,Object> map=powerService.getById(id);
-//        int parentid= (int) map.get("parentid");
-//        Map<String,Object> map1=powerService.getParent(parentid);
-//        String name = (String) map1.get("name");
-//        map.put("parentname",name);
-        System.out.println(map);
         return powerService.getById(id);
     }
 

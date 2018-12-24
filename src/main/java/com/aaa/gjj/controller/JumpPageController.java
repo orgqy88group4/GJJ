@@ -61,41 +61,74 @@ public class JumpPageController {
     }
 
     /**
-     * 跳转权限树页面
+     * 跳转权限树添加页面
      * @return
      */
     @RequestMapping("/toadd")
     public String toadd(){
         return "back/power/add";
     }
+
     /**
      * 跳转更新页面
-     * @param powerId
      * @return
      */
-    //@ResponseBody
     @RequestMapping("/toupdate")
-    public String toUpdate(Integer powerId,Model model){
-        //model.addAttribute("power", powerService.getById(powerId));
+    public String toUpdate(){
         return "back/power/update";
     }
 
     /**
-     * 权限菜单修改
-     * @param paramMap
-     * @param response
-     * @throws IOException
+     * 跳转角色管理页面toaccount
+     * @return
      */
-    @RequestMapping("/update")
-    public void update(@RequestParam Map paramMap,HttpServletResponse response) throws IOException{
-        int update = powerService.update(paramMap);
-        System.out.println("更新了。。。。。。。。。。。。。。。。。");
-        response.setCharacterEncoding("utf-8");
-        response.setContentType("text/html");
-        if(update==-1)
-            response.getWriter().print("修改失败！");
-        else
-            response.getWriter().print("<script>window.parent.parent.location.href=window.parent.parent.location.href; </script>");
+    @RequestMapping("/torole")
+    public String torole(){
+        return "back/role/role";
+    }
+
+    /**
+     * 跳转角色管理页面
+     * @return
+     */
+    @RequestMapping("/toaccount")
+    public String toaccount(){
+        return "back/role/count";
+    }
+
+    /**
+     * 跳转还款页面
+     * @return
+     */
+    @RequestMapping("/topay")
+    public String topay(){
+        return "back/pay/pay";
+    }
+    /**
+     * 跳转还款记录页面
+     * @return
+     */
+    @RequestMapping("/topayRecord")
+    public String topayRecord(){
+        return "back/pay/payRecord";
+    }
+
+    /**
+     * 跳转还款记录页面
+     * @return
+     */
+    @RequestMapping("/toloadRecord")
+    public String toloadRecord(){
+        return "back/pay/loadRecord";
+    }
+
+    /**
+     * 跳转角色登录
+     * @return
+     */
+    @RequestMapping("/toLogin")
+    public String loading(){
+        return "login";
     }
 
 }

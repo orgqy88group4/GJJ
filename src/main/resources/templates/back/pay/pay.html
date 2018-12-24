@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>还款业务</title>
+    <!-- 引入样式 -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../js/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+    <link rel="stylesheet" href="../css/elementui.css">
+    <!-- 引入组件库 -->
+    <!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
+    <script type="text/javascript" src="../js/elementui.js"></script>
+    <style>
+        .el-header, .el-footer {
+            text-align: center;
+            margin-top: -50px;
+            line-height: 100px;
+        }
+    </style>
+
+
+</head>
+<body>
+<div id="app">
+    <h2>{{ message }}</h2>
+</div>
+
+<div id="tableView">
+    <!--列表顶部搜索和工具条-->
+    <el-row>
+        <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+            <el-form-item label="编号">
+                <el-input v-model="searchForm.repay_id" placeholder="按编号查询"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名">
+                <el-input v-model="searchForm.pName" placeholder="按姓名查询"></el-input>
+            </el-form-item>
+            <el-form-item label="贷款期数">
+                <el-input v-model="searchForm.loan_periods" placeholder="按贷款期数查询"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" icon="search" @click="searchClick" round>查询</el-button>
+                <el-button type="success" icon="plus" @click="toFlush" round>刷新</el-button>
+            </el-form-item>
+        </el-form>
+    </el-row>
+    <!--列表-->
+    <el-row>
+        <el-table
+                :data="payData"
+                v-loading.body="loading"
+                border
+                highlight-current-row="true"
+                :default-sort = "{prop: 'repay_id', order: 'asc'}"
+                style="width: 100%">
+            <!--数据列-->
+            <el-table-column
+                    prop="repay_id"
+                    label="编号"
+                    sortable
+                    width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="GRZH"
+                    label="个人账号">
+            </el-table-column>
+            <el-table-column
+                    prop="pName"
+                    label="姓名"
+                    width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="loan_money"
+                    label="贷款金额(元)">
+            </el-table-column>
+            <el-table-column
+                    prop="loan_periods"
+                    label="贷款期数"
+                    width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_money"
+                    label="应还本金(元)">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_interests"
+                    label="应还利息(元)">
+            </el-table-column>
+            <el-table-column
+                    prop="repayed_All_money"
+                    label="已还(元)"
+                    width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="residue_periods"
+                    label="剩余期数"
+                    width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="repayed_date"
+                    label="最近还款日期">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_month"
+                    label="月还(元)">
+            </el-table-column>
+            <el-table-column prop="repay_state" label="还款状态" width="80">
+                <!--状态数字转文字-->
+                <template scope="scope">
+                    <div style="text-align: center" v-if="scope.row.repay_state=='1'">
+                        <span style="color:#2d51ff;">还款中</span>
+                    </div>
+                    <div style="text-align: center" v-if="scope.row.repay_state=='2'">
+                        <span style="color:#00bb00;">还款完成</span>
+                    </div>
+                    <div style="text-align: center" v-if="scope.row.repay_state=='3'">
+                        <span style="color:#ff0000;">已逾期</span>
+                    </div>
+                </template>
+            </el-table-column>
+
+            <!--操作列-->
+            <el-table-column label="操作">
+                <template scope="scope">
+                    <el-button :plain="true" type="primary" size="small" icon="edit" @click="editClick(scope.row)" round>详情</el-button>
+                    <el-button :plain="true" type="warning" size="small" :disabled="isabled" icon="edit" @click="clickSubmit(scope.row)" round>还款</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-row>
+
+    <!--列表底部工具条和分页符-->
+    <el-row style="margin-top: 20px" type="flex" justify="end">
+        <el-col :span="18" >
+            <el-pagination
+                    style="float: right"
+                    @size-change="pageSizeChange"
+                    @current-change="currentPageChange"
+                    :current-page="currentPage"
+                    :page-sizes="[5,10, 20, 30, 50]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+            </el-pagination>
+        </el-col>
+    </el-row>
+
+    <!--还款详情界面-->
+    <el-dialog :visible.sync="editFormVisible" :close-on-click-modal="false" width="85%">
+        <el-container>
+            <el-header>
+                <el-row>
+                    <div style="font-size: larger;color: #0c80d7;font-weight: bold;
+                ">还款详情</div>
+                </el-row>
+            </el-header>
+            <el-main>
+                <el-row style="font-size: large;font-weight: bold">贷款信息</el-row>
+                <!--<div style="font-size: medium;font-weight: bold;margin-left: -20px">贷款信息</div>-->
+                <el-row>
+                    <el-form :model="payData" label-position="right"  :inline="true" class="demo-table-expand" size="mini">
+                        <el-form-item label="个人账号" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.GRZH" :readonly="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="贷款总额" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.loan_money" :readonly="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="贷款期数" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.loan_periods" :readonly="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="放贷日期" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.ctime" :readonly="true"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-row>
+                <el-row>
+                    <el-form :model="payData" label-position="right"  :inline="true" class="demo-table-expand" size="mini">
+                        <el-form-item label="还款方式" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.loan_repay" :readonly="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="贷款利率(%)" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.loan_rate" :readonly="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="还款银行" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.repay_bank" :readonly="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="还款账户" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.repay_account" :readonly="true"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-row>
+                <el-row style="font-size: medium;font-weight: bold">待还款信息</el-row>
+                <!--<div style="font-size: medium;font-weight: bold;margin-left: -20px">待还款信息</div>-->
+                <el-row>
+                    <el-form :model="payData" label-position="right"  :inline="true" class="demo-table-expand" size="mini">
+                        <el-form-item label="应还本金" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.repay_money" :readonly="true" style="width: 100px;border:1px solid red"></el-input>
+                        </el-form-item>
+                        <el-form-item label="应还利息" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.repay_interests" :readonly="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="已还本金" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.repayed_money" :readonly="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="已还利息" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.repayed_interests" :readonly="true"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-row>
+                <el-row>
+                    <el-form :model="payData" label-position="right"  :inline="true" class="demo-table-expand" size="mini">
+                        <el-form-item label="剩余本金" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.residue_money" :readonly="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="剩余利息" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.residue_interests" :readonly="true"></el-input>
+                        </el-form-item>
+                        <el-form-item label="剩余期数" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.residue_periods" :readonly="true"></el-input>
+                        </el-form-item>
+                        <!--<el-form-item label="" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.repayed_period" :readonly="true"></el-input>
+                        </el-form-item>-->
+                    </el-form>
+                </el-row>
+                <el-row style="font-size: medium;font-weight: bold">本期应还信息</el-row>
+                <el-row>
+                    <el-form :model="payData" label-position="right"  :inline="true" class="demo-table-expand" size="mini">
+                        <el-form-item label="月应还金额" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.repay_month" :readonly="true" ></el-input>
+                        </el-form-item>
+                        <el-form-item label="月实还金额" :label-width="formLabelWidth">
+                            <el-input v-model="payForm.repay_mmonth" ref="input1"></el-input>
+                        </el-form-item>
+                    </el-form>
+                </el-row>
+            </el-main>
+            <el-footer>
+                <el-row style="margin-bottom: 20px">
+                    <div align="center">
+                        <el-button type="primary" icon="el-icon-success" :disabled="isDisabled" @click.native="editSubmit" :loading="editLoading" round>提前还款</el-button>
+                        <el-button type="primary" icon="el-icon-date" @click.native="historySubmit" :loading="editLoading" round>还款记录</el-button>
+                        <el-button type="danger" @click.native="editFormVisible = false" round>关闭</el-button>
+                    </div>
+                </el-row>
+            </el-footer>
+        </el-container>
+    </el-dialog>
+
+    <!--还款记录-->
+    <el-dialog :visible.sync="editFormVisible2" :close-on-click-modal="false" width="85%">
+        <el-row>
+            <div align="center" style="font-size: larger;color: #0c80d7;font-weight: bold;
+                margin-bottom: 20px;margin-top: -40px">还款记录</div>
+        </el-row>
+        <el-table
+                :data="hisData"
+                v-loading.body="loading"
+                border
+                :default-sort = "{prop: 'repayed_date', order: 'desc'}"
+                style="width: 100%">
+            <!--索引-->
+            <el-table-column
+                    type="index"
+                    :index="1">
+            </el-table-column>
+            <!--数据列-->
+            <el-table-column
+                    prop="GRZH"
+                    label="个人账号"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="pName"
+                    label="姓名"
+                    width="180">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_month_money"
+                    label="月还本金">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_month_interest"
+                    label="月还利息">
+            </el-table-column>
+            <el-table-column
+                    prop="repayed_date"
+                    sortable
+                    label="还款时间">
+            </el-table-column>
+        </el-table>
+        <el-row style="margin-bottom: 20px">
+            <div align="center">
+                <el-button type="danger" @click.native="editFormVisible2 = false" round>关闭</el-button>
+            </div>
+        </el-row>
+    </el-dialog>
+</div>
+
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '贷款列表'
+        }
+    });
+
+    var tableView = new Vue({
+        el: '#tableView',
+        data: {
+            formLabelWidth: '120px',
+            //列表数据
+            payData:[],
+            //显示加载中样式
+            loading:false,
+            //搜索表单
+            searchForm: {
+                repay_id:'',
+                pName:'',
+                loan_periods:'',
+
+            },
+            //当前页
+            currentPage:1,
+            //分页大小
+            pageSize:5,
+            //总记录数
+            total:800,
+            //编辑界面是否显示
+            editFormVisible: false,
+            //还款记录界面
+            editFormVisible2: false,
+            editLoading: false,
+            goUrl:'',
+            editFormRules: {
+                name: [
+                    { required: true, message: '请输入姓名', trigger: 'blur' }
+                ]
+            },
+            //还款界面数据
+            payForm:{
+                repay_id:'',
+                GRZH:'',
+                loan_money:'',
+                loan_periods:'',
+                ctime:'',
+                loan_repay:'',
+                loan_rate:'',
+                repay_bank:'',
+                repay_account:'',
+                repay_money:'',
+                repay_interests:'',
+                repayed_money:'',
+                repayed_interests:'',
+                residue_money:'',
+                residue_interests:'',
+                residue_periods:'',
+                repayed_period:'',
+                repay_month:'',
+                repay_mmonth:'',
+                repay_state:'',
+            },
+            //还款记录
+            hisData:[],
+            //剩余期数
+            residue_periods:'',
+            //按钮失效
+            isDisabled:false,
+            isabled:false,
+        },
+        created:function(){
+            //在 then的内部不能使用Vue的实例化的this, 因为在内部 this 没有被绑定。
+            var self = this;
+            var start =(this.currentPage-1)*this.pageSize;
+            var end =this.currentPage*this.pageSize;
+            axios.post('/sb/pay/page',{'pageNo':this.currentPage,'pageSize':this.pageSize,'start':start,'end':end}).then(function(response){
+                self.total=response.data.total;
+                self.payData = response.data.pageData;
+            });
+        },
+        methods:{
+            //刷新
+            toFlush:function(){
+                this.payForm={
+                    repay_id:'',
+                        GRZH:'',
+                        loan_money:'',
+                        loan_periods:'',
+                        ctime:'',
+                        loan_repay:'',
+                        loan_rate:'',
+                        repay_bank:'',
+                        repay_account:'',
+                        repay_money:'',
+                        repay_interests:'',
+                        repayed_money:'',
+                        repayed_interests:'',
+                        residue_money:'',
+                        residue_interests:'',
+                        residue_periods:'',
+                        repayed_period:'',
+                        repay_month:'',
+                        repay_mmonth:'',
+                        repay_state:'',
+                };
+                this.loadingData();
+            },
+            //表格重新加载数据
+            loadingData:function() {
+                var _self = this;
+                _self.loading = true;
+                var start =(this.currentPage-1)*this.pageSize;
+                var end =this.pageSize;
+                var searchForm={'start':start,'end':end,'repay_id':this.searchForm.repay_id,'pName':this.searchForm.pName,'loan_periods':this.searchForm.loan_periods};
+                axios.post('/sb/pay/page',searchForm).then(function(response){
+                    _self.total=response.data.total;
+                    _self.payData = response.data.pageData;
+                });
+                console.log(_self.currentPage);
+                setTimeout(function(){
+                    console.info("加载数据成功");
+                    _self.loading = false;
+                },300);
+            },
+            //还款记录弹窗事件
+            historySubmit:function(){
+                this.editFormVisible2 = true;
+                var goUrl="/sb/pay/getRecord";
+                var self = this;
+                var repay_id=this.payForm.repay_id;
+                axios.post(goUrl,{'repay_id':repay_id}).then(function(response){
+                    self.hisData = response.data.RecordData;
+                });
+            },
+            //表格查询事件
+            searchClick:function() {
+                this.loadingData();//重新加载数据
+            },
+            //分页大小修改事件
+            pageSizeChange:function(val) {
+                console.log('每页 ' + val +' 条');
+                this.pageSize = val;
+                var _self = this;
+                _self.loadingData();//重新加载数据
+            },
+            //当前页修改事件
+            currentPageChange:function(val) {
+                this.currentPage = val;
+                console.log('当前页: ' + val);
+                var _self = this;
+                _self.loadingData();//重新加载数据
+            },
+            //还款按钮失效
+            disabledIs:function (row) {
+                if(row.residue_periods<1){
+                     //提交按钮失效
+                    _self.$message({
+                        message: '已还款完毕,不能继续还款',
+                        type: 'error'
+                    });
+                    return true;
+                    //alert("已还款完毕,祝您生活愉快");
+                }
+            },
+            //详情点击事件
+            editClick:function(row) {
+                //this.$refs.input1.focus();
+                var _self=this
+                this.isDisabled=false;
+                this.residue_periods=row.residue_periods;
+                this.goUrl="/sb/pay/repayMoney";
+                this.editFormVisible = true;
+                this.payForm = Object.assign({}, row);
+                if(_self.residue_periods<1){
+                    _self.isDisabled=true //提交按钮失效
+                    /*_self.$message({
+                        message: '已还款完毕,不能继续还款',
+                        type: 'error'
+                    });*/
+                    //alert("已还款完毕,祝您生活愉快");
+                }
+            },
+            //还款点击事件
+            clickSubmit:function (row) {
+                var _self=this
+                var goUrl="/sb/pay/repayMoney";
+                //alert(JSON.stringify(row));return;
+                var formData =row;
+                var repayed_date=_self.payForm.repayed_date;
+                var GRZH=_self.payForm.GRZH;
+
+                this.$confirm('确认还款吗?', '提示', {
+                    type: 'warning'
+                }).then(function () {
+                    if(row.residue_periods<1){
+                        //_self.isabled=true //提交按钮失效
+                        _self.$message({
+                            message: '已还款完毕,不能继续还款',
+                            type: 'error'
+                        });
+                        _self.loadingData();//重新加载数据
+                    }else{
+                        axios.post("/sb/pay/getRecord",{'GRZH':GRZH,'repayed_date':repayed_date}).then(function(response){
+                                //alert("接受数据===="+JSON.stringify(obj['GRZH'])+"++====="+row.GRZH);
+                                if(response.data.RecordData.length>0){
+                                    _self.$message({
+                                        message: '本月已还清',//loan_repay
+                                        type: 'error'
+                                    });
+                                    //alert('本月已还清');
+                                }else{
+                                    axios.post(goUrl, formData).then(function (response) {
+                                        if (response.data > 0) {
+                                            _self.$message({
+                                                message: '还款成功',//loan_repay
+                                                type: 'success'
+                                            });
+                                            _self.editFormVisible = false;
+                                        } else {
+                                            _self.$message({
+                                                message: '还款失败',
+                                                type: 'error'
+                                            });
+                                        }
+                                        _self.loadingData();//重新加载数据
+                                    });
+                                }
+                        });
+
+                    }
+                })
+            },
+            //提前还款确认点击事件
+            editSubmit:function(){
+                var _self = this;
+                _self.loading = true;
+                var formData =this.payForm;
+                var goUrl=this.goUrl;
+                if(_self.residue_periods<1){
+                    //_self.isabled=true //提交按钮失效
+                    _self.$message({
+                        message: '已还款完毕,不能继续还款',
+                        type: 'error'
+                    });
+                    _self.loadingData();//重新加载数据
+                }
+                this.$confirm('确认还款吗?', '提示', {
+                    type: 'warning'
+                }).then(function() {
+                    axios.post(goUrl, formData).then(function (response) {
+                        if (response.data > 0) {
+                            _self.$message({
+                                message: '还款成功',//loan_repay
+                                type: 'success'
+                            });
+                            _self.editFormVisible = false;
+                        } else {
+                            _self.$message({
+                                message: '还款失败',
+                                type: 'error'
+                            });
+                        }
+                        _self.loadingData();//重新加载数据
+                    })
+                })
+            },
+            //还款状态数字转文字
+            numFormatter:function(){
+                //alert("repay_state=="+row.repay_state);
+                if(this.payForm.repay_state=='1'){
+                   // return '<span style="color:green;">还款中</span>';
+                    return '还款中';
+                }else if(this.payForm.repay_state == '2'){
+                   // return '<span style="color:red;">还款完毕</span>';
+                    return '还款完毕';
+                }else {
+                   // return '<span style="color:grey;">逾期</span>';
+                    return '已逾期';
+                }
+            }
+        }
+
+    })
+</script>
+
+</body>
+</html>

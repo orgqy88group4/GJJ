@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>贷款信息</title>
+    <!-- 引入样式 -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../js/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+    <link rel="stylesheet" href="../css/elementui.css">
+    <!-- 引入组件库 -->
+    <!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
+    <script type="text/javascript" src="../js/elementui.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>{{ message }}</h2>
+</div>
+
+<div id="tableView">
+    <!--列表顶部搜索和工具条-->
+    <el-row>
+        <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+            <el-form-item label="个人账号">
+                <el-input v-model="searchForm.GRZH" placeholder="按个人账号查询"></el-input>
+            </el-form-item>
+            <el-form-item label="姓名">
+                <el-input v-model="searchForm.pName" placeholder="按姓名查询"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button type="primary" icon="search" @click="searchClick" round>查询</el-button>
+                <el-button type="success" icon="plus" @click="toFlush" round>刷新</el-button>
+            </el-form-item>
+        </el-form>
+    </el-row>
+    <!--列表-->
+    <el-row>
+        <el-table
+                :data="recordData"
+                v-loading.body="loading"
+                border
+                :default-sort = "{prop: 'repay_id', order: 'asc'}"
+                style="width: 100%">
+            <!--索引-->
+            <el-table-column
+                    type="index"
+                    :index="1">
+            </el-table-column>
+            <!--数据列-->
+            <el-table-column
+                    prop="GRZH"
+                    label="个人账号"
+                    sortable
+                    width="130">
+            </el-table-column>
+            <el-table-column
+                    prop="pName"
+                    label="姓名"
+                    sortable
+                    width="80">
+            </el-table-column>
+            <el-table-column
+                    prop="loan_money"
+                    sortable
+                    label="贷款总额">
+            </el-table-column>
+            <el-table-column
+                    prop="loan_periods"
+                    sortable
+                    label="贷款期数">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_bank"
+                    label="还款银行">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_account"
+                    label="还款账户">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_money"
+                    label="应还本金">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_interests"
+                    label="应还利息">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_month"
+                    label="月还款">
+            </el-table-column>
+            <el-table-column
+                prop="ctime"
+                label="贷款时间">
+            </el-table-column>
+            <el-table-column
+                    prop="repay_state"
+                    label="还款状态">
+                <!--状态数字转文字-->
+                <template scope="scope">
+                    <div style="text-align: center" v-if="scope.row.repay_state=='1'">
+                        <span style="color:#2d51ff;">还款中</span>
+                    </div>
+                    <div style="text-align: center" v-if="scope.row.repay_state=='2'">
+                        <span style="color:#00bb00;">还款完成</span>
+                    </div>
+                    <div style="text-align: center" v-if="scope.row.repay_state=='3'">
+                        <span style="color:#ff0000;">已逾期</span>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-row>
+
+    <!--列表底部工具条和分页符-->
+    <el-row style="margin-top: 20px" type="flex" justify="end">
+        <el-col :span="18" >
+            <el-pagination
+                    style="float: right"
+                    @size-change="pageSizeChange"
+                    @current-change="currentPageChange"
+                    :current-page="currentPage"
+                    :page-sizes="[5,10, 20]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+            </el-pagination>
+        </el-col>
+    </el-row>
+
+</div>
+
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '贷款记录'
+        }
+    });
+
+    var tableView = new Vue({
+        el: '#tableView',
+        data: {
+            formLabelWidth: '120px',
+            //列表数据
+            recordData:[],
+            //显示加载中样式
+            loading:false,
+            //搜索表单
+            searchForm: {
+                GRZH:'',
+                pName:''
+            },
+            //当前页
+            currentPage:1,
+            //分页大小
+            pageSize:10,
+            //总记录数
+            total:800,
+            editLoading: false,
+            goUrl:'',
+            editFormRules: {
+                name: [
+                    { required: true, message: '请输入姓名', trigger: 'blur' }
+                ]
+            },
+        },
+        created:function(){
+            //在 then的内部不能使用Vue的实例化的this, 因为在内部 this 没有被绑定。
+            var self = this;
+            var start =(this.currentPage-1)*this.pageSize;
+            var end =this.currentPage*this.pageSize;
+            axios.post('/sb/pay/loanRecord',{'start':start,'end':end,'GRZH':this.searchForm.GRZH,'pName':this.searchForm.pName}).then(function(response){
+                self.total=response.data.total;
+                self.recordData = response.data.pageData;
+            });
+        },
+        methods:{
+            //刷新
+            toFlush:function(){
+                this.loadingData();
+            },
+            //表格重新加载数据
+            loadingData:function() {
+                var _self = this;
+                _self.loading = true;
+                var start =(this.currentPage-1)*this.pageSize;
+                var end =this.pageSize;
+                var searchForm={'start':start,'end':end,'GRZH':this.searchForm.GRZH,'pName':this.searchForm.pName};
+                axios.post('/sb/pay/loanRecord',searchForm).then(function(response){
+                    _self.total=response.data.total;
+                    _self.recordData = response.data.pageData;
+                })
+                console.log(_self.currentPage);
+                setTimeout(function(){
+                    console.info("加载数据成功");
+                    _self.loading = false;
+                },300);
+            },
+            //表格查询事件
+            searchClick:function() {
+                this.loadingData();//重新加载数据
+            },
+            //分页大小修改事件
+            pageSizeChange:function(val) {
+                console.log('每页 ' + val +' 条');
+                this.pageSize = val;
+                var _self = this;
+                _self.loadingData();//重新加载数据
+            },
+            //当前页修改事件
+            currentPageChange:function(val) {
+                this.currentPage = val;
+                console.log('当前页: ' + val);
+                var _self = this;
+                _self.loadingData();//重新加载数据
+            },
+        }
+
+    })
+</script>
+
+</body>
+</html>

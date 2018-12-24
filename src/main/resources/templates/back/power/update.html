@@ -6,9 +6,11 @@
     <script type="text/javascript" src="/sb/js/vue.js"></script>
     <script type="text/javascript" src="/sb/js/axios.min.js"></script>
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+    <link rel="stylesheet" href="../css/elementui.css">
     <!-- 引入组件库 -->
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
+    <script type="text/javascript" src="../js/elementui.js"></script>
     <style>
         .el-header, .el-footer {
             background-color: #B3C0D1;
@@ -27,7 +29,7 @@
         .el-main {
             background-color: #E9EEF3;
             color: #333;
-            text-align: center;
+            /*text-align: center;*/
         }
 
         body > .el-container {
@@ -53,50 +55,40 @@
                         :data="treeData"
                         accordion
                         @node-click="handleNodeClick"
-                        :icon-class="icon"
+                        :icon-class="iconClass"
                 >
                 </el-tree>
             </el-aside>
             <el-main style="height: auto;">
-                <el-tabs v-model="editableTabsValue2" type="card" closable >
-                    <el-tab-pane
-                            v-for="(item, index) in editableTabs2"
-                            :key="item.name"
-                            :label="item.title"
-                            :name="item.name"
-                    >
                         <el-row>
-                            <el-form  :label-position="labelPosition" label-width="80px" :model="power" ref="power">
-                                <el-form-item label="节点名称" prop="name">
-                                    </el-input><el-input v-model="power.name"></el-input>
+                            <el-form  :label-position="labelPosition" label-width="80px" :model="power" >
+                                <el-form-item label="节点名称" >
+                                    <el-input v-model="power.name" clearable resize="horizontal"></el-input>
                                 </el-form-item>
 
-                                <el-form-item label="父节点" prop="parentid">
-                                    <el-input v-model="power.parentid" ></el-input>
-                                    <!--<el-select v-model="power.parentid" placeholder="请选择父节点" @click="selected">-->
-                                        <!--<el-option v-for="parent in power" label="parent.parentname" :value="parent.parentid"></el-option>-->
-                                        <!--<el-option  label="parent" value="beijing"></el-option>-->
-                                    <!--</el-select>-->
+                                <el-form-item label="父节点" >
+                                    <el-select v-model="power.parentid"  placeholder="请选择父节点" >
+                                        <el-option label="0级节点" :value="0"></el-option>
+                                        <el-option v-for="t in treeData"  :key="t.id" :label="t.label" :value="t.id"></el-option>
+                                    </el-select>
                                 </el-form-item>
 
-                                <el-form-item label="图标" prop="iconcls">
-                                    <el-input v-model="power.iconcls"></el-input>
+                                <el-form-item label="图标" >
+                                    <el-select v-model="power.iconcls"  placeholder="请选择图标" >
+                                        <el-option v-for="t in icons"  :label="t.name" :value="t.value"></el-option>
+                                    </el-select>
                                 </el-form-item>
 
-                                <el-form-item label="URL" prop="url">
-                                    <el-input v-model="power.url"></el-input>
+                                <el-form-item label="URL" >
+                                    <el-input v-model="power.url" clearable></el-input>
                                 </el-form-item>
 
                                 <el-form-item size="large">
-                                    <el-button type="primary" @click="onSubmit">更新</el-button>
-                                    <el-button type="primary" @click="OnDel">删除</el-button>
+                                    <el-button type="success" @click="onSubmit" round>更新</el-button>
+                                    <el-button type="danger" @click="OnDel" round>删除</el-button>
                                 </el-form-item>
                             </el-form>
                         </el-row>
-
-                    </el-tab-pane>
-                </el-tabs>
-
             </el-main>
         </el-container>
     </el-container>
@@ -105,14 +97,11 @@
     var vm = new Vue({
         el:".diva",
         data:{
-            icon:'el-icon-menu',
+            selected:'',// 不可以多选
+            iconClass:'el-icon-menu',
+            //iconClass:[],
+            icons:[{"name":"菜单","value":"el-icon-menu"},{"name":"编辑","value":"el-icon-setting"},{"name":"右箭头","value":"el-icon-caret-right"},{"name":"下箭头","value":"el-icon-caret-bottom"}],
             treeData:[],
-            editableTabsValue2: '2',
-            editableTabs2: [ {
-                title: '编辑',
-                name: '2',
-                url: 'toUpdate?id=110'
-            }],
             labelPosition: 'right',
             power: [{
                 id:0,
@@ -122,7 +111,6 @@
                 iconcls: '',
                 url: ''
             }],
-            tabIndex: 2,
             options:[],
             gourl:'',
         },
@@ -135,10 +123,7 @@
         },
         methods: {
             handleNodeClick: function (node) {
-                //alert("节点ID:"+node.id+",   节点名称："+node.label+",   url："+node.url);
                 var URL="/sb/power/toUpdate?id="+node.id;
-//                this.editableTabs2.url=URL;
-//                alert("url="+this.editableTabs2.url);
                 var _self=this;
                 axios.post(URL).then(function(response){
                     _self.power= response.data;
@@ -154,7 +139,7 @@
                             message:'更新成功',
                             type: 'success'
                         });
-                        alert("更新成功");
+                        //alert("更新成功");
                         window.parent.parent.location.href=window.parent.parent.location.href;
                     }else{
                         _self.$message({
@@ -169,20 +154,23 @@
                 var _self = this;
                 var id=this.power;
                 //alert(id);
-                axios.post(url,id).then(function (response) {
-                    if(response.data>0){
-                        _self.$message({
-                            message:'删除成功',
-                            type: 'success'
-                        });
-                        window.parent.parent.location.href=window.parent.parent.location.href;
-                    }else{
-                        _self.$message({
-                            message:'操作失败',
-                            type: 'error'
-                        });
-                    }
+                this.$confirm('确认删除吗?', '提示', {type: 'warning'}).then(function(){
+                    axios.post(url,id).then(function (response) {
+                        if(response.data>0){
+                            _self.$message({
+                                message:'删除成功',
+                                type: 'success'
+                            });
+                            window.parent.parent.location.href=window.parent.parent.location.href;
+                        }else{
+                            _self.$message({
+                                message:'操作失败',
+                                type: 'error'
+                            });
+                        }
+                    })
                 })
+
             }
         }
     })

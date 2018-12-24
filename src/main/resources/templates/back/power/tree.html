@@ -6,30 +6,33 @@
     <script type="text/javascript" src="/sb/js/vue.js"></script>
     <script type="text/javascript" src="/sb/js/axios.min.js"></script>
     <!-- 引入样式 -->
-    <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+    <!--<link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">-->
+    <link rel="stylesheet" href="../css/elementui.css">
     <!-- 引入组件库 -->
-    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+    <!--<script src="https://unpkg.com/element-ui/lib/index.js"></script>-->
+    <script type="text/javascript" src="../js/elementui.js"></script>
     <style>
         .el-header, .el-footer {
-            background-color: #B3C0D1;
+            background-color: #496e9a;
             color: #333;
             text-align: center;
             line-height: 60px;
         }
 
         .el-aside {
-            background-color: #D3DCE6;
+            background-color: #4f546e;
             color: #333;
             text-align: center;
-            line-height: 200px;
+            line-height: 26px;
         }
-
         .el-main {
             background-color: #E9EEF3;
             color: #333;
             text-align: center;
         }
-
+        .el-tree{
+            background-color: #adacff;
+        }
         body > .el-container {
             margin-bottom: 40px;
         }
@@ -42,24 +45,92 @@
         .el-container:nth-child(7) .el-aside {
             line-height: 320px;
         }
+
     </style>
+    <!--时间设置-->
+    <script language="JavaScript">
+        function startTime()
+        {
+            var today=new Date();//定义日期对象
+            var yyyy = today.getFullYear();//通过日期对象的getFullYear()方法返回年
+            var MM = today.getMonth()+1;//通过日期对象的getMonth()方法返回月
+            var dd = today.getDate();//通过日期对象的getDate()方法返回日
+            var hh=today.getHours();//通过日期对象的getHours方法返回小时
+            var mm=today.getMinutes();//通过日期对象的getMinutes方法返回分钟
+            var ss=today.getSeconds();//通过日期对象的getSeconds方法返回秒
+            // 如果分钟或小时的值小于10，则在其值前加0，比如如果时间是下午3点20分9秒的话，则显示15：20：09
+            MM=checkTime(MM);
+            dd=checkTime(dd);
+            mm=checkTime(mm);
+            ss=checkTime(ss);
+            var day; //用于保存星期（getDay()方法得到星期编号）
+            if(today.getDay()==0)   day   =   "星期日 "
+            if(today.getDay()==1)   day   =   "星期一 "
+            if(today.getDay()==2)   day   =   "星期二 "
+            if(today.getDay()==3)   day   =   "星期三 "
+            if(today.getDay()==4)   day   =   "星期四 "
+            if(today.getDay()==5)   day   =   "星期五 "
+            if(today.getDay()==6)   day   =   "星期六 "
+            document.getElementById('nowDateTimeSpan').innerHTML=yyyy+"年"+MM +"月"+ dd +"日";
+            document.getElementById('nowDateTimeSpan2').innerHTML=hh+":"+mm+":"+ss+"        "+ day;
+            setTimeout('startTime()',1000);//每一秒中重新加载startTime()方法
+        }
+
+        function checkTime(i)
+        {
+            if (i<10){
+                i="0" + i;
+            }
+            return i;9
+        }
+    </script>
+    <!--颜色变换-->
+    <script type="text/javascript">
+        var i=0;
+        setInterval('changeColor()',500);
+        function changeColor(){
+            var div=document.getElementById('character'); //获得div元素
+            var colorArr=['#8A2BE2','#DEB887','#7FFF00','#008B8B','#FF1493']; //建立颜色库
+            if(i==colorArr.length){
+                i=0;
+            }else{
+                div.style.color=colorArr[i++%colorArr.length]; //循环颜色
+            }
+        }
+    </script>
 </head>
-<body>
+<body onload="startTime()">
 <div class="diva">
             <el-container>
-                <el-header style="height: 160px;">Header</el-header>
+                <el-header style="height: 120px;">
+                    <div id="diva" style="float: left" align="left">
+                        <span class="title" id="character" style="height: 70px;width: auto;float: left;font-size: 80px;margin-top: 20px;color: black;font-weight: 500">AAA公积金</span>
+                        <span style="color: gold;">QY88&nbsp;&nbsp;&nbsp;第四组</span>
+                    </div>
+                    <div style="float: right;">
+                        欢迎{{user}}
+                    </div>
+                    <div id="divb"  align="center">
+                        <!--<span style="font-size: larger;color: rebeccapurple">时间：</span>-->
+                        <font color="red" style="font-size: xx-large;padding: 0px 35px;">
+                            <span id="nowDateTimeSpan" style="padding-bottom: 20px"></span><br>
+                            <span id="nowDateTimeSpan2" style="margin-left: 30px;"></span>
+                        </font>
+                    </div>
+                </el-header>
                 <el-container>
                     <el-aside width="200px" style="height: 760px;">
+                        <!--&lt;!&ndash;:render-content="editSpan"&ndash;&gt; 图标显示-->
                         <el-tree
                                 :data="treeData"
-                                accordion
+                                highlight-current
                                 @node-click="handleNodeClick"
                                 :icon-class="icon"
                         >
                         </el-tree>
                     </el-aside>
                     <el-main style="height: auto;">
-                        <el-tabs v-model="editableTabsValue2" type="card" closable @tab-remove="removeTab">
+                        <el-tabs v-model="editableTabsValue2" type="card" closable @tab-remove="removeTab" hit="true">
                             <el-tab-pane
                                     v-for="(item, index) in editableTabs2"
                                     :key="item.name"
@@ -78,6 +149,7 @@
        var vm = new Vue({
            el:".diva",
            data:{
+               user:'',
                icon:'el-icon-menu',
                treeData:[],
                editableTabsValue2: '2',
@@ -95,6 +167,20 @@
                })
            },
            methods: {
+               editSpan:function(createElement,{node,data,store}){
+                   //alert(JSON.stringify(node.icon));
+                   var t ="{\""+data.iconClass+"\":\"true\"}";
+                   //转义 t = "{ "el-icon-menu" : "true" }"
+                   //JSON字符串转对象
+                   var t1 = JSON.parse(t);
+                   return createElement('span',[
+                       //createElement('i', {'class':{(self.editableTabsValue2.icon): true}}),
+                       createElement('i', {'class':t1}),
+                       createElement('span', node.label),
+
+                   ]);
+               },
+
                handleNodeClick: function (n) {
                    // alert(n.label+",url"+n.url);
                    if (n.url != null && n.url != 'null' && n.url != '')

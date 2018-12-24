@@ -29,7 +29,7 @@ public interface PowerDao {
      * @param map
      * @return
      */
-    @Insert("insert into tb_treemenu values(#{id},#{name},#{iconcls},#{url},#{parentid})")
+    @Insert("insert into tb_treemenu values(null,#{name},#{url},#{parentid},#{iconcls})")
     int add(Map map);
 
     /**
