@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人抵押贷款</title>
+    <!-- 引入样式 -->
+    <script type="text/javascript" src="/sb/js/vue.js"></script>
+    <script type="text/javascript" src="/sb/js/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/sb/css/elementui.css">
+    <!-- 引入组件库 -->
+    <script src="/sb/js/elementui.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>{{ message }}</h2>
+</div>
+<div id="tableView">
+    <el-steps :active="active" align-center>
+        <el-step title="贷款基本资料"></el-step>
+        <el-step title="共同借款人"></el-step>
+        <el-step title="房屋信息"></el-step>
+        <el-step title="抵押信息"></el-step>
+    </el-steps>
+
+    <el-form :model="editForm" status-icon label-width="120px" :rules="editFormRules" ref="editForm">
+        <div class="basicInfo" v-if="active==0">
+            <el-container>
+                <el-header height="270px">
+                    <el-row>
+                        <h3 style="text-align:left;">个人信息</h3>
+                    </el-row>
+                    <el-container>
+                        <el-aside width="400px">
+                            <el-form-item label="个人账号:" key="111" prop="GRZH">
+                                <el-input v-model="editForm.GRZH"  @blur="blurSearchFor" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="*姓名:">
+                                <el-input v-model="editForm.tb_pName" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="*性别:">
+                                <el-input v-model="editForm.tb_pSex"  :disabled="true" style="width:220px;height:20px;"  auto-complete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="*手机号:">
+                                <el-input v-model="editForm.tb_pIphone" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                <el-input v-model="editForm.tb_pid" :disabled="true" type="hidden" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            </el-form-item>
+                        </el-aside>
+                        <el-container>
+                            <el-aside width="400px">
+                                <el-form-item label="*证件类型:">
+                                    <el-input v-model="editForm.tb_idcard" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="*证件号码:">
+                                    <el-input v-model="editForm.tb_idNUmber" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+
+                                <el-form-item label="*婚姻状态:">
+                                    <el-input v-model="editForm.tb_pMarriage" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="*职业:">
+                                    <el-input v-model="editForm.tb_Profession" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                            </el-aside>
+                            <el-container>
+                                <el-aside width="400px">
+                                    <el-form-item label="*学历:">
+                                        <el-input v-model="editForm.tb_pEducation" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="*邮箱:">
+                                        <el-input v-model="editForm.tb_pEmail" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="*家庭住址:">
+                                        <el-input v-model="editForm.tb_pAddress" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="*单位账号:">
+                                        <el-input v-model="editForm.unit_Id" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                </el-aside>
+                                <el-container>
+                                    <el-aside width="400px">
+                                        <el-form-item label="*月收入:" prop="bcApplyIcome">
+                                            <el-input-number v-model="editForm.bcApplyIcome" :min="0" style="width:220px;height:20px;" auto-complete="off"></el-input-number>
+                                        </el-form-item>
+                                        <el-form-item label="*银行存款:">
+                                            <el-input-number v-model="editForm.bcBankFund" :min="0"  style="width:220px;height:20px;" auto-complete="off"></el-input-number>
+                                        </el-form-item>
+                                    </el-aside>
+                                </el-container>
+                            </el-container>
+                        </el-container>
+                    </el-container>
+                </el-header>
+
+                <el-main>
+                    <el-row>
+                        <h3 style="text-align:left;">缴存信息</h3>
+                    </el-row>
+                    <el-container>
+                        <el-aside width="400px">
+                            <el-form-item label="*缴存状态:">
+                                <el-input v-model="editForm.peraccStateA" :disabled="true" style="width:220px;height:20px;" auto-complete="off">
+
+                                </el-input>
+                            </el-form-item>
+                        </el-aside>
+                        <el-container>
+                            <el-aside width="400px">
+                                <el-form-item label="*缴存余额:">
+                                    <el-input v-model="editForm.dalance" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                            </el-aside>
+                            <el-container>
+                                <el-aside width="400px">
+                                    <el-form-item label="*缴至年月:">
+                                        <el-input v-model="editForm.lastNaydate" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                </el-aside>
+                            </el-container>
+                        </el-container>
+                    </el-container>
+                </el-main>
+                <el-main>
+                    <el-row>
+                        <h3 style="text-align:left;">贷款信息</h3>
+                    </el-row>
+                    <el-container>
+                        <el-aside width="400px">
+                            <el-form-item label="*贷款金额:">
+                                <el-input-number v-model="editForm.bcMoney" style="width:220px;height:20px;" auto-complete="off"></el-input-number>
+                            </el-form-item>
+                            <el-form-item label="贷款期数:" prop="bcNum">
+                                <el-select v-model="editForm.bcNum" @change="show_sub" style="width:220px;height:20px;" auto-complete="off">
+                                    <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                                    <el-option label="6" value="6"></el-option>
+                                    <el-option label="10" value="10"></el-option>
+                                    <el-option label="24" value="24"></el-option>
+                                    <el-option label="36" value="36"></el-option>
+                                    <el-option label="48" value="48"></el-option>
+                                    <el-option label="60" value="60"></el-option>
+                                    <el-option label="72" value="72"></el-option>
+                                    <el-option label="84" value="84"></el-option>
+                                    <el-option label="96" value="96"></el-option>
+                                    <el-option label="108" value="108"></el-option>
+                                    <el-option label="120" value="120"></el-option>
+                                    <el-option label="132" value="132"></el-option>
+                                    <el-option label="144" value="144"></el-option>
+                                    <el-option label="168" value="168"></el-option>
+                                    <el-option label="180" value="180"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-aside>
+                        <el-container>
+                            <el-aside width="400px">
+                                <el-form-item label="*贷款利率:">
+                                    <el-input v-model="editForm.bcRate" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="委托银行:" prop="bcbankname">
+                                    <el-select v-model="editForm.bcbankname" style="width:220px;height:20px;" auto-complete="off">
+                                        <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                                        <el-option label="中国银行" value="中国银行"></el-option>
+                                        <el-option label="中国工商银行" value="中国工商银行"></el-option>
+                                        <el-option label="中国建设银行" value="中国建设银行"></el-option>
+                                        <el-option label="中国农业银行" value="中国农业银行"></el-option>
+                                        <el-option label="中国邮政银行" value="中国邮政银行"></el-option>
+                                        <el-option label="中国交通银行" value="中国交通银行"></el-option>
+                                        <el-option label="中国人民银行" value="中国人民银行"></el-option>
+                                    </el-select>
+                                </el-form-item>
+                            </el-aside>
+                            <el-container>
+                                <el-aside width="400px">
+                                    <el-form-item label="还款方式:" prop="bcRefundType">
+                                        <el-select v-model="editForm.bcRefundType" style="width:220px;height:20px;" auto-complete="off">
+                                            <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                                            <el-option label="等额本息" value="等额本息"></el-option>
+                                            <el-option label="等额本金" value="等额本金"></el-option>
+                                        </el-select>
+                                    </el-form-item>
+                                    <el-form-item label="操作人:" prop="bcname">
+                                        <el-input v-model="editForm.bcname" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                </el-aside>
+                                <el-container>
+                                    <el-aside width="400px">
+                                        <el-form-item label="*还款日:">
+                                            <el-input v-model="editForm.bcRepaymentDate" type="text" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                        </el-form-item>
+                                    </el-aside>
+                                </el-container>
+                            </el-container>
+                        </el-container>
+                    </el-container>
+                </el-main>
+                <el-main>
+                    <el-row>
+                        <h3 style="text-align:left;">还款信息</h3>
+                    </el-row>
+                    <el-container>
+                        <el-aside width="400px">
+                            <el-form-item label="开户银行:" prop="bcwAtBankName">
+                                <el-select v-model="editForm.bcwAtBankName" style="width:220px;height:20px;" auto-complete="off">
+                                    <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                                    <el-option label="中国银行" value="中国银行"></el-option>
+                                    <el-option label="中国工商银行" value="中国工商银行"></el-option>
+                                    <el-option label="中国建设银行" value="中国建设银行"></el-option>
+                                    <el-option label="中国农业银行" value="中国农业银行"></el-option>
+                                    <el-option label="中国邮政银行" value="中国邮政银行"></el-option>
+                                    <el-option label="中国交通银行" value="中国交通银行"></el-option>
+                                    <el-option label="中国人民银行" value="中国人民银行"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-aside>
+                        <el-container>
+                            <el-aside width="400px">
+                                <el-form-item label="还款账户名:" prop="bcAccount">
+                                    <el-input v-model="editForm.bcAccount"  style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                            </el-aside>
+                            <el-container>
+                                <el-aside width="400px">
+                                    <el-form-item label="*贷款账号:">
+                                        <el-input v-model="editForm.YHZH" :disabled="true"  style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                </el-aside>
+                            </el-container>
+                        </el-container>
+                    </el-container>
+                </el-main>
+            </el-container>
+        </div>
+
+
+
+
+
+
+        <div class="basicInfo" v-if="active==1">
+            <el-container>
+                <el-header height="270px">
+                    <el-row>
+                        <h3 style="text-align:left;">共同借款人</h3>
+                    </el-row>
+                    <el-container>
+                        <el-aside width="400px">
+                            <el-form-item label="个人账号:" key="222" prop="ggrzh">
+                                <el-input v-model="editForm.ggrzh"  @blur="blurSearchFor1" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="*姓名:">
+                                <el-input v-model="editForm.pName" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="*手机号:">
+                                <el-input v-model="editForm.pIphone" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            </el-form-item>
+                        </el-aside>
+                        <el-container>
+                            <el-aside width="400px">
+                                <el-form-item label="*单位账号:">
+                                    <el-input v-model="editForm.unit"  :disabled="true" style="width:220px;height:20px;"  auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="*单位名称:">
+                                    <el-input v-model="editForm.uName" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="*单位电话:">
+                                    <el-input v-model="editForm.phone"  :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                            </el-aside>
+                            <el-container>
+                                <el-aside width="400px">
+                                    <el-form-item label="*证件类型:">
+                                        <el-input v-model="editForm.idcard" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="*证件号码:">
+                                        <el-input v-model="editForm.idNUmber"  :disabled="true" style="width:220px;height:20px;"  auto-complete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="*账户余额:">
+                                        <el-input v-model="editForm.Dalance" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                    </el-form-item>
+                                </el-aside>
+                                <el-container>
+                                    <el-aside width="400px">
+                                        <el-form-item label="*缴存状态:">
+                                            <el-input v-model="editForm.State" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                        </el-form-item>
+                                        <el-form-item label="*缴至年月:">
+                                            <el-input v-model="editForm.LastNaydate" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                        </el-form-item>
+                                    </el-aside>
+                                </el-container>
+                            </el-container>
+                        </el-container>
+                    </el-container>
+                </el-header>
+            </el-container>
+        </div>
+
+
+
+
+
+
+
+        <div class="basicInfo" v-if="active==2">
+            <el-container>
+                <el-header height="270px">
+                    <el-row>
+                        <h3 style="text-align:left;">拟购房信息</h3>
+                    </el-row>
+                    <el-container>
+                        <el-aside width="400px">
+                            <el-form-item label="房屋类型:" prop="hsPurchaseType">
+                                <el-select v-model="editForm.hsPurchaseType"  style="width:220px;height:20px;" auto-complete="off">
+                                    <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                                    <el-option label="商品房" value="商品房"></el-option>
+                                    <el-option label="解困房" value="解困房"></el-option>
+                                    <el-option label="花园式住宅" value="花园式住宅"></el-option>
+                                    <el-option label="经济适用房" value="经济适用房"></el-option>
+                                    <el-option label="平价房" value="平价房"></el-option>
+                                </el-select>
+                            </el-form-item>
+                            <el-form-item label="*证件号码:">
+                                <el-input v-model="editForm.tb_idNUmber" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="*房屋总价:">
+                                <el-input v-model="editForm.hsAllMonery" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            </el-form-item>
+                        </el-aside>
+                        <el-container>
+                            <el-aside width="400px">
+                                <el-form-item label="房屋位置:" prop="hshouseAddress">
+                                    <el-input v-model="editForm.hshouseAddress"  style="width:220px;height:20px;"  auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="*购房人名称:">
+                                    <el-input v-model="editForm.tb_pName" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="*购房首付款:">
+                                    <el-input v-model="editForm.hsFirstMonery" :disabled="true"  style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                            </el-aside>
+                            <el-container>
+                                <el-aside width="400px">
+                                    <el-form-item label="*建筑面积:">
+                                        <el-input-number v-model="editForm.hsFloorSpace" :min="50" :max="500" style="width:220px;height:20px;" auto-complete="off" ></el-input-number>
+                                    </el-form-item>
+                                    <el-form-item label="*银行账户:">
+                                        <el-input v-model="editForm.YHZH"  :disabled="true" style="width:220px;height:20px;"  auto-complete="off"></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="*面积单价:">
+                                        <el-input-number v-model="editForm.hsFloorSpacePrice" @blur="blurSearchForFWZJ" :min="3000" :max="100000" style="width:220px;height:20px;" auto-complete="off"></el-input-number>
+                                    </el-form-item>
+                                </el-aside>
+                            </el-container>
+                        </el-container>
+                    </el-container>
+                </el-header>
+            </el-container>
+        </div>
+
+
+
+
+
+
+        <div class="basicInfo" v-if="active==3">
+            <el-container>
+                <el-header height="270px">
+                    <el-row>
+                        <h3 style="text-align:left;">抵押信息</h3>
+                    </el-row>
+                    <el-container>
+                        <el-aside width="400px">
+                            <el-form-item label="*抵押类型:">
+                                <el-input v-model="editForm.miType" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            </el-form-item>
+                            <el-form-item label="抵押物地址:" prop="miThAddresss">
+                                <el-input v-model="editForm.miThAddresss"  style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            </el-form-item>
+                        </el-aside>
+                        <el-container>
+                            <el-aside width="400px">
+                                <el-form-item label="*抵押人姓名:">
+                                    <el-input v-model="editForm.tb_pName" :disabled="true" style="width:220px;height:20px;"  auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item label="*抵押物状态:">
+                                    <el-input v-model="editForm.miThState" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                            </el-aside>
+                            <el-container>
+                                <el-aside width="400px">
+                                    <el-form-item label="*身份证号:">
+                                        <el-input v-model="editForm.tb_idNUmber" :disabled="true" style="width:220px;height:20px;" auto-complete="off" ></el-input>
+                                    </el-form-item>
+                                    <el-form-item label="*抵押物金额:">
+                                        <el-input v-model="editForm.miPledgeMonery" :disabled="true" style="width:220px;height:20px;"  auto-complete="off"></el-input>
+                                    </el-form-item>
+                                </el-aside>
+                            </el-container>
+                        </el-container>
+                    </el-container>
+                </el-header>
+            </el-container>
+        </div>
+
+
+
+
+        <div class="basicInfo" v-if="active==4">
+            <h1 style="text-align:center;">您申请的贷款信息已经提交审核 工作人员会在三到五个工作日内反馈审核信息  请等待 <br>
+                <span style="text-align:center;">
+                    <el-button type="primary" @click.native="editSubmitOne" :loading="editLoading" v-if="active==4">返回首页</el-button>
+                </span>
+            </h1>
+        </div>
+        <div style="text-align: center">
+            <el-button type="danger"  round @click="upstep" v-if="active==1||active==2||active==3">上一步</el-button>
+            <el-button type="primary" round @click="next" v-if="active==0||active==1||active==2">下一步</el-button>
+            <el-button type="primary" @click.native="editSubmit" :loading="editLoading" v-if="active==3">提交</el-button>
+        </div>
+    </el-form>
+</div>
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '个人抵押贷款'
+        }
+    });
+    var tableView = new Vue({
+        el: '#tableView',
+        data: {
+            active: 0,
+            //编辑框中的值
+            editForm: {
+                GRZH: '',
+                tb_pName: '',
+                tb_pSex: '',
+                tb_pIphone: '',
+                tb_pid:'',
+                tb_idcard: '',
+                tb_idNUmber: '',
+
+
+                tb_pMarriage: '',
+                tb_Profession: '',
+                tb_pEducation: '',
+                tb_pEmail: '',
+                tb_pAddress: '',
+                unit_Id: '',
+                bcApplyIcome: '',
+                bcBankFund: '',
+                peraccStateA:'',
+
+                peraccState: '',
+                dalance: '',
+                lastNaydate: '',
+
+
+                bcMoney: '',
+                bcNum: '',
+                bcRate: '',
+                bcbankname: '',
+                bcRefundType: '',
+                bcname: '',
+                bcRepaymentDate: '放款日起',
+
+
+                bcwAtBankName: '',
+                bcAccount: '',
+                YHZH: '',
+
+
+
+
+                ggrzh: '',
+                pName: '',
+                unit: '',
+                pIphone: '',
+
+
+                uName: '',
+                phone: '',
+                idcard: '',
+                idNUmber: '',
+
+
+                State: '',
+                Dalance: '',
+                LastNaydate: '',
+
+
+                hsPurchaseType: '',
+                //tb_idNUmber: '',
+                hsAllMonery: '',
+
+
+                hshouseAddress: '',
+                //tb_pName: '',
+                hsFirstMonery: '',
+
+                hsFloorSpace: '50',
+                //YHZH: '',
+                hsFloorSpacePrice: '',
+
+
+
+                miType: '房屋抵押',
+                //tb_pName: '',
+                //tb_idNUmber: '',
+                miThAddresss: '',
+                miThState: '正常',
+                miPledgeMonery: '0',
+            },
+            loading:false,
+            editFormRules:{
+                GRZH:[
+                    { required: true, message: '请输入申请人账号', trigger: 'blur' },
+                    { min: 10, max: 11, message: '长度在 10 到 11 个数字', trigger: 'blur' }
+                ],
+                bcname:[
+                    { required: true, message: '请输入操作人', trigger: 'blur' },
+                    { min: 2, max: 6, message: '长度在 2 到 6 个数字', trigger: 'blur' }
+                ],
+                bcNum:[
+                    { required: true, message: '请选择贷款期数', trigger: 'change' }
+                ],
+                bcbankname:[
+                    { required: true, message: '请选择委托银行', trigger: 'change' }
+                ],
+                bcRefundType:[
+                    { required: true, message: '请选择还款方式', trigger: 'change' }
+                ],
+                bcwAtBankName:[
+                    { required: true, message: '请选择开户银行', trigger: 'change' }
+                ],
+                bcAccount:[
+                    { required: true, message: '请输入还款账户名', trigger: 'blur' },
+                    { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+                ],
+                hsPurchaseType:[
+                    { required: true, message: '请选择房屋类型', trigger: 'change' }
+                ],
+                hshouseAddress:[
+                    { required: true, message: '请输入房屋位置', trigger: 'blur' },
+                    { min: 4, max: 22, message: '长度在 5 到 22 个字符', trigger: 'blur' }
+                ],
+                miThAddresss:[
+                    { required: true, message: '请输入抵押物地址', trigger: 'blur' },
+                    { min: 20, max: 35, message: '长度在 20 到 35 个字符', trigger: 'blur' }
+                ],
+                ggrzh:[
+                    { required: true, message: '请输入共同借款人账号', trigger: 'blur' },
+                    { min: 10, max: 11, message: '长度在 10 到 11 个数字', trigger: 'blur' }
+                ]
+            }
+        },
+        created:function(){
+
+        },
+        methods:{
+            //表格重新加载数据
+            loadingData:function() {
+
+            },
+            next:function(){
+                if (this.active++ > 4) this.active = 4;
+            },
+            upstep:function(){
+                if (this.active-- == 0) this.active = 0;
+            },
+            //失焦按钮
+            blurSearchFor:function () {
+                //alert("获取个人账号"+this.editForm.GRZH);
+                var _self = this;
+                var url = "/sb/Loan/getgrzh";
+                axios.post(url,{grzh:_self.editForm.GRZH}).then(function (response) {
+                    //alert(JSON.stringify(response.data.infos))//true 该账号不能进行重复贷款
+                    if (response.data.infof==false){
+                        axios.post('/sb/Loan/user',{grzh:_self.editForm.GRZH}).then(function (response) {
+                            //alert(JSON.stringify(response.data[0]));
+                            //_self.editForm = Object.assign({}, response.data[0]);
+                            if (response.data[0].peraccState==1){
+                                _self.editForm.GRZH = response.data[0].GRZH;
+                                _self.editForm.tb_pName = response.data[0].tb_pName;
+                                _self.editForm.tb_pSex = response.data[0].tb_pSex;
+                                _self.editForm.tb_pIphone = response.data[0].tb_pIphone;
+                                _self.editForm.tb_pid = response.data[0].tb_pid;
+                                _self.editForm.tb_idcard = response.data[0].tb_idcard;
+                                _self.editForm.tb_idNUmber = response.data[0].tb_idNUmber;
+                                _self.editForm.tb_pMarriage = response.data[0].tb_pMarriage;
+                                _self.editForm.tb_Profession = response.data[0].tb_Profession;
+                                _self.editForm.tb_pEducation = response.data[0].tb_pEducation;
+                                _self.editForm.tb_pEmail = response.data[0].tb_pEmail;
+                                _self.editForm.tb_pAddress = response.data[0].tb_pAddress;
+                                _self.editForm.unit_Id = response.data[0].unit_Id;
+                                _self.editForm.dalance = response.data[0].dalance;
+                                _self.editForm.lastNaydate = response.data[0].lastNaydate;
+                                _self.editForm.YHZH= response.data[0].YHZH;
+                                _self.editForm.peraccStateA ='正常';
+                                _self.editForm.bcRepaymentDate= '放款日起';
+                                _self.editForm.miType = '房屋抵押';
+                                _self.editForm.hsFloorSpace = '50';
+                                _self.editForm.miPledgeMonery = '0';
+                                _self.editForm.miThState = '正常';
+                            }else if(response.data[0].peraccState==2){
+                                alert("账号封存状态,不能进行贷款操作。");
+                                _self.editForm = Object.assign({}, '');
+                                _self.editForm.bcRepaymentDate= '放款日起';
+                                _self.editForm.miType= '房屋抵押';
+                                _self.editForm.hsFloorSpace = '50';
+                                _self.editForm.miPledgeMonery = '0';
+                                _self.editForm.miThState = '正常';
+                            }else {
+                                alert("账号销户状态,不能进行贷款操作。");
+                                _self.editForm = Object.assign({}, '');
+                                _self.editForm.bcRepaymentDate= '放款日起';
+                                _self.editForm.miType= '房屋抵押';
+                                _self.editForm.hsFloorSpace = '50';
+                                _self.editForm.miPledgeMonery = '0';
+                                _self.editForm.miThState = '正常';
+                            }
+                        });
+                    }else {
+                        alert(response.data.infos);
+                        _self.editForm = Object.assign({}, '');
+                        _self.editForm.bcRepaymentDate= '放款日起';
+                        _self.editForm.miType= '房屋抵押';
+                        _self.editForm.hsFloorSpace = '50';
+                        _self.editForm.miPledgeMonery = '0';
+                        _self.editForm.miThState = '正常';
+                    }
+                });
+            },
+            //共同借款人失焦按钮
+            blurSearchFor1:function () {
+                var _self = this;
+                if (_self.editForm.ggrzh == _self.editForm.GRZH){
+                    alert("同志，该睡觉了！");
+                    _self.editForm.ggrzh = '';
+                }else{
+                    var url = "/sb/Loan/getgrzh";
+                    axios.post(url,{grzh:_self.editForm.ggrzh}).then(function (response) {
+                        //alert("22222222222="+JSON.stringify(response.data.infof))//true 该账号不能进行重复贷款
+                        if (response.data.infof==false){
+                            axios.post('/sb/Loan/together',{grzh1:_self.editForm.ggrzh}).then(function (response) {
+                                //alert(JSON.stringify(response.data));
+                                if (response.data[0].peraccState==1){
+                                    _self.editForm.State ='正常';
+                                    _self.editForm.ggrzh = response.data[0].GRZH;
+                                    _self.editForm.pName = response.data[0].tb_pName;
+                                    _self.editForm.unit = response.data[0].unit_Id;
+                                    _self.editForm.pIphone = response.data[0].tb_pIphone;
+                                    _self.editForm.uName = response.data[0].uname;
+                                    _self.editForm.phone = response.data[0].uOpIphone;
+                                    _self.editForm.idcard = response.data[0].tb_idcard;
+                                    _self.editForm.idNUmber = response.data[0].tb_idNUmber;
+                                    _self.editForm.Dalance = response.data[0].dalance;
+                                    _self.editForm.LastNaydate = response.data[0].lastNaydate;
+                                }else if(response.data[0].peraccState==2){
+                                    alert("账号封存状态,不能进行贷款操作。");
+                                    _self.editForm.State ='';
+                                    _self.editForm.ggrzh = '';
+                                    _self.editForm.pName = '';
+                                    _self.editForm.unit = '';
+                                    _self.editForm.pIphone = '';
+                                    _self.editForm.uName = '';
+                                    _self.editForm.phone = '';
+                                    _self.editForm.idcard = '';
+                                    _self.editForm.idNUmber = '';
+                                    _self.editForm.Dalance = '';
+                                    _self.editForm.LastNaydate = '';
+                                }else {
+                                    alert("账号销户状态,不能进行贷款操作。");
+                                    _self.editForm.State ='';
+                                    _self.editForm.ggrzh = '';
+                                    _self.editForm.pName = '';
+                                    _self.editForm.unit = '';
+                                    _self.editForm.pIphone = '';
+                                    _self.editForm.uName = '';
+                                    _self.editForm.phone = '';
+                                    _self.editForm.idcard = '';
+                                    _self.editForm.idNUmber = '';
+                                    _self.editForm.Dalance = '';
+                                    _self.editForm.LastNaydate = '';
+                                }
+                            });
+                        }else {
+                            //alert("2222"+response.data.infos);
+                            _self.editForm.State ='';
+                            _self.editForm.ggrzh = '';
+                            _self.editForm.pName = '';
+                            _self.editForm.unit = '';
+                            _self.editForm.pIphone = '';
+                            _self.editForm.uName = '';
+                            _self.editForm.phone = '';
+                            _self.editForm.idcard = '';
+                            _self.editForm.idNUmber = '';
+                            _self.editForm.Dalance = '';
+                            _self.editForm.LastNaydate = '';
+                        }
+                    });
+                }
+            },
+            show_sub:function () {
+                var _self = this;
+                //alert(this.editForm.bcNum);
+                if (_self.editForm.bcNum>=60){
+                    _self.editForm.bcRate= '3.25';
+                }else{
+                    _self.editForm.bcRate= '2.75';
+                }
+            },
+            editSubmit:function () {
+                var _self = this;
+                _self.loading = true;
+                if (_self.editForm.bcMoney > _self.editForm.miPledgeMonery){
+                    alert("贷款总金额大于抵押物金额不能进行贷款操作！");
+                }else {
+                    if (_self.editForm.GRZH != '' && _self.editForm.GRZH != null &&
+                        _self.editForm.bcApplyIcome != '' && _self.editForm.bcApplyIcome != null &&
+                        _self.editForm.bcBankFund != '' && _self.editForm.bcBankFund != null &&
+                        _self.editForm.bcMoney != '' && _self.editForm.bcMoney != null &&
+                        _self.editForm.bcNum != '' && _self.editForm.bcNum != null &&
+                        _self.editForm.bcbankname != '' && _self.editForm.bcbankname != null &&
+                        _self.editForm.bcRefundType != '' && _self.editForm.bcRefundType != null &&
+                        _self.editForm.bcname != '' && _self.editForm.bcname != null &&
+                        _self.editForm.bcwAtBankName != '' && _self.editForm.bcwAtBankName != null &&
+                        _self.editForm.bcAccount != '' && _self.editForm.bcAccount != null &&
+                        _self.editForm.hsPurchaseType != '' && _self.editForm.hsPurchaseType != null &&
+                        _self.editForm.hshouseAddress != '' && _self.editForm.hshouseAddress != null &&
+                        _self.editForm.hsAllMonery != '' && _self.editForm.hsAllMonery != null &&
+                        _self.editForm.hsFirstMonery != '' && _self.editForm.hsFirstMonery != null &&
+                        _self.editForm.hsFloorSpacePrice != '' && _self.editForm.hsFloorSpacePrice != null &&
+                        _self.editForm.miThAddresss != '' && _self.editForm.miThAddresss != null &&
+                        _self.editForm.miPledgeMonery != '' && _self.editForm.miPledgeMonery != null
+                    ) {
+                        var url = "/sb/Loan/save";
+                        var formData = {
+                            GRZH: _self.editForm.GRZH,
+                            tb_pName: _self.editForm.tb_pName,
+                            tb_pSex: _self.editForm.tb_pSex,
+                            tb_pIphone: _self.editForm.tb_pIphone,
+                            tb_pid: _self.editForm.tb_pid,
+                            tb_idcard: _self.editForm.tb_idcard,
+                            tb_idNUmber: _self.editForm.tb_idNUmber,
+                            tb_pMarriage: _self.editForm.tb_pMarriage,
+                            tb_Profession: _self.editForm.tb_Profession,
+                            tb_pEducation: _self.editForm.tb_pEducation,
+                            tb_pEmail: _self.editForm.tb_pEmail,
+                            tb_pAddress: _self.editForm.tb_pAddress,
+                            unit_Id: _self.editForm.unit_Id,
+                            bcApplyIcome: _self.editForm.bcApplyIcome,
+                            bcBankFund: _self.editForm.bcBankFund,
+                            peraccState: _self.editForm.peraccStateA,
+                            dalance: _self.editForm.dalance,
+                            lastNaydate: _self.editForm.lastNaydate,
+                            bcMoney: _self.editForm.bcMoney,
+                            bcNum: _self.editForm.bcNum,
+                            bcRate: _self.editForm.bcRate,
+                            bcbankname: _self.editForm.bcbankname,
+                            bcRefundType: _self.editForm.bcRefundType,
+                            bcname: _self.editForm.bcname,
+                            bcRepaymentDate: _self.editForm.bcRepaymentDate,
+                            bcwAtBankName: _self.editForm.bcwAtBankName,
+                            bcAccount: _self.editForm.bcAccount,
+                            YHZH: _self.editForm.YHZH,
+                            ggrzh: _self.editForm.ggrzh,
+                            pName: _self.editForm.pName,
+                            pIphone: _self.editForm.pIphone,
+                            unit: _self.editForm.unit,
+                            uName: _self.editForm.uName,
+                            phone: _self.editForm.phone,
+                            idcard: _self.editForm.idcard,
+                            idNUmber: _self.editForm.idNUmber,
+                            State: _self.editForm.State,
+                            Dalance: _self.editForm.Dalance,
+                            LastNaydate: _self.editForm.LastNaydate,
+                            hsPurchaseType: _self.editForm.hsPurchaseType,
+                            hshouseAddress: _self.editForm.hshouseAddress,
+                            hsFloorSpace: _self.editForm.hsFloorSpace,
+                            hsAllMonery: _self.editForm.hsAllMonery,
+                            hsFirstMonery: _self.editForm.hsFirstMonery,
+                            hsFloorSpacePrice: _self.editForm.hsFloorSpacePrice,
+                            miType: _self.editForm.miType,
+                            miThAddresss: _self.editForm.miThAddresss,
+                            miThState: _self.editForm.miThState,
+                            miPledgeMonery: _self.editForm.miPledgeMonery
+                        };
+                        axios.post(url, formData).then(function (response) {
+                            if (response.data == 1) {
+                                _self.active = 4;
+                                _self.editForm = Object.assign({}, '');
+                                _self.editForm.bcRepaymentDate = '放款日起';
+                                _self.editForm.miType = '房屋抵押';
+                                _self.editForm.hsFloorSpace = '50';
+                                _self.editForm.miPledgeMonery = '0';
+                                _self.editForm.miThState = '正常';
+                            }
+                        });
+                    } else {
+                        alert("请完善未填写的信息");
+                    }
+                }
+            },
+            editSubmitOne:function () {
+                var _self = this;
+                _self.editForm = Object.assign({}, '');
+                _self.active=0;
+
+            },
+            blurSearchForFWZJ:function () {
+                var _self = this;
+                _self.editForm.hsAllMonery =  _self.editForm.hsFloorSpace * _self.editForm.hsFloorSpacePrice;
+                _self.editForm.hsFirstMonery = _self.editForm.hsAllMonery * 0.25;
+                _self.editForm.miPledgeMonery = _self.editForm.hsAllMonery;
+            }
+        }
+    })
+</script>
+</body>
+</html>

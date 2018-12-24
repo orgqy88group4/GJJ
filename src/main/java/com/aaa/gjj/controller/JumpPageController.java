@@ -25,14 +25,14 @@ public class JumpPageController {
     private PowerService powerService;
 
     //个人信息页面
-    @RequestMapping("/PersonaInfo")
-    public String PersonaInfo(){
-        return "back/person/PersonDatil";
+    @RequestMapping("/PersonaInfo1")
+    public String PersonaInfo1(){
+        return "back/person/PersonDatiled";
     }
     //单位信息页面
-    @RequestMapping("/UnitInfo")
-    public String UnitInfo(){
-        return "back/person/Unit_Information";
+    @RequestMapping("/UnitInfo1")
+    public String UnitInfo1(){
+        return "back/person/Unit_Informationed";
     }
     //年度贷款金额统计图
     @RequestMapping("/LoanInfoMap")
@@ -44,6 +44,7 @@ public class JumpPageController {
     public String RefundInfoMap(){
         return "back/financial/HJTQXX";
     }
+
     //单位注册，点击保存按钮后跳到账户信息  单位信息
     @RequestMapping("/UnitInformationa01")
     public String Unit_Information(){
@@ -59,7 +60,71 @@ public class JumpPageController {
     public String toTree(){
         return "back/power/tree";
     }
-
+    //封存、启封、销户 element
+    @RequestMapping("/list")
+    public String list(){
+        return "back/person/list";
+    }
+    //人员转移
+    @RequestMapping("/select1")
+    public String PersonRemoveAudit1(){
+        return "back/person/PersonTransfered";
+    }
+    //明细查询
+    @RequestMapping("/Aetail_Enquiry1")
+    public String Aetail_Enquiry1(){
+        return "back/person/Aetail_Enquiryed";
+    }
+    //查看审批
+    @RequestMapping("/Examine_and_approve1")
+    public String Examine_and_approve1(){
+        return "back/person/Examine_and_approved";
+    }
+    //个人抵押贷款
+    @RequestMapping("/PersonLoan")
+    public String PersonLoan(){
+        return "back/loan/PersonLoan";
+    }
+    //贷款初审
+    @RequestMapping("/LoanAudit")
+    public String LoanAudit(){
+        return "back/loan/LoanAudit";
+    }
+    //贷款终审
+    @RequestMapping("/LoanAuditFinal")
+    public String LoanAuditFinal(){
+        return "back/loan/LoanAuditFinal";
+    }
+    //销户审核
+    @RequestMapping("/HouseholdsAudit")
+    public String HouseholdsAudi(){
+        return "back/loan/HouseholdsAudit";
+    }
+    //封存启封审核
+    @RequestMapping("/UnsealAudit")
+    public String UnsealAudit(){
+        return "back/loan/UnsealAudit";
+    }
+    //人员转移审核
+    @RequestMapping("/PersonRemoveAudit")
+    public String PersonRemoveAudit(){
+        return "back/loan/PersonRemoveAudit";
+    }
+    //基数调整
+    @RequestMapping("/jishutiaozheng")
+    public String JiShuTiaoZheng(){
+        return "back/company/jishutiaozheng";
+    }
+    //补缴办理
+    @RequestMapping("/BuJiaoBanLi")
+    public String BuJiaoBanLi(){
+        return "back/company/BuJIaoBanLi";
+    }
+    //个人开户
+    @RequestMapping("/personRegister")
+    public String PersonRegister(){
+        return "back/company/personRegister";
+    }
     /**
      * 跳转权限树添加页面
      * @return

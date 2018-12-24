@@ -19,7 +19,7 @@ import java.util.Map;
  * createTime:2018-12-08 16:24
  */
 @Service
-public class FundExtretionServiceImpl implements FundExtretionService {
+public class FundExtretionServiceImpl implements FundExtretionService{
 
 
     @Autowired

@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人开户</title>
+    <!-- 引入样式 -->
+    <script type="text/javascript" src="/sb/js/vue.js"></script>
+    <script type="text/javascript" src="/sb/js/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/sb/css/elementui.css">
+    <!-- 引入组件库 -->
+    <script src="/sb/js/elementui.js"></script>
+    <script scr="/sb/js/validate.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>{{ message }}</h2>
+</div>
+<div id="tableView">
+    <el-form :model="editForm" status-icon label-width="140px" :rules="editFormRules" ref="editForm">
+        <el-container>
+        <el-aside width="400px">
+            <el-form-item label="公司账号:" prop="DWZH" key="1">
+                <el-input v-model="editForm.DWZH" @blur="blurSearchFor1" style="width:220px;height:35px;" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="*公司名称:" >
+                <el-input v-model="editForm.uname" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="职工姓名:" prop="tb_pName" key="2">
+                <el-input v-model="editForm.tb_pName" style="width:220px;height:35px;" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="职工电话:" prop="tb_pIphone" key="3">
+                <el-input v-model="editForm.tb_pIphone" style="width:220px;height:35px;" auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="*职工性别:">
+                <el-select v-model="editForm.tb_pSex"  style="width:220px;height:35px;" auto-complete="off">
+                    <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                    <el-option label="男" value="男"></el-option>
+                    <el-option label="女" value="女"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="*证件类型:">
+                <el-select v-model="editForm.tb_idcard"  style="width:220px;height:35px;" auto-complete="off">
+                    <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                    <el-option label="身份证" value="身份证"></el-option>
+                    <el-option label="户口本" value="户口本"></el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label="证件号码:" prop="tb_idNUmber" key="4">
+                <el-input v-model="editForm.tb_idNUmber"  style="width:220px;height:35px;" auto-complete="off"></el-input>
+            </el-form-item>
+        </el-aside>
+        <el-container>
+            <el-aside width="400px">
+                <el-form-item label="*职工学历:">
+                    <el-select v-model="editForm.tb_pEducation"  style="width:220px;height:35px;" auto-complete="off">
+                        <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                        <el-option label="博士"  value = "博士"></el-option>
+                        <el-option label="硕士" value= "硕士"></el-option>
+                        <el-option label="本科" value = "本科"></el-option>
+                        <el-option label="大专" value = "大专"></el-option>
+                        <el-option label="高中" value = "高中"></el-option>
+                        <el-option label="初中" value = "初中"></el-option>
+                        <el-option label="小学" value = "小学"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="*职工职位:">
+                    <el-select v-model="editForm.tb_Profession"  style="width:220px;height:35px;" auto-complete="off">
+                        <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                        <el-option label="董事长" value = "董事长"></el-option>
+                        <el-option label="经理" value = "经理"></el-option>
+                        <el-option label="主管" value = "主管"></el-option>
+                        <el-option label="职员" value = "职员"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="电子邮箱:" prop="tb_pEmail" key="5">
+                    <el-input v-model="editForm.tb_pEmail" style="width:220px;height:35px;" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="家庭住址:" prop="tb_pAddress" key="6">
+                    <el-input v-model="editForm.tb_pAddress"  style="width:220px;height:35px;" auto-complete="off"></el-input>
+                </el-form-item>
+                <el-form-item label="*出生年月:">
+                    <el-date-picker type="date" placeholder="出生年月" v-model="editForm.tb_pDate"  style="width:220px;height:20px;" auto-complete="off" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker>
+                </el-form-item>
+                <el-form-item label="*婚姻状态:">
+                    <el-select v-model="editForm.tb_pMarriage"  style="width:220px;height:35px;" auto-complete="off">
+                        <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                        <el-option label="已婚" value = "已婚"></el-option>
+                        <el-option label="未婚" value = "未婚"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="缴存基数:" prop="baseNummber" key="7">
+                    <el-input v-model="editForm.baseNummber" style="width:220px;height:35px;" auto-complete="off"></el-input>
+                </el-form-item>
+            </el-aside>
+            <el-container>
+                <el-aside width="400px">
+                    <el-form-item label="*开户银行名称:">
+                        <el-select v-model="editForm.KHYH"  style="width:220px;height:35px;" auto-complete="off">
+                            <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                            <el-option label="中国银行" value="中国银行"></el-option>
+                            <el-option label="中国工商银行" value="中国工商银行"></el-option>
+                            <el-option label="中国建设银行" value="中国建设银行"></el-option>
+                            <el-option label="中国农业银行" value="中国农业银行"></el-option>
+                            <el-option label="中国邮政银行" value="中国邮政银行"></el-option>
+                            <el-option label="中国交通银行" value="中国交通银行"></el-option>
+                            <el-option label="中国人民银行" value="中国人民银行"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="开户银行账号:" prop="YHZH">
+                        <el-input v-model="editForm.YHZH"  style="width:220px;height:35px;" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="*单位比例:">
+                        <el-input v-model="editForm.uDepositRatio" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="*个人比例:">
+                        <el-input v-model="editForm.uPersonRatio" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="*办理人员:">
+                        <el-input v-model="editForm.paOp" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-aside>
+            </el-container>
+        </el-container>
+    </el-container>
+        <div style="text-align: center">
+            <el-button type="primary" @click.native="editSubmit('editForm')" :loading="editLoading">保存</el-button>
+        </div>
+    </el-form>
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '个人开户'
+        }
+    });
+    var tableView = new Vue({
+        el: '#tableView',
+        data: {
+            //显示加载中样式
+            loading:false,
+            editForm:{
+                DWZH:'',
+                tb_pEducation:'',
+                KHYH:'',
+                uname:'',
+                tb_Profession:'',
+                YHZH:'',
+                tb_pName:'',
+                tb_pEmail:'',
+                tb_pIphone:'',
+                tb_pAddress:'',
+                uPersonRatio:'',
+                tb_pSex:'',
+                tb_pDate:'',
+                paOp:'',
+                tb_idcard:'',
+                tb_idNUmber:'',
+                tb_pMarriage:'',
+                baseNummber:'',
+                uDepositRatio:'',
+            },
+            editFormRules:{
+                tb_pName:[
+                    { required: true, message: '请输入姓名', trigger: 'blur' },
+                    { min: 2, max: 5, message: '请输入长度在 2 到 5 个字的姓名', trigger: 'blur' }
+                ],
+                tb_pIphone:[
+                    { required: true, message: '请输入手机号码', trigger: 'blur'},
+                    {validator:function(rule,value,callback){
+                        if(/^1[34578]\d{9}$/.test(value) == false){
+                            callback(new Error("请输入正确的手机号"));
+                        }else{
+                            callback();
+                        }
+                    },trigger: 'blur'}
+                ],
+                tb_idNUmber:[
+                    {required: true,message: '请输入身份证ID',trigger: 'blur'},
+                    {pattern:/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,trigger: 'blur', message: '你的身份证格式不正确'}
+                ],
+                tb_pEmail:[
+                    {required: true,message: '请输入邮箱',trigger: 'blur'},
+                    {pattern:/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/, trigger: 'blur', message: '你的邮箱格式不正确'}
+                ],
+                YHZH:[
+                    {required: true,message: '请输入开户银行账号',trigger: 'blur'},
+                    {pattern:/^([1-9]{1})(\d{14}|\d{18})$/, trigger: 'blur', message: '你的银行账号格式不正确'}
+                ],
+                tb_pAddress:[
+                    {required: true,message: '请输入家庭地址',trigger: 'blur'},
+                    { min: 10, max: 30, message: '请输入长度在 10 到 30 个字的地址', trigger: 'blur' }
+                ],
+                DWZH:[
+                    {required: true,message: '请输入单位账号',trigger: 'blur'},
+                    {pattern:/^\d{8,19}$/, trigger: 'blur', message: '你输入的单位账号格式不正确'}
+                ],
+                baseNummber:[
+                    {required: true,message: '请输入缴存基数',trigger: 'blur'},
+                    {pattern:/^(0|[1-9][0-9]*)$/, trigger: 'blur', message: '你输入的缴存基数格式不正确'}
+                ]
+            }
+        },
+        created:function(){
+
+        },
+        methods:{
+            //表格重新加载数据
+            loadingData:function() {
+
+            },//公司账号失焦按钮
+            blurSearchFor1:function () {
+                var _self=this;
+                axios.post('/sb/company/UnitInfo',{DWZH:_self.editForm.DWZH}).then(function (response) {
+                    //_self.editForm = Object.assign({}, response.data[0]);
+                    //alert(JSON.stringify(response.data[0]));
+                    if (response.data[0]!=''&&response.data[0]!=null){
+                        _self.editForm.uname=response.data[0].uname;
+                        _self.editForm.uDepositRatio=response.data[0].uDepositRatio;
+                        _self.editForm.uPersonRatio=response.data[0].uPersonRatio;
+                    }
+                    else{
+                        _self.editForm = Object.assign({}, '');
+                        _self.$message({
+                            message: '公司账号输入有误',
+                            type: 'warning'
+                        })
+                    }
+                })
+            },
+            //点击保存按钮
+            editSubmit(formName){
+                var _self = this;
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                        axios.post('/sb/company/AddPersonInfo', this.editForm).then(function (response) {
+                            if (response.data==1){
+                                _self.editForm = Object.assign({}, '');
+                                _self.$message({
+                                    message: '恭喜你！开户成功。',
+                                    type: 'success'
+                                });
+                                location.href="/sb/Page/PersonaInfo1"
+                            }else{
+                                _self.$message({
+                                    message: '开户失败！！！',
+                                    type: 'warning'
+                                });
+                            }
+                        })
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                })
+            }
+        }
+    })
+</script>
+</body>
+</html>

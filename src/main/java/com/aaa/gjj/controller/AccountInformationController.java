@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,81 +35,72 @@ public class AccountInformationController {
     }
     @Value("${upload.path}")
     private String uploadPath;
+
     //个人信息
     @ResponseBody
-    @RequestMapping("/AccountInformation")
-    private Object AccountInformation(@RequestParam Map map){
-        List<Map> accountInformation = Account.AccountInformation(map);
+    @RequestMapping("/AccountInformation1")
+    private Object AccountInformation1(@RequestBody Map map){
+        List<Map> accountInformation = Account.AccountInformation1(map);
         Map tempMap = new HashMap();
-        tempMap.put("rows", accountInformation);
-        tempMap.put("total",Account.AccountInformationCount(map));
+        tempMap.put("pageDate", accountInformation);
+        tempMap.put("total",Account.AccountInformationCount1(map));
         return tempMap;
     }
+
     //个人信息修改
     @ResponseBody
-    @RequestMapping("/particulars")
-    private Object particulars(@RequestParam Map map){
-        List<Map> particulars = Account.particulars(map);
+    @RequestMapping("/particulars1")
+    private Object particulars1(@RequestBody Map map){
+        System.out.println("map参数是"+map);
+        List<Map> particulars = Account.particulars1(map);
+        System.out.println("返回前台的值为"+particulars);
         return particulars;
     }
 
     //个人信息修改完毕提交按钮
-    @RequestMapping("/modification")
-    private Object modification(@RequestParam Map map){
-        int modification = Account.modification(map);
+    @ResponseBody
+    @RequestMapping("/modification1")
+    private Object modification1(@RequestBody Map map){
+        System.out.println("页面修改完毕前台传来的值element"+map);
+        int modification = Account.modification1(map);
         System.out.println(modification);
-        int modification2 = Account.modification2(map);
+        int modification2 = Account.modification21(map);
         System.out.println(modification2);
         if(modification==1&&modification2==1){
-            return "redirect:/PersonalDetails";
+            return 1;
         }
-        return null;
-    }
-    //个人信息修改完毕提交按钮跳到个人信息页面
-    @RequestMapping("/PersonalDetails")
-    public String PersonalDetails(){
-        System.out.println("跳到了。。。。");
-        return "back/person/PersonDatil";
+        return 0;
     }
     //单位信息
     @ResponseBody
-    @RequestMapping("/UnitInformation")
-    private Object UnitInformation(@RequestParam Map map){
-        List<Map> UnitInformation = Account.UnitInformation(map);
+    @RequestMapping("/UnitInformation1")
+    private Object UnitInformation1(@RequestBody Map map){
+        System.out.println("00000"+map);
+        List<Map> UnitInformation = Account.UnitInformation1(map);
         Map tempMap = new HashMap();
-        tempMap.put("rows", UnitInformation);
-        tempMap.put("total",Account.UnitInformationCount(map));
+        tempMap.put("pageDate", UnitInformation);
+        tempMap.put("total",Account.UnitInformationCount1(map));
         return tempMap;
     }
     //单位信息修改按钮
     @ResponseBody
-    @RequestMapping("/tan")
-    private Object tan(@RequestParam Map map){
-        List<Map> tan = Account.tan(map);
+    @RequestMapping("/tan1")
+    private Object tan1(@RequestBody Map map){
+        List<Map> tan = Account.tan1(map);
         return tan;
     }
     //单位信息提交更改按钮
-    @RequestMapping("/unitModification")
-    private Object unitModification(@RequestParam Map map, @RequestParam MultipartFile pic){
-        if (pic!=null){
-            String newFileName = FileUtil.uploadFile(uploadPath, pic);
-            map.put("fileName",pic.getOriginalFilename());
-            map.put("picPath",newFileName);
-        }
-//        if(!yz.isEmpty()){
-//            String uploadFile = FileUploadUtil.uploadFile("D:\\GJJ\\GJJ\\src\\main\\webapp/files/comreg",yz,request);
-//            map.put("yz", uploadFile);
-//        }else{
-//            map.put("yz", map.get("YYZZ"));
-//        }
-        int unitModification = Account.unitModification(map);
+    @ResponseBody
+    @RequestMapping("/unitModification1")
+    private Object unitModification1(@RequestBody Map map){
+        int unitModification = Account.unitModification1(map);
         System.out.println(unitModification);
-        int unitModification2 = Account.unitModification2(map);
+        int unitModification2 = Account.unitModification21(map);
         System.out.println(unitModification2);
         if(unitModification == 1&&unitModification2 == 1){
-            return "redirect:/UnitInformationa";
+            return 1;
         }
-        return null;
+        return 0;
     }
     //显示图片
     @RequestMapping("show")

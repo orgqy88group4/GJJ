@@ -19,14 +19,14 @@ public class AccountInformationServiceImpl implements AccountInformationService 
     private AccountInformationDao Account;
 
     @Override
-    public int unitModification2(Map map) {
-        return Account.unitModification2(map);
+    public int unitModification21(Map map) {
+        return Account.unitModification21(map);
     }
 
     //单位信息提交更改按钮
     @Override
-    public int unitModification(Map map) {
-        return Account.unitModification(map);
+    public int unitModification1(Map map) {
+        return Account.unitModification1(map);
     }
 
     //单位信息修改按钮
@@ -34,23 +34,22 @@ public class AccountInformationServiceImpl implements AccountInformationService 
     public List<Map> tan(Map map) {
         return Account.tan(map);
     }
+    //单位信息修改按钮
+    @Override
+    public List<Map> tan1(Map map) {
+        return Account.tan1(map);
+    }
 
     //单位信息
     @Override
-    public List<Map> UnitInformation(Map map) {
-        int pageNo = Integer.parseInt(map.get("page") == null?"1":map.get("page")+"");
-        int pageSize = Integer.parseInt(map.get("rows") == null?"10":map.get("rows")+"");
-        int start = (pageNo-1)*pageSize;
-        map.put("start",start);
-        map.put("rows",pageSize);
-        //map.remove("page");
-        //map.remove("rows");
-        return Account.UnitInformation(map);
+    public List<Map> UnitInformation1(Map map) {
+        return Account.UnitInformation1(map);
     }
+
     //单位信息
     @Override
-    public int UnitInformationCount(Map map) {
-        List<Map> pageCount = Account.UnitInformationCount(map);
+    public int UnitInformationCount1(Map map) {
+        List<Map> pageCount = Account.UnitInformationCount1(map);
         if(pageCount!=null&&pageCount.size()>0){
             return Integer.parseInt(pageCount.get(0).get("cnt")+"");
         }
@@ -58,15 +57,8 @@ public class AccountInformationServiceImpl implements AccountInformationService 
     }
     //个人信息查询总条数
     @Override
-    public List<Map> AccountInformation(Map map) {
-        int pageNo = Integer.parseInt(map.get("page") == null?"1":map.get("page")+"");
-        int pageSize = Integer.parseInt(map.get("rows") == null?"10":map.get("rows")+"");
-        int start = (pageNo-1)*pageSize;
-        map.put("start",start);
-        map.put("rows",pageSize);
-      //  map.remove("page");
-      //  map.remove("rows");
-        return Account.AccountInformation(map);
+    public List<Map> AccountInformation1(Map map) {
+        return Account.AccountInformation1(map);
     }
     //个人信息修改完毕提交按钮
     @Override
@@ -75,19 +67,24 @@ public class AccountInformationServiceImpl implements AccountInformationService 
     }
     //个人信息修改完毕提交按钮
     @Override
-    public int modification2(Map map) {
-        return Account.modification2(map);
+    public int modification1(Map map) {
+        return Account.modification1(map);
+    }
+    //个人信息修改完毕提交按钮
+    @Override
+    public int modification21(Map map) {
+        return Account.modification21(map);
     }
 
     //个人信息修改
     @Override
-    public List<Map> particulars(Map map) {
-        return Account.particulars(map);
+    public List<Map> particulars1(Map map) {
+        return Account.particulars1(map);
     }
     //个人信息查询总条数
     @Override
-    public int AccountInformationCount(Map map) {
-        List<Map> pageCount = Account.AccountInformationCount(map);
+    public int AccountInformationCount1(Map map) {
+        List<Map> pageCount = Account.AccountInformationCount1(map);
         if(pageCount!=null&&pageCount.size()>0){
             return Integer.parseInt(pageCount.get(0).get("cnt")+"");
         }

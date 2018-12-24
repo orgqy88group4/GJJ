@@ -52,5 +52,6 @@ public class FundExtretion {
 
         List<Map> list = fund.meiYueJinE();
         return list;
+
     }
 }

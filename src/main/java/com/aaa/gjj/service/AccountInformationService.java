@@ -11,20 +11,28 @@ import java.util.Map;
  */
 public interface AccountInformationService {
     //个人信息
-    List<Map> AccountInformation(Map map);
-    int  AccountInformationCount(Map map);
+    List<Map> AccountInformation1(Map map);
+    int  AccountInformationCount1(Map map);
     //个人信息修改
-    List<Map>  particulars(Map map);
+    List<Map>  particulars1(Map map);
     //个人信息修改完毕提交按钮
     int  modification(Map map);
-    int  modification2(Map map);
+    //个人信息修改完毕提交按钮
+    int  modification1(Map map);
+    //    int  modification2(Map map);
+    int  modification21(Map map);
 
     //单位信息
-    List<Map> UnitInformation(Map map);
-    int  UnitInformationCount(Map map);
+    List<Map> UnitInformation1(Map map);
+
+    int  UnitInformationCount1(Map map);
     //单位信息修改按钮
     List<Map> tan(Map map);
+    //单位信息修改按钮
+    List<Map> tan1(Map map);
+
     //单位信息提交更改按钮
-    int  unitModification(Map map);
-    int  unitModification2(Map map);
+    int  unitModification1(Map map);
+
+    int  unitModification21(Map map);
 }

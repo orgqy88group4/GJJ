@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>补缴办理</title>
+    <!-- 引入样式 -->
+    <script type="text/javascript" src="/sb/js/vue.js"></script>
+    <script type="text/javascript" src="/sb/js/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/sb/css/elementui.css">
+    <!-- 引入组件库 -->
+    <script src="/sb/js/elementui.js"></script>
+</head>
+<body>
+<div id="app">
+    <h2>{{ message }}</h2>
+</div>
+<div id="tableView">
+    <!--列表顶部搜索和工具条-->
+    <el-row>
+        <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+            <!--vue双向显示所以会给表搜索表单中默认的空值-->
+            <el-form-item label="单位名称">
+                <el-input v-model="searchForm.uname" placeholder="单位名称"></el-input>
+            </el-form-item>
+            <el-form-item>
+                <el-button :plain="true" type="primary" icon="el-icon-search" @click="searchClick">查询</el-button>
+            </el-form-item>
+        </el-form>
+    </el-row>
+    <!--列表-->
+    <el-row>
+        <el-table :data="tableData" v-loading.body="loading" border @selection-change="selectionChange1" style="width: 100%">
+            <el-table-column prop="DWZH" label="单位账号" width="160"></el-table-column>
+            <el-table-column prop="uname" label="单位名称" width="150"></el-table-column>
+            <el-table-column prop="uDepositRatio" label="单位存缴比例" width="150"></el-table-column>
+            <el-table-column prop="uPersonRatio" label="个人存缴比例" width="120"></el-table-column>
+            <el-table-column prop="uDepositedPnum" label="单位存缴人数" width="120"></el-table-column>
+            <el-table-column prop="uARemain" label="单位账户余额" width="120"></el-table-column>
+            <el-table-column prop="uaState" label="单位账户状态" width="120"></el-table-column>
+            <el-table-column prop="uaPayEndDate" label="单位缴至年月" width="80"></el-table-column>
+            <el-table-column label="操作" width="150px">
+                <template scope="scope">
+                    <div style="text-align: center" >
+                        <el-button :plain="true" type="success" icon="el-icon-check" round @click="editClick(scope.row)">补缴办理</el-button>
+                    </div>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-row>
+
+    <!--列表底部工具条和分页符-->
+    <el-row style="margin-top: 20px" type="flex" justify="end">
+        <el-col :span="18" >
+            <el-pagination style="float: right" @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage"
+                           :page-sizes="[10, 20, 30, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+            </el-pagination>
+        </el-col>
+    </el-row>
+    <!--弹出框基数调整按钮所弹出的页面-->
+    <el-dialog title="补缴办理" width="900px" :visible.sync="editFormVisibleQ1" :close-on-click-modal="false">
+        <el-form :model="editForm" label-width="130px" :rules="editFormRules" ref="editForm">
+            <el-container>
+                <el-aside width="400px">
+                    <el-form-item label="单位账号">
+                        <el-input v-model="editForm.DWZH" :disabled="true" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="单位缴存比例">
+                        <el-input v-model="editForm.uDepositRatio" :disabled="true" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="单位账户余额">
+                        <el-input v-model="editForm.uARemain" :disabled="true" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="单位缴存人数">
+                        <el-input v-model="editForm.uDepositedPnum" :disabled="true" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="操作人员">
+                        <el-input v-model="editForm.YWCZR" :disabled="true" auto-complete="off"></el-input>
+                    </el-form-item>
+                </el-aside>
+                <el-container>
+                    <el-aside width="400px">
+                        <el-form-item label="单位名称">
+                            <el-input v-model="editForm.uname" :disabled="true" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="个人缴存比例">
+                            <el-input v-model="editForm.uPersonRatio" :disabled="true" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="账户状态">
+                            <el-input v-model="editForm.uaState" :disabled="abc" @blur="blurSearchFor" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="未缴存人数">
+                            <el-input v-model="editForm.payPerson" :disabled="true" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="办理日期">
+                            <el-input v-model="editForm.perMonPaysum" :disabled="true" auto-complete="off"></el-input>
+                        </el-form-item>
+                    </el-aside>
+                </el-container>
+            </el-container>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button :plain="true" type="primary" round @click.native="pullupdate">办理补缴</el-button>
+            <el-button icon="el-icon-error" round @click.native="editFormVisibleQ1 = false">关闭</el-button>
+        </div>
+    </el-dialog>
+    <!--点击基数调整按钮所弹出的页面-->
+    <el-dialog title="补缴办理" width="1250px" :visible.sync="editFormVisibleQ" :close-on-click-modal="false">
+        <!--列表顶部搜索和工具条-->
+        <el-row>
+            <el-form :inline="true" :model="searchForm1" class="demo-form-inline">
+                <!--vue双向显示所以会给表搜索表单中默认的空值-->
+                <el-form-item label="员工姓名">
+                    <el-input v-model="searchForm1.tb_pName" placeholder="员工姓名"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button :plain="true" type="primary" icon="el-icon-search" @click="searchClick1">查询</el-button>
+                </el-form-item>
+            </el-form>
+        </el-row>
+        <el-row>
+            <el-table :data="tableDataRYZY" v-loading.body="loading" border @selection-change="selectionChange" style="width: 100%">
+                <el-table-column type="selection" width="55"></el-table-column>
+                <el-table-column prop="GRZH" label="个人账号" width="120"></el-table-column>
+                <el-table-column prop="tb_pName" label="员工姓名" width="120"></el-table-column>
+                <el-table-column prop="dalance" label="账号余额" width="100"></el-table-column>
+                <el-table-column prop="peraccState" label="账号状态" width="100"></el-table-column>
+                <el-table-column prop="ubitNrop" label="单位存缴比例" width="130"></el-table-column>
+                <el-table-column prop="indiNrop" label="个人存缴比例" width="120"></el-table-column>
+                <el-table-column prop="unitMonPaysum" label="单位月缴存额" width="120"></el-table-column>
+                <el-table-column prop="perMonPaysum" label="个人月缴存额" width="120"></el-table-column>
+                <el-table-column prop="yinterestBal" label="个人缴存状态" width="120"></el-table-column>
+                <el-table-column label="操作" width="100px">
+                    <template scope="scope">
+                        <div style="text-align: center" >
+                            <el-button :plain="true" type="success" icon="el-icon-check" round @click="editClick1(scope.row)">补缴</el-button>
+                        </div>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </el-row>
+        <el-col :span="6" >
+            <el-button :plain="true" type="success" round @click="removeSelection">补缴所选</el-button>
+        </el-col>
+        <div slot="footer" class="dialog-footer">
+            <el-button  icon="el-icon-error" @click.native="editFormVisibleQ = false">关闭</el-button>
+        </div>
+    </el-dialog>
+</div>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '补缴办理'
+        }
+    });
+    var tableView = new Vue({
+        el: '#tableView',
+        data: {
+            abc:true,
+            //列表数据
+            tableData: [],
+            tableDataRYZY:[],
+            //多选值
+            multipleSelection:[],
+            DWZH:'',
+            //显示加载中样式
+            loading:false,
+            //当前页
+            currentPage:1,
+            //分页大小
+            pageSize:10,
+            //总记录数
+            total:800,
+            //搜索表单
+            searchForm: {
+                uname: ''
+            },
+            searchForm1:{
+                tb_pName:''
+            },
+            editFormVisibleQ1:false,
+            editFormVisibleQ:false,
+            editForm:{
+                DWZH:'',
+                uDepositRatio:'',
+                uARemain:'',
+                uDepositedPnum:'',
+                YWCZR:'',
+
+
+                uname:'',
+                uPersonRatio:'',
+                uaState:'',
+                payPerson:'',
+                perMonPaysum:'',
+            }
+        },
+        created:function(){
+            //在 then的内部不能使用Vue的实例化的this, 因为在内部 this 没有被绑定。
+            var self = this;
+            var start =(this.currentPage-1)*this.pageSize;
+            var end =this.currentPage*this.pageSize;
+            //第一进来后进入的发法
+            axios.post('/sb/company/NumberAdjust',{'start':start,'end':end}).then(function(response){
+                self.total=response.data.total;
+                self.tableData = response.data.pageDate;
+                //alert(JSON.stringify(response.data.pageDate))//查看后台返回的数据
+                tableView.self.tableData;
+            })
+        },
+        methods:{
+            //表格重新加载数据
+            loadingData:function() {
+                var _self = this;
+                _self.loading = true;
+                var start =(this.currentPage-1)*this.pageSize;
+                var end =this.currentPage*this.pageSize;
+                var searchForm={'start':start,'end':end,'uname':_self.searchForm.uname};
+                //   alert(JSON.stringify(searchForm));
+                axios.post('/sb/company/NumberAdjust',searchForm).then(function(response){
+                    _self.total=response.data.total;
+                    _self.tableData = response.data.pageDate;
+                })
+                console.log(_self.currentPage);
+                setTimeout(function(){
+                    console.info("加载数据成功");
+                    _self.loading = false;
+                },300);
+            },
+            //分页大小修改事件
+            pageSizeChange:function(val) {
+                console.log('每页 ' + val +' 条');
+                this.pageSize = val;
+                var _self = this;
+                _self.loadingData();//重新加载数据
+            },
+            //当前页修改事件
+            currentPageChange:function(val) {
+                this.currentPage = val;
+                console.log('当前页: ' + val);
+                var _self = this;
+                _self.loadingData();//重新加载数据
+            },
+            //表格查询事件
+            searchClick:function() {
+                var self = this;
+                self.loadingData();//重新加载数据
+            },
+            editClick:function (row) {
+                var _self = this;
+                _self.DWZH=row.DWZH;
+                axios.post('/sb/company/payFees',{DWZH:row.DWZH}).then(function(response){
+                    //alert(JSON.stringify(response.data.payPerson));
+                    if (response.data.payPerson!=0){
+                        _self.editForm = Object.assign({}, row);
+                        _self.editForm.payPerson=response.data.payPerson;
+                        _self.editForm.perMonPaysum=new Date().toLocaleString()+'',
+                        _self.editFormVisibleQ1=true;
+                    }else{
+                        _self.$message({
+                            message: '没有需要补交的人员',
+                            type: 'warning'
+                        });
+                    }
+                })
+            },
+            //点击办理补缴按钮
+            pullupdate:function () {
+                var _self = this;
+                _self.editFormVisibleQ1=false;
+                //alert(_self.editForm.DWZH);
+                axios.post('/sb/company/payFees1',{DWZH:_self.editForm.DWZH}).then(function(response){
+                    _self.editFormVisibleQ=true;
+                    //alert(JSON.stringify(response.data));
+                    _self.tableDataRYZY = response.data;
+                })
+
+            },
+            //弹出页面查询按钮
+            searchClick1:function () {
+                var _self = this;
+                var searchForm = {DWZH:_self.DWZH,'tb_pName':_self.searchForm1.tb_pName};
+                //alert(JSON.stringify(searchForm));
+                axios.post('/sb/company/payFees1',searchForm).then(function(response){
+                    //alert("基数调整按钮后台传来的值："+JSON.stringify(response.data[0]))
+                    _self.tableDataRYZY = response.data;
+                })
+            },
+            //补缴按钮
+            editClick1:function (row) {
+                var _self = this;
+                //alert(row.GRZH);
+                this.$confirm('确认为' + row.tb_pName +'补缴吗?', '提示', {
+                    type: 'warning'
+                }).then(function(){
+                    axios.post('/sb/company/payFees2',{GRZH:row.GRZH}).then(function(response){
+                        if (response.data==1){
+                            _self.editFormVisibleQ=false;
+                            _self.loadingData();//重新加载数据
+                            _self.$message({
+                                message: '补缴成功',
+                                type: 'success'
+                            });
+                        }else{
+                            _self.editFormVisibleQ=false;
+                            _self.loadingData();//重新加载数据
+                            _self.$message.error('补缴失败');
+                        }
+                    })
+                })
+            },
+            //勾选事件
+            selectionChange:function (val) {
+                var _self = this;
+                _self.multipleSelection = val;
+            },
+            //批量补缴
+            removeSelection:function() {
+                var _self = this;
+                var multipleSelection = this.multipleSelection;
+                if(multipleSelection.length < 1) {
+                    _self.$message({
+                        message: '请至少选中一条记录',
+                        type: 'error'
+                    });
+                    return;
+                }
+                var ids = "";
+                for(var i=0;i<multipleSelection.length;i++) {
+                    var row = multipleSelection[i];
+                    ids += row.GRZH + ","
+                }
+                _self.$confirm('确认为个人账号为：' + ids +'补缴吗?', '提示', {
+                    type: 'warning'
+                }).then(function(){
+                    var  url="/sb/company/payFees2";
+                    //alert(ids);
+                    axios.post(url,{GRZH:ids}).then(function (response) {
+                        if (response.data==1){
+                            _self.editFormVisibleQ=false;
+                            _self.loadingData();//重新加载数据
+                            _self.$message({
+                                message: '补缴成功',
+                                type: 'success'
+                            });
+                        }else{
+                            _self.editFormVisibleQ=false;
+                            _self.loadingData();//重新加载数据
+                            _self.$message.error('补缴失败');
+                        }
+                    });
+
+                }).catch(function(e){
+                    if(e != "cancel")
+                        console.log("出现错误：" + e);
+                });
+            }
+        }
+    })
+</script>
+</body>
+</html>
