@@ -5,12 +5,15 @@ import com.aaa.gjj.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,74 +25,160 @@ import java.util.Map;
  * createTime:2018-12-10 21:10
  */
 @Controller
+@RequestMapping("/company1")
 public class TheCompanyBusinessController {
     @Autowired
     private TheCompanyBusinessService theCompanyBusinessService;
-
     /**
-     * 单位开户 公司效验
+     * 分页显示公司信息
      * @param map
      * @return
      */
     @ResponseBody
-    @RequestMapping("unitCheckout")
-    public Object unitRegisterCheckout(@RequestParam Map map){
+    @RequestMapping("/sss")
+    public Object sss(@RequestBody Map map) {
+        System.out.println(map);
+        List<Map> userList = theCompanyBusinessService.UnitAccountInformation(map);
+        int cnt = theCompanyBusinessService.UnitAccountInformationCount(map);
         Map tempmap = new HashMap();
-        List<Map> list = theCompanyBusinessService.getUnitInfoList(map);
-        if(list!=null&&list.size()>0){
-            for (Map map2 : list) {
-                if(map2.get("uname").equals(map.get("uName"))){
-                    tempmap.put("issc", false);
-                    tempmap.put("error", "输入的公司名称已存在！");
+        if(userList!=null&&userList.size()>0){
+            for (Map map2 : userList) {
+                if(map2.get("uaState").equals(1)){
+                    map2.put("uaState", "正常");
+                }else{
+                    map2.put("uaState", "异常");
                 }
             }
         }
+        tempmap.put("pageData", userList);
+        tempmap.put("total",cnt);
         return tempmap;
     }
 
     /**
-     * 单位开户 机构代码效验
+     * 汇缴办理
      * @param map
      * @return
+     */
+    /**
+     * 汇缴时判断本月是否已经汇缴过了
      */
     @ResponseBody
-    @RequestMapping("unitCheckout1")
-    public Object unitRegisterCheckout1(@RequestParam Map map){
-        Map tempmap = new HashMap();
-        List<Map> list = theCompanyBusinessService.getUnitInfoList(map);
-        if(list!=null&&list.size()>0){
-            for (Map map2 : list) {
-                if(map2.get("uNetworkCode").equals(map.get("uNetworkCode"))){
-                    tempmap.put("issc", false);
-                    tempmap.put("error1", "输入的机构代码已存在！");
+    @RequestMapping("/getRemit")
+    public Object getRemit(@RequestBody Map map){
+        System.out.println("前台传来的值："+map);
+        Map tempMap = new HashMap();
+        //取数据库里的交至年月
+        List<Map> remitTime = theCompanyBusinessService.getRemitTime(map);
+        System.out.println("后台返回的值："+remitTime);
+        if(remitTime!=null&&remitTime.size()>0){
+            try {
+                if((remitTime.get(0).get("time"))==null){
+                    tempMap.put("issc", false);
+                }else{
+                    String ot =remitTime.get(0).get("time")+"";
+                    String oldTime =  ot.replace("-", "").substring(0,6);
+                    //获取当前时间
+                    Date date = new Date();
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMM");
+                    String df = dateFormat.format(date);
+                    String nt = df.toString();
+                    if(oldTime.equals(nt)){
+                        tempMap.put("issc", true);
+                        tempMap.put("info", "本月已汇缴");
+                    }else{
+                        tempMap.put("issc", false);
+                    }
                 }
-            }
-        }
-        return tempmap;
-    }
+            } catch (Exception e) {
 
-    /**
-     * 公司开户保存按钮
-     * @param map
-     * @param request
-     * @param model
-     * @param YYZZ
-     * @return
-     */
-    @RequestMapping("registerInfo")
-    public String registerInfo(@RequestParam Map map, HttpServletRequest request, Model model, @RequestParam MultipartFile YYZZ){
-        String filePath = FileUploadUtil.uploadFile("files/comreg",YYZZ,request);
-        map.put("YYZZ", filePath);
-        int uid = theCompanyBusinessService.unitRegister(map);//���ʱ���ص�����
-        if(uid>0){
-            int num=theCompanyBusinessService.unitAccount(map,uid);//��λ�˺ű��������
-            if(num>0){
-                return "redirect:/UnitInformationa01";
-            }else{
-                return "注册出现错误了！！！";
             }
+            return tempMap;
         }else{
-            return "注册出现错误了！！！";
+            tempMap.put("issc", false);
         }
+        return tempMap;
+    }
+
+
+    /**
+     * 汇缴办理完成之后把汇缴的信息存到明细查询表里，然后跳转到明细查询界面
+     */
+    @ResponseBody
+    @RequestMapping("/unitRemit")
+    public Object unitRemit(@RequestBody Map map){
+        int i = theCompanyBusinessService.unitRemit(map);
+        //System.out.println(""+map1);
+        //return "company/MXCX";
+        if(i==1){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    /**
+     * 明细查询
+     * @param map
+     * @return
+     */
+    @RequestMapping("/MXCXController")
+    @ResponseBody
+    public Object MXCXController(@RequestBody Map map) {
+        List<Map> userList = theCompanyBusinessService.MXCXBiao1(map);
+        if(userList!=null&&userList.size()>0){
+            for (Map map2 : userList) {
+                if(map2.get("ubdSettleStates").equals(1)){
+                    map2.put("ubdSettleStates", "正常");
+                }else{
+                    map2.put("ubdSettleStates", "异常");
+                }
+            }
+        }
+        Map resultMap = new HashMap();
+        resultMap.put("pageData", userList);
+        resultMap.put("total",theCompanyBusinessService.MXCXBiaoCut1(map));
+        return resultMap;
+    }
+
+    /**
+     * 比例变更时把员工信息显示出来
+     */
+    @ResponseBody
+    @RequestMapping("/getStaffInfo")
+    public Object getInfo(@RequestBody Map map){
+        List<Map> list = theCompanyBusinessService.getStaffInfo(map);
+        Map tempMap = new HashMap();
+        if(list!=null&&list.size()>0){
+            tempMap.put("rows", list);
+        }
+        return list;
+    }
+
+    /**
+     * 比例变更
+     * @param map
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/ratioChange")
+    public String ratioChange(@RequestBody Map map){
+        int result = theCompanyBusinessService.updateRatio(map);
+        if(result==-1){
+            return "0";
+        }else{
+            return "1";
+        }
+
+    }
+    /**
+     * 挂账办理
+     * @param map
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/GZBLYewu")
+    public Object GZBLYewu(@RequestBody Map map) {
+        return  theCompanyBusinessService.GZBLyewu1(map);
+
     }
 }

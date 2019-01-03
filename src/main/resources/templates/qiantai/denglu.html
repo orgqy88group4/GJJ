@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人登录</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="/sb/css/style.css">
+    <!-- <link rel="stylesheet/less" type="text/css" href="css/style.less" /> -->
+    <script type="text/javascript" src="/sb/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/sb/js/all.js"></script>
+    <!--[if IE 6]>
+    <script src="/sb/js/iepng.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        EvPNG.fix('div, ul, img, li, input,span, p');
+    </script>
+    <!-- 引入样式 -->
+    <script type="text/javascript" src="/sb/js/vue.js"></script>
+    <script type="text/javascript" src="/sb/js/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/sb/css/elementui.css">
+    <!-- 引入组件库 -->
+    <script src="/sb/js/elementui.js"></script>
+</head>
+<body>
+<!-- header start -->
+<div class="zxcf_top_wper" >
+    <div class="zxcf_top px1000 clearfix">
+        <div class="zxcf_top_l fl">
+            <img src="/sb/images/zxcf_phone.png" alt="">
+            400-027-0101(工作时间9:00-17:30)
+            <a href="#"><img src="/sb/images/zxcf_weixin.png" alt=""></a>
+            <a href="#"><img src="/sb/images/zxcf_sina.png" alt=""></a>
+            <a href="#"><img src="/sb/images/zxcf_qq.png" alt=""></a>
+        </div>
+        <div class="zxcf_top_r fr">
+            <a href="/sb/Page/shouye1">返回首页</a>
+        </div>
+    </div>
+</div>
+<!-- end top -->
+<div class="zxcf_nav_wper">
+    <div class="zxcf_nav clearfix px1000">
+        <div class="zxcf_nav_l fl"><img src="/sb/images/logo.png" alt=""></div>
+        <div class="zxcf_nav_r fr">
+        </div>
+    </div>
+</div>
+<!-- end  -->
+<div class="login_con_wper">
+    <div class="login_con px1000 ">
+        <div class="lg_section clearfix">
+            <div class="lg_section_l fl">
+                <img src="/sb/images/fang.jpg"></img>
+            </div>
+            <!-- end l -->
+            <div class="lg_section_r fl">
+                <h2 class="lg_sec_tit clearfix">
+                    <span class="fl">个人登录</span>
+                    <em class="fr"><a href="/sb/Page/danwei">单位登录</a></em>
+                </h2>
+                <!--<form action="/sb/qiantai/denglu" method="post">-->
+                    <!--<fieldset>-->
+                        <!--<p class="mt20">-->
+                            <!--<input type="text" name="grzh" placeholder="个人账号" class="lg_input01 lg_input">-->
+                        <!--</p>-->
+                        <!--<p class="mt20">-->
+                            <!--<input type="password" name="grmm" placeholder="密码" class="lg_input02 lg_input">-->
+                        <!--</p>-->
+                        <!--<p class="mt20">-->
+                            <!--<input type="text" name="phone" placeholder="手机号" class="lg_input01 lg_input">-->
+                        <!--</p>-->
+                        <!--<p class="clearfix lg_check"><span class="fl"><input type="checkbox">记住用户名</span><a href="wmima1.jsp" class="fr">忘记密码？找回</a></p>-->
+                        <!--<p><input type="submit" class="lg_btn" value="立即登录"></p>-->
+                    <!--</fieldset>-->
+                <!--</form>-->
+                <div id="tableView">
+                    <el-form :model="editForm" status-icon label-width="0px" :rules="editFormRules" ref="editForm">
+                        <el-container>
+                            <el-aside>
+                                <el-form-item>
+                                    <el-input v-model="editForm.grzh" placeholder="个人账号"  style="width:260px;height:25px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-input v-model="editForm.grmm" placeholder="密码"  type="password" style="width:260px;height:25px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-input v-model="editForm.tel" placeholder="手机号"  style="width:260px;height:25px;" auto-complete="off"></el-input>
+                                    <el-button  @click.native="editSubmit2" :loading="editLoading">获取验证码</el-button>
+                                </el-form-item>
+                                <el-form-item>
+                                    <el-input v-model="editForm.yzm" placeholder="验证码" style="width:260px;height:25px;" auto-complete="off"></el-input>
+                                </el-form-item>
+                                <div style="text-align: center">
+                                    <!--@click.native="editSubmit('editForm')"-->
+                                    <el-button type="primary"  round :plain="true" @click.native="editSubmit1" :loading="editLoading">立即登录</el-button>
+                                </div>
+                                <el-form-item>
+                                    <el-input v-model="editForm.yzmm" style="width:260px;height:25px;" auto-complete="off" type="hidden"></el-input>
+                                </el-form-item>
+                            </el-aside>
+                        </el-container>
+
+                    </el-form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- footer start -->
+<div class="zscf_aboutus_wper">
+    <div class="zscf_aboutus px1000 clearfix">
+        <div class="zscf_aboutus_l fl">
+            <ul class="zscf_aboutus_lul clearfix">
+                <li class="pt10"><a href="#"><img src="/sb/images/app.png" alt=""></a>
+                </li>
+                <li>
+                    <p class="pb20">服务热线</p>
+                    <strong>400-027-0101</strong>
+                </li>
+                <li>
+                    <p class="pb10 linkpic">
+                        <a href="#"><img src="/sb/images/ft_sina.png" alt=""></a>
+                        <a href="#"><img src="/sb/images/ft_weixin.png" alt=""></a>
+                        <a href="#"><img src="/sb/images/ft_erji.png" alt=""></a>
+                    </p>
+                    <p><a href="#">kefu@zhongxincaifu.com</a></p>
+                </li>
+            </ul>
+        </div>
+        <!-- end left -->
+        <div class="zscf_aboutus_r fl clearfix">
+            <a href="#" class="fl ft_ewm"><img src="/sb/images/ft_erweima.png" alt=""></a>
+            <ul class="fl clearfix">
+                <li><a href="#">联系我们</a></li>
+                <li><a href="#">我要融资</a></li>
+                <li><a href="#">帮助中心</a></li>
+                <li><a href="#">友情链接</a></li>
+                <li><a href="#">招贤纳士</a></li>
+                <li><a href="#">收益计算器</a></li>
+            </ul>
+        </div>
+        <!-- end right -->
+
+    </div>
+</div>
+
+<div class="zscf_bottom_wper">
+    <div class="zscf_bottom px1000 clearfix">
+        <p class="fl">© 2014 zhongxincaifu &nbsp;  &nbsp;&nbsp;   中兴财富金融信息服务股份有限公司 &nbsp;&nbsp;&nbsp;    来源:<a href="http://www.mycodes.net/" target="_blank">源码之家</a></p>
+        <p class="fr">
+            <a href="#"><img src="/sb/images/360.png" alt=""></a>
+            <a href="#"><img src="/sb/images/kexin.png" alt=""></a>
+            <a href="#"><img src="/sb/images/norton.png" alt=""></a>
+        </p>
+    </div>
+</div>
+<!-- footer end -->
+<script>
+    var tableView = new Vue({
+        el: '#tableView',
+        data: {
+            //显示加载中样式
+            loading:false,
+            editForm:{
+                grzh:'',
+                grmm:'',
+                tel:'',
+                yzm:'',
+                yzmm:'',
+            },
+        },
+        created:function(){
+
+        },
+        methods:{
+            //表格重新加载数据
+            loadingData:function() {
+
+            },
+            editSubmit1:function () {
+                var _self=this;
+                //alert(JSON.stringify(_self.editForm.yzm==_self.editForm.yzmm));
+                var temp=_self.editForm.grzh!=''&&_self.editForm.grmm!=''&&_self.editForm.tel!=''&&_self.editForm.yzm==_self.editForm.yzmm;
+                //alert(JSON.stringify("temp="+temp))
+                if (temp==true){
+                    axios.post('/sb/qiantai/denglu', _self.editForm).then(function (response) {
+                        //alert(JSON.stringify(response.data));
+                        if (response.data==1){
+                            location.href="/sb/Page/green"
+                        }else{
+                            location.href="/sb/Page/denglu"
+                        }
+                    })
+                }else{
+                    _self.$message({
+                        message: '请填写完整信息',
+                        type: 'warning'
+                    });
+                }
+
+            },
+            editSubmit2:function () {
+                var _self=this;
+                //alert(JSON.stringify(_self.editForm.tel));
+                axios.post('/sb/qiantai/sendCode', {tel:_self.editForm.tel}).then(function (response) {
+                    //alert("后台返回的值是：==="+response.data);
+                    _self.editForm.yzmm=response.data;
+                    //alert(JSON.stringify("yzmm=="+_self.editForm.yzmm))
+                })
+            }
+        }
+    })
+</script>
+</body>

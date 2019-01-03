@@ -23,29 +23,29 @@
                 <el-input v-model="searchForm.uname" placeholder="单位名称"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" icon="search" @click="searchClick1">查询</el-button>
+                <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick1">查询</el-button>
             </el-form-item>
         </el-form>
     </el-row>
     <!--列表-->
     <el-row>
         <el-table :data="tableData" v-loading.body="loading" border @selection-change="selectionChange" style="width: 100%">
-            <el-table-column prop="DWZH" label="单位账号" type="center" width="160"></el-table-column>
-            <el-table-column prop="uname" label="单位名称" width="220"></el-table-column>
-            <el-table-column prop="uDepositRatio" label="单位缴存比例" width="130">
+            <el-table-column prop="DWZH"  align="center"  label="单位账号" type="center" width="160"></el-table-column>
+            <el-table-column prop="uname"  align="center" label="单位名称" width="250"></el-table-column>
+            <el-table-column prop="uDepositRatio" align="center"  label="单位缴存比例" width="150">
                 <template scope="scope">
                     <span style="color:green;">{{scope.row.uDepositRatio}}.00%</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="uPersonRatio" label="个人缴存比例" type="center" width="130">
+            <el-table-column prop="uPersonRatio"  align="center"  label="个人缴存比例" type="center" width="150">
                 <template scope="scope">
                     <span style="color:blue;">{{scope.row.uPersonRatio}}.00%</span>
                 </template>
             </el-table-column>
-            <el-table-column prop="uDepositedPnum" label="单位缴存人数" width="140"></el-table-column>
-            <el-table-column prop="uARemain" label="单位账户余额" width="140"></el-table-column>
-            <el-table-column prop="uaOweMonery" label="应缴纳金额" width="140"></el-table-column>
-            <el-table-column prop="uaState" label="单位账户状态" type="center" width="140">
+            <el-table-column prop="uDepositedPnum" align="center"  label="单位缴存人数" width="160"></el-table-column>
+            <el-table-column prop="uARemain" align="center"  label="单位账户余额" width="160"></el-table-column>
+            <el-table-column prop="uaOweMonery" align="center"  label="应缴纳金额" width="160"></el-table-column>
+            <el-table-column prop="uaState" align="center"  label="单位账户状态" type="center" width="160">
                 <template scope="scope">
                     <div v-if="scope.row.uaState=='2'">
                         <span style="color:red;">封存</span>
@@ -58,17 +58,17 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="KHRQ" label="单位开户日期" width="120"></el-table-column>
-            <el-table-column prop="uaState" label="操作" width="100">
+            <el-table-column prop="KHRQ" align="center"  label="单位开户日期" width="160"></el-table-column>
+            <el-table-column prop="uaState" align="center"  label="操作" width="150">
                 <template scope="scope">
                     <div v-if="scope.row.uaState=='2'">
-                        <div><el-button type="warning" disabled @click="editClick(scope.row)">暂无</el-button></div>
+                        <div><el-button type="warning" round :plain="true"  disabled @click="editClick(scope.row)">暂无</el-button></div>
                     </div>
                     <div v-if="scope.row.uaState=='0'">
-                        <div><el-button type="danger" disabled @click="editClick(scope.row)">暂无</el-button></div>
+                        <div><el-button type="danger" round :plain="true"  disabled @click="editClick(scope.row)">暂无</el-button></div>
                     </div>
                     <div v-if="scope.row.uaState=='1'">
-                        <div><el-button type="primary" @click="editClick(scope.row)">修改</el-button></div>
+                        <div><el-button type="primary" round :plain="true"  @click="editClick(scope.row)">修改</el-button></div>
                     </div>
                 </template>
             </el-table-column>
@@ -244,9 +244,9 @@
 
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button type="danger" round  @click.native="unlock">解除锁定</el-button>
-            <el-button type="primary" round @click.native="pullupdate">提交更改</el-button>
-            <el-button @click.native="editFormVisibleQ = false">关闭</el-button>
+            <el-button type="danger" round :plain="true" @click.native="unlock">解除锁定</el-button>
+            <el-button type="primary" round :plain="true" @click.native="pullupdate">提交更改</el-button>
+            <el-button round :plain="true" @click.native="editFormVisibleQ = false">关闭</el-button>
         </div>
     </el-dialog>
 </div>

@@ -374,15 +374,14 @@ public interface LoanDao {
             "pName,repay_money,repay_interests,repay_month,ctime,repayed_money," +
             "repayed_interests,residue_money,residue_interests,repayed_period," +
             "residue_periods,repay_mmonth,repay_all_mmonth,repayed_date,repay_state," +
-            "repay_month_money,repay_month_interest,repayed_All_money) " +
+            "repay_month_money,repay_month_interest,repayed_All_money,repay_date) " +
             "values(#{repay_id},#{Loan_id},#{pid},#{repay_account},#{GRZH},#{loan_money}," +
             "#{loan_periods},#{loan_rate},#{repay_bank},#{loan_repay},#{pName},#{repay_money}," +
             "#{repay_interests},#{repay_month},#{ctime},#{repayed_money},#{repayed_interests}," +
             "#{residue_money},#{residue_interests},#{repayed_period},#{residue_periods}," +
             "#{repay_mmonth},#{repay_all_mmonth},#{repayed_date},1,#{repay_month_money}," +
-            "#{repay_month_interest},#{repayed_All_money})")
+            "#{repay_month_interest},#{repayed_All_money},DATE_ADD(now(),INTERVAL 1 MONTH))")
     int insertRepay(Map map);
-
     /**
      * 查询还款信息表
      * @param GRZH

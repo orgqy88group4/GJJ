@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<style>
+    #liao{
+        position: fixed;
+        top:500px;
+        left: auto;
+        right:100px;;
+        bottom: auto;
+    }
+</style>
+<style type="text/css">
+
+    h5{
+        margin: 0;
+    }
+    img{
+        max-width: 100%;
+        vertical-align: middle
+    }
+    input{
+        outline: none;
+    }
+    #chatbox{
+        max-width: 720px;
+        margin: 0 auto;
+        color:#333;
+        font-size: 0.26rem;
+        height: 700px;
+        border: 1px solid #5ea6eb;
+        overflow:scroll;  background-color: #5ea6eb;
+    }
+    .header{
+        border-bottom: 1px solid #dfdfdf;
+        padding:0 0.2rem;
+        height: 0.6rem;
+        line-height: 1rem;
+        background: #fff;
+        position: fixed;
+        width: 100%;
+        max-width: 720px;
+        box-sizing: border-box;
+        z-index: 100;
+    }
+    .back{
+        position: absolute;
+        top: 0;
+        left: 0.3rem;
+        background:url('/sb/images/left.png') no-repeat;
+        width: 0.2rem;
+        height:0.4rem;
+        margin-top: 0.34rem;
+        background-size: 0.2rem 0.4rem;
+    }
+    .header .tit{
+        margin-top:-20px;
+        font-size: 0.32rem;
+        vertical-align: middle;
+        text-align: center;
+        height: 1rem;
+        line-height: 1rem;
+        font-weight: normal;
+    }
+    .header .right{
+        position: absolute;
+        right: 0.3rem;
+        top: 0;
+        float: none;
+        font-size: 0.24rem;
+        line-height: 1.2rem;
+    }
+    .message{
+
+        padding: 1.2rem 0.3rem 1rem 0.3rem;
+
+    }
+    .time{
+        font-size:0.24rem;
+        color:#000;
+        margin-bottom: 0.3rem;
+        text-align: center;
+    }
+
+    .footer{
+        position: fixed;
+        bottom: 0;
+        height:1rem;
+        background-color:#fff;
+        line-height:1rem;
+        width: 100%;
+        max-width: 720px;
+        border-top: 1px solid #ddd;
+    }
+    .footer img{
+        margin-left:0.2rem;
+        width: 0.5rem;
+    }
+    .footer input{
+        margin-left:0.2rem;
+        width:3.5rem;
+        height:0.64rem;
+        border-radius: 0.1rem;
+        border:0.01rem solid #ddd;
+        padding : 0 0.15rem;
+
+
+    }
+    .footer p{
+        width:1.2rem;
+        height:0.68rem;
+        font-size:0.3rem;
+        color:#fff;
+        line-height:0.68rem;
+        text-align:center;
+        background-color:#ddd;
+        border-radius: 0.1rem;
+        float:right;
+        margin-top:0.2rem;
+        margin-right:0.2rem;
+    }
+    .send:after,.show:after,.msg:after{
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+    .msg>img{
+        width: 0.8rem;
+        float: left;
+    }
+    .msg>p{
+        float: left;
+        margin:0  0.4rem;
+        padding: 0.25rem;
+        background: #fff;
+        font-size: 0.3rem;
+        position: relative;
+        border-radius: 0.2rem;
+        max-width:5rem ;
+        box-sizing: border-box;
+    }
+
+    .msg_input{
+        position: absolute;
+        background: url('/sb/images/msg-input.png') no-repeat;
+        background-size: 0.31rem auto;
+        width: 0.31rem;
+        height: 0.51rem;
+        left: -0.31rem;
+        top: 0.25rem;
+    }
+    .show .msg img,.show .msg p,.show .msg{
+        float: right;
+    }
+
+
+    .show .msg_input{
+        left: auto;
+        right: -0.11rem;
+        transform:rotate(180deg);
+        -ms-transform:rotate(180deg); 	/* IE 9 */
+        -moz-transform:rotate(180deg); 	/* Firefox */
+        -webkit-transform:rotate(180deg); /* Safari 鍜�Chrome */
+        -o-transform:rotate(180deg); 	/* Opera */
+    }
+    .send,.show{
+        padding-bottom: 0.3rem;
+    }
+    .alert_novip,.flower_num,.give_flower{
+        display: none;
+        padding: 0.3rem 0.5rem;
+        font-size: 0.28rem;
+    }
+    .alert_novip p,.flower_num  p{
+        margin-bottom: 0.45rem;
+
+    .layui-layer-wrap button{
+        font-size: 0.28rem;
+        padding: 0.2rem 0.3rem;
+        margin-top: 0.1rem;
+        background: #f8f8f8;
+        border-radius: 10px;
+    }
+    }
+    .flower_num button{
+        padding: 0.2rem 0.5rem;
+        border-radius: 10px;
+    }
+    .layui-layer-wrap button:first-child{
+        float: left;
+    }
+    .layui-layer-wrap button:last-child{
+        float: right;
+        background: #FF7171;
+        color: #fff;
+    }
+    .alert_novip button{
+        padding: 0.2rem 0.3rem;
+        border-radius: 10px
+    }
+    .flower{
+        width: 0.8rem;
+        margin: 0 auto;
+    }
+    .give_flower{
+        text-align: center;
+    }
+    .give_flower p{
+        text-align: center;
+        line-height: 1.5;
+    }
+    .give_flower input{
+        width: 1rem;
+        margin-right: 0.1rem;
+        margin-top: 0.2rem;
+    }
+    .give_flower button{
+        display: block;
+        width: 3rem;
+        font-size: 0.28rem;
+        margin: 0 auto;
+        margin-top: 0.6rem;
+        float: none!important;
+        line-height: 0.65rem;
+        border-radius: 10px;
+    }
+    *{
+        padding: 0px;
+        margin: 0px;
+    }
+</style>
+<head>
+    <link rel="stylesheet" href="/sb/css/common.css"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="/sb/css/style.css">
+    <!-- <link rel="stylesheet/less" type="text/css" href="css/style.less" /> -->
+    <script type="text/javascript" src="/sb/js/jquery-1.7.2.min.js"></script>
+    <script type="text/javascript" src="/sb/js/all.js"></script>
+    <!--[if IE 6]>
+    <!-- header start -->
+    <script type="text/javascript">
+        var w,h,className;
+        function getSrceenWH(){
+            w = $(window).width();
+            h = $(window).height();
+            $('#dialogBg').width(w).height(h);
+        }
+        window.onresize = function(){
+            getSrceenWH();
+        }
+        $(window).resize();
+        $(function(){
+            getSrceenWH();
+            //显示弹框
+            $('.box a').click(function(){
+                className = $(this).attr('class');
+                $('#dialogBg').fadeIn(300);
+                $('#dialog').removeAttr('class').addClass('animated '+className+'').fadeIn();
+            });
+            //关闭弹窗
+            $('.claseDialogBtn').click(function(){
+                $('#dialogBg').fadeOut(300,function(){
+                    $('#dialog').addClass('bounceOutUp').fadeOut();
+                });
+            });
+        });
+    </script>
+</head>
+<body onload="re()"  >
+<!-- 模态框 -->
+<div class="box" >
+    <div class="demo">
+        <a href="javascript:;" class="bounceIn"><img src="/sb/images/6746bd0f54737f3666dff07d312c028b.gif" width="200px" height="100px;" id="liao"/></a>
+    </div>
+    <div id="dialogBg"></div>
+    <div id="dialog" class="animated" style="width: 720px;top: 150px;">
+        <div   id="chatbox" >
+            <header class="header">
+                <h6 class="tit">在线咨询</h6>
+            </header>
+            <div class="message" >
+                <div class="send">
+                    <div class="time">06/22 06:30</div>
+                    <div class="msg">
+                        <img src="/sb/images/touxiangm.png" alt="" />
+                        <p><i class="msg_input"></i>新乡公积金欢迎你！</p>
+                    </div>
+                </div>
+                <div class="send">
+                    <div class="time">05/22 06:30</div>
+                    <div class="msg">
+                        <img src="/sb/images/touxiangm.png" alt="" />
+                        <p><i class="msg_input"></i>欢迎在线咨询！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="border: 0px solid #5ea6eb;position: relative;width: 720px;left: 0px;background-color: #fff;">
+            <form name="myform" method="post" action="SendMsg2.action" target="sform">
+                <!-- 输入框完成消息输入 -->
+                <input id="msginput" type="text" name="chatmsg" style="width: 720px;height: 45px;" />
+                <hr>
+                <!-- 发送按钮，点击执行sendok（）方法 -->
+                <button type="button"  style="width: 100px;height: 40px;font-size: 18px;margin-left: 520px;" onclick="sendok()" >发送(s)</button>
+                <button type="button" style="width: 100px;height: 40px;font-size: 18px;"class="claseDialogBtn"  >	关闭(c)</button>
+                        <!-- 设置一个空iframe，让表单提交后不跳转， -->
+            </form>
+            <iframe width="0" height="0" style="display: none;" name="sform"></iframe>
+        </div>
+    </div>
+</div>
+<!-- 模态框 -->
+
+
+<div class="zxcf_top_wper">
+    <div class="zxcf_top px1000 clearfix">
+        <div class="zxcf_top_l fl">
+
+            <img src="/sb/images/zxcf_phone.png">
+            400-027-0101(工作时间9:00-17:30)
+            <a href="#"><img src="/sb/images/zxcf_weixin.png" alt=""></a>
+            <a href="#"><img src="/sb/images/zxcf_sina.png" alt=""></a>
+            <a href="#"><img src="/sb/images/zxcf_qq.png" alt=""></a>
+        </div>
+        <div class="zxcf_top_r fr">
+
+
+
+            <a href="/sb/Page/denglu" class="curspan">立即登录</a>
+            <span>|</span>
+            <a href="">免费注册</a>
+            <span>|</span>
+            <a href="">常见问题</a>
+        </div>
+    </div>
+</div>
+<!-- end top -->
+<div class="zxcf_nav_wper">
+    <div class="zxcf_nav clearfix px1000">
+        <div class="zxcf_nav_l fl"><img src="/sb/images/logo.png" width="100%" ></img></div>
+        <div class="zxcf_nav_r fr">
+
+        </div>
+    </div>
+</div>
+<div class="zxcf_menu_wper">
+    <div class="zxcf_menu px1000" >
+
+        <a href="/sb/Page/shouye1" style="color:#ffffff" class="zm_cura">首页</a>
+        <a href="biaogexiazai.jsp" style="color:#ffffff">表格下载</a>
+        <a href="tupianxinwen.jsp" style="color:#ffffff">图片新闻</a>
+        <a href="/sb/Page/zhengce" style="color:#ffffff">政策法规</a>
+        <a href="/sb/Page/gongzuo"style="color:#ffffff">工作动态</a>
+        <a href="dkzhuanlan.jsp" style="margin-right:0;color:#ffffff">贷款专栏</a>
+    </div>
+</div>
+<!-- end  -->
+<div class="zscf_banner_wper">
+    <div class="zscf_banner px1000">
+        <div class="zscf_box">
+            <p style="color: red;font-size: 20px;">取之于民，用之于民</p>
+            <p style="color: red;font-size: 20px;">园你住房梦！！！</p>
+            <p style="color: red;font-size: 20px;">共筑幸福家！！！</p>
+            <a href="/sb/Page/denglu" class="btn btn1">个人登录</a><br>
+            <a href="/sb/Page/danwei" class="btn btn2">单位登录</a>
+        </div>
+    </div>
+</div>
+<!-- end banner -->
+<div class="index-main clearfix">
+    <!--上部分的左侧-->
+    <div class="left-part fl">
+        <!--焦点图-->
+        <div class="focusBox fl">
+            <ul class="pic">
+                <li><a href="#" target="_blank"><img src="/sb/images/pic1.jpg" width="282" height="237" /></a></li>
+            </ul>
+            <div class="txt-bg"></div>
+            <div class="txt">
+                <ul>
+                    <li><a href="#">焦点图一</a></li>
+
+                </ul>
+            </div>
+        </div>
+        <!--新闻头条-->
+        <div class="news-tt ml8 fl" id="gongzuo" style="font-size: 18px;">
+            <dl>
+                <dt><p><a href=''>最新动态</a></p></dt>
+            </dl>
+        </div>
+        <script>
+//            $(function(){
+//                //查询班级信息
+//                $.ajax({
+//                    url:"selnewgall.action",
+//                    type:"post",
+//                    data:{tid:3},
+//                    dataType:"json",//返回值的数据类型，text：字符串,json
+//                    success:function(data){
+//                        var a="";
+//                        for(var i=0;i<data.length;i++){
+//
+//                            a+= "<dd>"+data[i].newsID+"&nbsp;<a href='selnews.action?newsid="+data[i].newsID+"'>"+data[i].newsHead+"</a></dd><br>"
+//                        }
+//                        $("#gongzuo").append(a);
+//                    }
+//                })
+//            });
+        </script>
+        <div class="leftpart-lbottom fl mt10 clearfix">
+            <ul class="pic-list clearfix">
+                <table width="100%" border="0" cellpadding="0" height="220px" style="font-size: 18px;">
+                    <tr>
+                        <th colspan="2"style="background-color: #ACD6FF">
+                            <b>个人住房公积金存款</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td  style="background-color: #D2E9ff">
+                            当年缴存
+                        </td>
+                        <td  style="background-color: #D2E9ff">
+                            年利率 1.50%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  style="background-color: #D2E9ff">
+                            上年结转
+                        </td>
+                        <td  style="background-color: #D2E9ff">
+                            年利率 1.50%
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="2" style="background-color: #ACD6FF">
+                            <b>个人住房公积金贷款</b>
+                        </th>
+                    </tr>
+                    <tr>
+                        <td  style="background-color: #D2E9ff">
+                            五年以下(含五年)
+                        </td>
+                        <td  style="background-color: #D2E9ff">
+                            年利率 2.75% <br>月利率 2.2917%
+                        </td>
+                    </tr>
+                    <tr>
+                        <td  style="background-color: #D2E9ff">
+                            五年以上
+                        </td>
+                        <td  style="background-color: #D2E9ff">
+                            年利率 3.25% <br>月利率 2.7083%
+                        </td>
+                    </tr>
+                </table>
+            </ul>
+        </div>
+        <div class="slideTxtBox fl mt10 ml8" >
+            <div class="hd h30" >
+                <a href="gongzuo.jsp" class="fr fm1 pr10">MORE<<</a>
+                <ul><li>工作动态</li></ul>
+            </div>
+            <div class="bd" id="gong"  style="width:400px; height:400px; overflow:auto; border:0px solid #000000;font-size: 18px;">
+
+            </div>
+        </div>
+        <script>
+//            $(function(){
+//                //查询班级信息
+//                $.ajax({
+//                    url:"selnewgall.action",
+//                    type:"post",
+//                    data:{tid:3},
+//                    dataType:"json",//返回值的数据类型，text：字符串,json
+//                    success:function(data){
+//                        var a="";
+//                        for(var i=0;i<data.length;i++){
+//                            a+=" <ul >"
+//                            a+=" <li>"+data[i].newsID+"<span class='date'>"+data[i].newsPastDate+"</span><a href='selnews.action?newsid="+data[i].newsID+"'>"+data[i].newsHead+"</a></li>"
+//                            a+="</ul>"
+//                        }
+//                        $("#gong").append(a);
+//                    }
+//                })
+//            });
+        </script>
+    </div>
+    <!--上部分的左侧结束-->
+    <div class="right-part fr" >
+        <dl class="tabRank" id="tabRank">
+            <dt class="hd">
+                <h3 class="on">&nbsp;&nbsp;图片新闻</h3>
+            </dt></center>
+            <dd class="bd" >
+                <ul class="ulList">
+                    <li class="t on">
+                        <span class="num">1</span>
+                        <div class="c ">
+                            <div class="pubpic"><a href="tupianxinwen.jsp"><img src="/sb/images/pic1.jpg"></a></div>
+                            <div class="pubtitle"><a href="tupianxinwen.jsp">这里是最新动态</a><p>2013/02/15—2013/03/15</p></div>
+                        </div>
+                    </li>
+                    <li class="t on">
+                        <span class="num">2</span>
+                        <div class="c ">
+                            <div class="pubpic"><a href="tupianxinwen.jsp"><img src="/sb/images/pic1.jpg"></a></div>
+                            <div class="pubtitle"><a href="tupianxinwen.jsp">这里是最新动态</a><p>2013/02/15—2013/03/15</p></div>
+                        </div>
+                    </li>
+                    <li class="t">
+                        <span class="num">3</span>
+                        <div class="c ">
+                            <div class="pubpic"><a href="tupianxinwen.jsp"><img src="/sb/images/pic3.jpg"></a></div>
+                            <div class="pubtitle"><a href="tupianxinwen.jsp">这里是最新动态</a><p>2012/09/01—2012/09/30</p></div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="num">4</span>
+                        <div class="c">
+                            <div class="pubpic"><a href="tupianxinwen.jsp"><img src="/sb/images/pic4.jpg"></a></div>
+                            <div class="pubtitle"><a href="tupianxinwen.jsp">这里是最新动态</a><p>2012/10/15—2012/12/31</p></div>
+                        </div>
+                    </li>
+                    <li>
+                        <span class="num">5</span>
+                        <div class="c ">
+                            <div class="pubpic"><a href="tupianxinwen.jsp"><img src="/sb/images/pic5.jpg"></a></div>
+                            <div class="pubtitle"><a href="tupianxinwen.jsp">这里是最新动态</a><p>2011/04/01—2011/04/25</p>
+                            </div>
+                    </li>
+                    <li>
+                        <span class="num">6</span>
+                        <div class="c ">
+                            <div class="pubpic"><a href="tupianxinwen.jsp"><img src="/sb/images/pic6.jpg"></a></div>
+                            <div class="pubtitle"><a href="tupianxinwen.jsp">这里是最新动态</a><p>2012/09/16—2012/11/30</p></div>
+                        </div>
+                    </li>
+
+                    <li>
+                        <span class="num">7</span>
+                        <div class="c ">
+                            <div class="pubpic"><a href="tupianxinwen.jsp"><img src="/sb/images/pic7.jpg"></a></div>
+                            <div class="pubtitle"><a href="tupianxinwen.jsp">秋冬滋补进行时.</a></div>
+                        </div>
+                    </li>
+                </ul>
+            </dd>
+        </dl>
+    </div>
+    <!-- 上部分的右侧TAB结束 -->
+    <div class="slideTxtBox ruyuan fl mt10">
+        <div class="hd h30">
+            <a href="/sb/Page/zhengce" class="fr fm1 pr10">MORE<<</a>
+            <ul><li>政策法规</li></ul>
+        </div>
+        <div class="bd" id="zheng" style="width:310px; height:200px; overflow:auto; border:0px solid #000000;"></div>
+        <script>
+            $(function(){
+                //查询班级信息
+                $.ajax({
+                    url:"/sb/qiantai/selnewgall",
+                    contentType: 'application/json; charset=UTF-8',
+                    type:"post",
+                    async:false,
+                    //data:{tid:1},  415
+                    data:JSON.stringify({tid:1}),
+                    dataType:"json",//返回值的数据类型，text：字符串,json
+                    success:function(data){
+                        //alert(JSON.stringify(data));
+                        //alert(JSON.stringify(data[0]));
+                        var a="";
+                        for(var i=0;i<data.length;i++){
+                            a+=" <ul >"
+                            a+=" <li>"+data[i].id+"<span class='date'><a href='/sb/qiantai/selnews?id="+data[i].id+"'>"+data[i].title+"&nbsp;&nbsp;</a></span></li>"
+                            a+="</ul>"
+                        }
+                        $("#zheng").append(a);
+                    }
+                })
+            });
+        </script>
+    </div>
+    <div class="slideTxtBox qy-news fl ml8 mt10">
+        <div class="hd h30">
+            <a href="dkzhuanlan.jsp" class="fr fm1 pr10">MORE<<</a>
+            <ul><li>贷款专栏</li></ul>
+        </div>
+        <div class="bd" id="dai" style="width:400px; height:400px; overflow:auto; border:0px solid #000000;">
+        </div>
+        <script>
+//            $(function(){
+//                //查询班级信息
+//                $.ajax({
+//                    url:"selnewgall.action",
+//                    type:"post",
+//                    data:{tid:2},
+//                    dataType:"json",//返回值的数据类型，text：字符串,json
+//                    success:function(data){
+//                        var a="";
+//                        for(var i=0;i<data.length;i++){
+//                            a+=" <ul >"
+//                            a+=" <li>"+data[i].newsID+"<span class='date'>"+data[i].newsPastDate+"</span><a href='selnews.action?newsid="+data[i].newsID+"'>"+data[i].newsHead+"</a></li>"
+//                            a+="</ul>"
+//                        }
+//                        $("#dai").append(a);
+//                    }
+//                })
+//            });
+        </script>
+    </div>
+    <div class="slideTxtBox xgxz fr mt10" >
+        <div class="hd h30">
+            <ul><li>相关下载</li></ul>
+        </div>
+        <div class="bd"  style="width:230px; height:400px; overflow:auto; border:0px solid #000000;">
+            <ul>
+                <img src="/sb/images/xiazai.jpg"><a href="#"  target="_blank">自然抵押申请表</a><br><br>
+                <img src="/sb/images/xiazai.jpg"><a href="#"  target="_blank">保证人变更为开发企业担保申请表</a><br> <br>
+                <img src="/sb/images/xiazai.jpg"><a href="#"  target="_blank">保证人变更为开发企业担保申请表</a><br><br>
+                <img src="/sb/images/xiazai.jpg"><a href="#"  target="_blank">房产抵押变更为房产抵押申请表</a><br><br>
+                <img src="/sb/images/xiazai.jpg"><a href="#"  target="_blank">抵押物共有人变更申请表</a><br>
+                <img src="/sb/images/xiazai.jpg"><a href="#"  target="_blank">自然保证人变更为自然保证人申请表</a>
+
+            </ul>
+        </div>
+    </div>
+</div>
+<div class="zscf_aboutus_wper" >
+    <div class="zscf_aboutus px1000 clearfix">
+        <div class="zscf_aboutus_l fl">
+            <ul class="zscf_aboutus_lul clearfix">
+                <li class="pt10"><a href="#"><img src="/sb/images/app.png" alt=""></a>
+                </li>
+                <li>
+                    <p class="pb20">服务热线</p>
+                    <strong>400-027-0101</strong>
+                </li>
+                <li>
+                    <p class="pb10 linkpic">
+                        <a href="#"><img src="/sb/images/ft_sina.png" alt=""></a>
+                        <a href="#"><img src="/sb/images/ft_weixin.png" alt=""></a>
+                        <a href="#"><img src="/sb/images/ft_erji.png" alt=""></a>
+                    </p>
+                    <p><a href="#">kefu@zhongxincaifu.com</a></p>
+                </li>
+            </ul>
+        </div>
+        <!-- end left -->
+        <div class="zscf_aboutus_r fl clearfix" >
+            <a href="#" class="fl ft_ewm"><img src="/sb/images/ft_erweima.png" alt=""></a>
+            <ul class="fl clearfix">
+                <li><a href="#">联系我们</a></li>
+                <li><a href="#">我要融资</a></li>
+                <li><a href="problem.html">帮助中心</a></li>
+                <li><a href="#">友情链接</a></li>
+                <li><a href="#">招贤纳士</a></li>
+                <li><a href="#">收益计算器</a></li>
+            </ul>
+        </div>
+        <!-- end right -->
+
+    </div>
+</div>
+
+<div class="zscf_bottom_wper">
+    <div class="zscf_bottom px1000 clearfix">
+        <p class="fl">© 2014 zhongxincaifu &nbsp;  &nbsp;&nbsp;   中兴财富金融信息服务股份有限公司 &nbsp;&nbsp;&nbsp;    来源:<a href="http://www.mycodes.net/" target="_blank">源码之家</a></p>
+        <p class="fr">
+            <a href="#"><img src="/sb/images/360.png" alt=""></a>
+            <a href="#"><img src="/sb/images/kexin.png" alt=""></a>
+            <a href="#"><img src="/sb/images/norton.png" alt=""></a>
+        </p>
+    </div>
+</div>
+<script src="/sb/js/all.js" type="text/javascript"></script>
+<link rel="stylesheet" href="/sb/css/base.css" type="text/css"></link><link rel="stylesheet" href="/sb/css/master.css" type="text/css"></link></body>
+</body>
+</html>
+<script>
+//    function re(){
+//        $.ajax({
+//            url: "GetMsg2.action" ,
+//            type:'post',
+//            dataType:'text',
+//            success:function(date){
+//                var strArray=date.split(":");
+//                if(strArray[0]!='小洋'){
+//                    show("../backStage/images/touxiang.png",strArray[1]);
+//                }else{
+//                    send("../backStage/./images/touxiangm.png",strArray[1]);   //
+//                }
+//                re();
+//            }
+//        })
+//    }
+    //i++;
+//    function sendok() {
+//        myform.submit();
+//        //用txt保存聊天显示框的对象
+//        $("#msginput").val(" ");
+//        var txt = $("#chatbox")[0];
+//        //设置显示框显示在最底部
+//        //	alert(document.body.scrollTop);
+//        txt.scrollTop = txt.scrollHeight;
+//    };
+//    /*发送消息*/
+//    function send(headSrc,str){
+//        var html="<div class='send'><div class='msg'><img src="+headSrc+" />"+
+//            "<p><i class='msg_input'></i>"+str+"</p></div></div>";
+//        upView(html);
+//    }
+//    /*接受消息*/
+//    function show(headSrc,str){
+//        var html="<div class='show'><div class='msg'><img src="+headSrc+" />"+
+//            "<p><i class='msg_input'></i>"+str+"</p></div></div>";
+//        upView(html);
+//    }
+//    /*更新视图*/
+//    function upView(html){
+//        $('.message').append(html);
+//        $('body').animate({scrollTop:$('.message').outerHeight()-window.innerHeight},200)
+//    }
+//    (function (doc, win) {
+//        var docEl = doc.documentElement,
+//            resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+//            recalc = function () {
+//                var clientWidth = docEl.clientWidth;
+//                if (!clientWidth) return;
+//                if(clientWidth>=720){
+//                    docEl.style.fontSize = '100px';
+//                }else{
+//                    docEl.style.fontSize = 100 * (clientWidth / 720) + 'px';
+//                }
+//            };
+//        if (!doc.addEventListener) return;
+//        win.addEventListener(resizeEvt, recalc, false);
+//        doc.addEventListener('DOMContentLoaded', recalc, false);
+//    })(document, window);
+    $(function(){
+        var date = new Date();
+        var mon = date.getMonth()+1;
+        var day = date.getDate();
+        var hour = date.getHours();
+        var minute = date.getMinutes();
+        var second = date.getSeconds();
+        $(".time").html((mon<10?"0"+mon:mon) +"/"+day+"  "+hour+':'+minute+':'+second);
+
+    })
+</script>

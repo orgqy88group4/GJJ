@@ -33,14 +33,14 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
-    @Override
-    public User getUserById(Integer empNo) {
-        List<User> userList = userDao.getUserById(empNo);
-        if (userList!=null&&userList.size()>0){
-            return userList.get(0);
-        }
-        return null;
-    }
+//    @Override
+//    public User getUserById(Integer empNo) {
+//        List<User> userList = userDao.getUserById(empNo);
+//        if (userList!=null&&userList.size()>0){
+//            return userList.get(0);
+//        }
+//        return null;
+//    }
 
     //1211
     @Override
@@ -60,9 +60,30 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Map> UserSelect1(Map map) {
+    public List<Person> UserSelect1(Map map) {
         System.out.println("======"+map);
-        return userDao.UserSelect1(map);
+        List<Map> userSelect = userDao.UserSelect1(map);
+        List<Person> userList = new ArrayList<Person>();
+        if(userSelect!=null&userSelect.size()>0){
+            Person person = null;
+            String pState = "";
+            for (int i = 0; i < userSelect.size(); i++) {
+                Map maps = userSelect.get(i);
+                if(maps.get("state").equals("1")){
+                    pState="正常";
+                }else if(maps.get("state").equals("2")){
+                    pState="封存";
+                }else{
+                    pState="销户";
+                }
+                person = new Person(maps.get("pname")+"", maps.get("idNumber")+"",maps.get("balance")+"",pState);
+                userList.add(person);
+            }
+            return userList;
+        }else {
+            return null;
+        }
+
     }
 
     @Override
@@ -137,5 +158,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Map> select() {
         return userDao.select();
+    }
+    @Override
+    public List<Map> selByUserName(String userName) {
+        List<Map> userList = userDao.selByUserName(userName);
+        if (userList!=null&&userList.size()>0){
+            return userList;
+        }
+        return null;
+    }
+
+    @Override
+    public User getUserById(Integer empNo) {
+        List<User> userList = userDao.getUserById(empNo);
+        if (userList!=null&&userList.size()>0){
+            return userList.get(0);
+        }
+        return null;
     }
 }

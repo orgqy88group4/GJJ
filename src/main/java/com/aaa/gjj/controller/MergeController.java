@@ -34,6 +34,7 @@ public class MergeController {
     @ResponseBody
     @RequestMapping("/SealedPage1")
     public Object list(@RequestBody Map map){
+        System.out.println("前台传来的值："+map);
         if(map!=null&&map.size()>0){
             List<PersonsAccountNumberState> userList = mergerService.SealedPage1(map);//获取分页查询的值
             for (PersonsAccountNumberState personsAccountNumberState : userList) {
@@ -111,14 +112,10 @@ public class MergeController {
     //12121658查看审批
     @ResponseBody
     @RequestMapping("/accraditation1")
-    public Object accraditation1(@RequestBody Map map){
-        List<Map> accraditation = mergerService.accraditation1(map);  //查询查看审批表的 工作类型信息
-        Map tempMap = new HashMap();
-        //绑定数据 分页数据
-        tempMap.put("pageDate", accraditation);
-        //总数量
-        tempMap.put("total",mergerService.accraditationCount1(map));
-        return tempMap;
+    public Object accraditation1(){
+        List<Map> list = mergerService.accraditation1();//查询查看审批表的 工作类型信息
+        System.out.println(list);
+        return list;
     }
 
     /**

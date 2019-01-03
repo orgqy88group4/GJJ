@@ -167,10 +167,10 @@ public class CompanyController {
     @ResponseBody
     @RequestMapping("/registerInfo")
     public Object RegisterInfo(@RequestBody Map map){
-        System.out.println("map="+map);
+        //System.out.println("map="+map);
         int i = companyService.unitRegister(map);
         map.put("uid",i);
-        int i1 = companyService.unitAccount(map);
+        int i1 = companyService.unitAccount(map);//催缴人
         return i1;
     }
     /**

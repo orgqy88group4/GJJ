@@ -12,9 +12,6 @@
     <script src="/sb/js/elementui.js"></script>
 </head>
 <body>
-<div id="app">
-    <h2>{{ message }}</h2>
-</div>
 <div id="tableView">
     <!--列表顶部搜索和工具条-->
     <el-row>
@@ -24,26 +21,26 @@
                 <el-input v-model="searchForm.uname" placeholder="单位名称"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" icon="search" @click="searchClick">查询</el-button>
+                <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick">查询</el-button>
             </el-form-item>
         </el-form>
     </el-row>
     <!--列表-->
     <el-row>
         <el-table :data="tableData" v-loading.body="loading" border @selection-change="selectionChange" style="width: 100%">
-            <el-table-column prop="DWZH" label="单位账号" width="160"></el-table-column>
-            <el-table-column prop="uname" label="单位名称" width="150"></el-table-column>
-            <el-table-column prop="uDepositRatio" label="单位存缴比例" width="150"></el-table-column>
-            <el-table-column prop="uPersonRatio" label="个人存缴比例" width="120"></el-table-column>
-            <el-table-column prop="uDepositedPnum" label="单位存缴人数" width="120"></el-table-column>
-            <el-table-column prop="uARemain" label="单位账户余额" width="120"></el-table-column>
-            <el-table-column prop="uaOweMonery" label="应缴纳金额" width="120"></el-table-column>
-            <el-table-column prop="uaState" label="单位账户状态" width="80"></el-table-column>
-            <el-table-column prop="uaPayEndDate" label="单位缴至年月" width="120"></el-table-column>
-            <el-table-column label="操作" width="150px">
+            <el-table-column prop="DWZH" label="单位账号" align="center" width="180"></el-table-column>
+            <el-table-column prop="uname" label="单位名称" align="center" width="240"></el-table-column>
+            <el-table-column prop="uDepositRatio" label="单位存缴比例" align="center" width="160"></el-table-column>
+            <el-table-column prop="uPersonRatio" label="个人存缴比例" align="center" width="160"></el-table-column>
+            <el-table-column prop="uDepositedPnum" label="单位存缴人数" align="center" width="160"></el-table-column>
+            <el-table-column prop="uARemain" label="单位账户余额" align="center" width="160"></el-table-column>
+            <el-table-column prop="uaOweMonery" label="应缴纳金额" align="center" width="160"></el-table-column>
+            <el-table-column prop="uaState" label="单位账户状态" align="center" width="120"></el-table-column>
+            <el-table-column prop="uaPayEndDate" label="单位缴至年月" align="center" width="160"></el-table-column>
+            <el-table-column label="操作" width="150px" align="center">
                 <template scope="scope">
                     <div style="text-align: center" >
-                        <el-button type="success" icon="el-icon-check" round @click="editClick(scope.row)">基数调整</el-button>
+                        <el-button type="success" :plain="true" icon="el-icon-check" round @click="editClick(scope.row)">基数调整</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -68,7 +65,7 @@
                     <el-input v-model="searchForm1.tb_pName" placeholder="员工姓名"></el-input>
                 </el-form-item>
                 <el-form-item>
-                    <el-button type="primary" icon="search" @click="searchClick1">查询</el-button>
+                    <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick1">查询</el-button>
                 </el-form-item>
             </el-form>
         </el-row>
@@ -84,14 +81,14 @@
                 <el-table-column label="操作" width="150px">
                     <template scope="scope">
                         <div style="text-align: center" >
-                            <el-button type="success" icon="el-icon-check" round @click="editClick1(scope.row)">修改基数</el-button>
+                            <el-button type="success" :plain="true" icon="el-icon-check" round @click="editClick1(scope.row)">修改基数</el-button>
                         </div>
                     </template>
                 </el-table-column>
             </el-table>
         </el-row>
         <div slot="footer" class="dialog-footer">
-            <el-button @click.native="editFormVisibleQ = false">关闭</el-button>
+            <el-button :plain="true" @click.native="editFormVisibleQ = false">关闭</el-button>
         </div>
     </el-dialog>
     <!--弹出框基数调整按钮所弹出的页面-->
@@ -137,19 +134,13 @@
             </el-container>
         </el-form>
         <div slot="footer" class="dialog-footer">
-            <el-button type="danger" round  @click.native="unlock">解除锁定</el-button>
-            <el-button type="primary" round @click.native="pullupdate">保存调整</el-button>
-            <el-button round @click.native="editFormVisibleQ1 = false">关闭</el-button>
+            <el-button type="danger" round :plain="true"  @click.native="unlock">解除锁定</el-button>
+            <el-button type="primary" round :plain="true" @click.native="pullupdate">保存调整</el-button>
+            <el-button round :plain="true"  @click.native="editFormVisibleQ1 = false">关闭</el-button>
         </div>
     </el-dialog>
 </div>
 <script>
-    var app = new Vue({
-        el: '#app',
-        data: {
-            message: '基数调整'
-        }
-    });
     var tableView = new Vue({
         el: '#tableView',
         data: {

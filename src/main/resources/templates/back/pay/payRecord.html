@@ -29,8 +29,8 @@
                 <el-input v-model="searchForm.pName" placeholder="按姓名查询"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" icon="search" @click="searchClick" round>查询</el-button>
-                <el-button type="success" icon="plus" @click="toFlush" round>刷新</el-button>
+                <el-button type="primary"  round :plain="true" icon="el-icon-search"  @click="searchClick">查询</el-button>
+                <el-button type="success"  :plain="true" icon="plus" @click="toFlush" round>刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -51,25 +51,30 @@
             <el-table-column
                     prop="GRZH"
                     label="个人账号"
+                    align="center"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="pName"
                     label="姓名"
+                    align="center"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="repay_month_money"
-                    label="已还本金">
+                    label="已还本金"
+                    align="center" >
             </el-table-column>
             <el-table-column
                     prop="repay_month_interest"
-                    label="已还利息">
+                    label="已还利息"
+                    align="center" >
             </el-table-column>
             <el-table-column
                     prop="repayed_date"
                     sortable
-                    label="还款时间">
+                    label="还款时间"
+                    align="center" >
             </el-table-column>
         </el-table>
     </el-row>

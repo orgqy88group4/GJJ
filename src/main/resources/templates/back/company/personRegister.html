@@ -124,7 +124,7 @@
         </el-container>
     </el-container>
         <div style="text-align: center">
-            <el-button type="primary" @click.native="editSubmit('editForm')" :loading="editLoading">保存</el-button>
+            <el-button type="primary" @click.native="editSubmit('editForm')"  round :plain="true" :loading="editLoading">保存</el-button>
         </div>
     </el-form>
 </div>
@@ -154,7 +154,7 @@
                 uPersonRatio:'',
                 tb_pSex:'',
                 tb_pDate:'',
-                paOp:'',
+                paOp:'[[${session.account_name}]]',
                 tb_idcard:'',
                 tb_idNUmber:'',
                 tb_pMarriage:'',
@@ -213,15 +213,15 @@
             blurSearchFor1:function () {
                 var _self=this;
                 axios.post('/sb/company/UnitInfo',{DWZH:_self.editForm.DWZH}).then(function (response) {
-                    //_self.editForm = Object.assign({}, response.data[0]);
-                    //alert(JSON.stringify(response.data[0]));
                     if (response.data[0]!=''&&response.data[0]!=null){
                         _self.editForm.uname=response.data[0].uname;
                         _self.editForm.uDepositRatio=response.data[0].uDepositRatio;
                         _self.editForm.uPersonRatio=response.data[0].uPersonRatio;
                     }
                     else{
-                        _self.editForm = Object.assign({}, '');
+                        _self.editForm.uname='';
+                        _self.editForm.uDepositRatio='';
+                        _self.editForm.uPersonRatio='';
                         _self.$message({
                             message: '公司账号输入有误',
                             type: 'warning'

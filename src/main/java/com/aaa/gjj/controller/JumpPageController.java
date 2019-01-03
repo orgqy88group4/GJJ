@@ -36,7 +36,7 @@ public class JumpPageController {
     }
     //年度贷款金额统计图
     @RequestMapping("/LoanInfoMap")
-    public String LoanInfoMap(){
+    public String LoanInfoMap2(){
         return "back/financial/DKQKXX";
     }
     //年度还款金额统计图
@@ -125,6 +125,26 @@ public class JumpPageController {
     public String PersonRegister(){
         return "back/company/personRegister";
     }
+    //汇缴页面
+    @RequestMapping("/remit")
+    public String remit(){
+        return "back/company/Remit";
+    }
+    //挂账办理
+    @RequestMapping("/guaZhangBanLi")
+    public  String  guaZhangBanLi(){
+        return "back/company/GuaZhangBanLi";
+    }
+    //比例变更
+    @RequestMapping("/biLiBianGeng")
+    public String biLiBianGeng(){
+        return "back/company/BiliBinaGeng";
+    }
+    //明细查询
+    @RequestMapping("/mXCXC")
+    public  String  MXCX(){
+        return "back/company/MXCX";
+    }
     /**
      * 跳转权限树添加页面
      * @return
@@ -187,13 +207,102 @@ public class JumpPageController {
         return "back/pay/loadRecord";
     }
 
+//    /**
+//     * 跳转角色登录
+//     * @return
+//     */
+//    @RequestMapping("/toLogin")
+//    public String loading(){
+//        return "login";
+//    }
+    /**
+     * 跳转还款记录页面
+     * @return
+     */
+    @RequestMapping("/overdue")
+    public String overdue(){
+        return "back/pay/overduePay";
+    }
     /**
      * 跳转角色登录
      * @return
      */
     @RequestMapping("/toLogin")
     public String loading(){
-        return "login";
+        return "Login";
+    }
+    //=====================前台页面跳转==========================================
+    //前台首页
+    @RequestMapping("/shouye1")
+    public String ShouYe(){
+        return "qiantai/shouye";
+    }
+    //个人登录
+    @RequestMapping("/denglu")
+    public String DengLu(){
+        return "qiantai/denglu";
+    }
+    //个人登录进来
+    @RequestMapping("/green")
+    public String Green(){
+        return "qiantai/green";
+    }
+    //个人登录进来缴纳记录
+    @RequestMapping("/jiaona")
+    public String JiaoCun(){
+        return "qiantai/jiaona";
+    }
+    //个人登录进来贷款记录
+    @RequestMapping("/daikuan")
+    public String DaiKuan(){
+        return "qiantai/daikuan";
+    }
+    //个人登录进来偿还贷款
+    @RequestMapping("/huankuan")
+    public String Huankuan(){
+        return "qiantai/huankuan";
+    }
+    //单位登录
+    @RequestMapping("/danwei")
+    public String DanWei(){
+        System.out.println("注销进来了：：：");
+        return "qiantai/danwei";
+    }
+    //单位登录信息
+    @RequestMapping("/dxinxi")
+    public String DxinXi(){
+        return "qiantai/dxinxi";
+    }
+    //单位登录缴纳
+    @RequestMapping("/danjiaona")
+    public String DanJiaoNa(){
+        return "qiantai/danjiaona";
+    }
+    //单位登录缴纳记录
+    @RequestMapping("/seldanjiao")
+    public String DanJiaoNaJiLu(){
+        return "qiantai/danjiaonajilu";
     }
 
+    //政策法规
+    @RequestMapping("/zhengce")
+    public String ZhengCe(){
+        return "qiantai/zhengce";
+    }
+    //政策法规内容
+    @RequestMapping("/zhengce11")
+    public String ZhengCe11(){
+        return "qiantai/zhengce11";
+    }
+    //政策法规内容之小新闻
+    @RequestMapping("/gongzuo11")
+    public String GongZuo11(){
+        return "qiantai/gongzuo11";
+    }
+//==========================================================================
+    //后台新闻模块
+    @RequestMapping("/newsInfo")
+    public String NewsInfo(){
+        return "back/information/information";
+    }
 }

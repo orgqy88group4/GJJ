@@ -20,12 +20,6 @@ public interface UserService {
      */
     User getUserByuserName(String ename);
 
-    /**
-     * 通过id找用户
-     * @return
-     */
-    User getUserById(Integer empNo);
-
     //1211
     /**
      * 查询待审核表  查询审核信息  前台回去的值对比 相同操作的人
@@ -54,7 +48,7 @@ public interface UserService {
      * 用户列表
      * @return
      */
-    List<Map> UserSelect1(Map map);
+    List<Person> UserSelect1(Map map);
 
     /**
      * 用户分页列表总数量
@@ -115,4 +109,16 @@ public interface UserService {
      * @return
      */
     List<Map> select();
+    /**
+     * 根据用户名找用户
+     * @param userName
+     * @return
+     */
+    List<Map> selByUserName(String userName);
+
+    /**
+     * 通过id找用户
+     * @return
+     */
+    User getUserById(Integer empNo);
 }

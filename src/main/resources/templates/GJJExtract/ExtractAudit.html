@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <!-- 引入样式 -->
+    <script type="text/javascript" src="../js/vue.js"></script>
+    <script type="text/javascript" src="../js/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/sb/css/elementui.css">
+
+    <!-- 引入组件库 -->
+    <script src="/sb/js/elementui.js"></script>
+
+</head>
+<style>
+
+    .el-aside {
+        background-color: #E9EEF3;
+        color: #333;
+        text-align: center;
+        line-height: 200px;
+    }
+
+    .el-main {
+        background-color: #E9EEF3;
+        color: #333;
+        text-align: center;
+        line-height: 160px;
+    }
+
+    body > .el-container {
+        margin-bottom: 40px;
+    }
+
+    .el-container:nth-child(5) .el-aside,
+    .el-container:nth-child(6) .el-aside {
+        line-height: 260px;
+    }
+
+    .el-container:nth-child(7) .el-aside {
+        line-height: 320px;
+    }
+</style>
+<body>
+<div id="app">
+    <h2>{{ message }}</h2>
+</div>
+
+<div id="tableView">
+    <!--列表顶部搜索和工具条-->
+    <el-row>
+        <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+            <el-form-item label="个人账号">
+                <el-input v-model="searchForm.pre_account" placeholder="个人账号"></el-input>
+            </el-form-item>
+            <el-form-item label="个人姓名">
+                <el-input v-model="searchForm.appl_name" placeholder="个人姓名"></el-input>
+            </el-form-item>
+            <!--<el-form-item label="状态">-->
+            <!--<el-select v-model="searchForm.deptNo" placeholder="部门">-->
+            <!--<el-option label="全部" value=""></el-option>-->
+            <!--<el-option label="财务部" value="10"></el-option>-->
+            <!--<el-option label="销售部" value="20"></el-option>-->
+            <!--</el-select>-->
+            </el-form-item><el-form-item>
+            <el-button type="primary" icon="search" @click="searchClick">查询</el-button>
+        </el-form-item>
+        </el-form>
+    </el-row>
+    <!--列表-->
+    <el-row>
+        <el-table
+                :data="tableData"
+                v-loading.body="loading"
+                border
+                style="width: 100%">
+            <el-table-column
+                    prop="extract_application_id"
+                    label="提取编号"
+                    align="center"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="comp_name"
+                    label="单位名称"
+                    align="center"
+                    width="150">
+            </el-table-column>
+
+            <el-table-column
+                    prop="appl_name"
+                    label="职工名称"
+                    align="center"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="pre_account"
+                    label="个人账户"
+                    align="center"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="extract_money"
+                    label="申请提取金额"
+                    align="center"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="application_way"
+                    label="提取方式"
+                    align="center"
+                    width="150">
+                <template scope="scope">
+                    {{ scope.row.application_way === "1" ?  '现金': '' }}
+                    {{ scope.row.application_way === "2" ?  '银行': '' }}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="application_type"
+                    label="提取类型"
+                    align="center"
+                    width="150">
+                <template scope="scope">
+                    {{ scope.row.application_type === "1" ?  '部分提取': '' }}
+                    {{ scope.row.application_type === "2" ?  '销户提取': '' }}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="extract_reason"
+                    label="提取原因"
+                    align="center"
+                    width="150">
+                <template scope="scope">
+                    {{ scope.row.extract_reason === "1" ?  '房屋超出家庭工资收入的规定比例': '' }}
+                    {{ scope.row.extract_reason === "2" ?  '建造、翻修、大修住房': '' }}
+                    {{ scope.row.extract_reason === "3" ?  '偿还购房贷款本息': '' }}
+                    {{ scope.row.extract_reason === "4" ?  '销户提取': '' }}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    prop="appl_time"
+                    label="申请时间"
+                    align="center"
+                    width="150">
+            </el-table-column>
+            <el-table-column
+                    prop="appl_state"
+                    label="审批状态"
+                    align="center"
+                    width="150">
+                <template scope="scope">
+                    {{ scope.row.appl_state === 1 ?  '未审核': '' }}
+                    {{ scope.row.appl_state === 2 ?  '通过': '' }}
+                    {{ scope.row.appl_state === 3 ?  '驳回': '' }}
+                </template>
+            </el-table-column>
+            <el-table-column
+                    label="操作"
+                    align="center">
+                <template scope="scope">
+                    <el-button :plain="true" type="success" size="small" icon="edit" @click="editClick(scope.row,'editForm')">提取审核</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-row>
+
+    <!--列表底部工具条和分页符-->
+    <el-row style="margin-top: 20px" type="flex" justify="end">
+        <el-col :span="18" >
+            <el-pagination
+                    style="float: right"
+                    @size-change="pageSizeChange"
+                    @current-change="currentPageChange"
+                    :current-page="currentPage"
+                    :page-sizes="[10, 20, 30, 50]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+            </el-pagination>
+        </el-col>
+    </el-row>
+
+    <!--编辑界面-->
+    <el-dialog title="提取审核" :visible.sync="editFormVisible" width="1000px" :close-on-click-modal="false" >
+        <el-form :model="editForm" status-icon  label-width="110px" :rules="rules2" ref="editForm">
+            <el-container>
+                <el-aside width="300px" style="padding-top: 40px">
+                    <el-form-item label="提取编号" prop="extract_application_id">
+                        <el-input v-model="editForm.extract_application_id" :disabled="true" auto-complete="off" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="个人账号" prop="pre_account">
+                        <el-input v-model="editForm.pre_account" :disabled="true" auto-complete="off" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="姓名" prop="appl_name">
+                        <el-input v-model="editForm.appl_name" :disabled="true" auto-complete="off" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="证件类型" prop="tb_idcard">
+                        <el-input v-model="editForm.tb_idcard" :disabled="true" auto-complete="off" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="证件号码" prop="appl_idnum">
+                        <el-input v-model="editForm.appl_idnum" :disabled="true" auto-complete="off" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="单位名称" prop="comp_name">
+                        <el-input v-model="editForm.comp_name" :disabled="true" auto-complete="off" ></el-input>
+                    </el-form-item>
+                </el-aside>
+                <el-main width="700px">
+                    <el-container>
+                        <el-aside width="300px" style="padding-top: 20px">
+                            <el-form-item label="申请提取金额" prop="extract_money">
+                                <el-input v-model="editForm.extract_money" :disabled="true" auto-complete="off" ></el-input>
+                            </el-form-item>
+                            <el-form-item label="收款账号" prop="appl_bank_account">
+                                <el-input v-model="editForm.appl_bank_account" :disabled="true" auto-complete="off" ></el-input>
+                            </el-form-item>
+                            <el-form-item label="提取方式" prop="application_way1">
+                                <el-input v-model="editForm.application_way1" :disabled="true" auto-complete="off" ></el-input>
+                            </el-form-item>
+                            <el-form-item label="提取类型" prop="application_type1">
+                                <el-input v-model="editForm.application_type1" :disabled="true" auto-complete="off" ></el-input>
+                            </el-form-item>
+                            <el-form-item label="提取原因" prop="extract_reason1">
+                                <el-input v-model="editForm.extract_reason1" :disabled="true" auto-complete="off" ></el-input>
+                            </el-form-item>
+                            <el-form-item label="申请时间" prop="appl_time">
+                                <el-input v-model="editForm.appl_time" :disabled="true" auto-complete="off" ></el-input>
+                            </el-form-item>
+                        </el-aside>
+                        <el-main width="300px">
+                            <el-form-item label="收款户名" prop="appl_bank_name">
+                                <el-input v-model="editForm.appl_bank_name" :disabled="true" auto-complete="off" ></el-input>
+                            </el-form-item>
+                            <el-form-item label="委托人姓名" prop="bailor_name">
+                                <el-input v-model="editForm.bailor_name" :disabled="true" auto-complete="off" ></el-input>
+                            </el-form-item>
+                            <el-form-item label="委托人身份证号" prop="bilor_idnum">
+                                <el-input v-model="editForm.bilor_idnum" :disabled="true" auto-complete="off" ></el-input>
+                            </el-form-item>
+                            <el-form-item label="审批状态" prop="appl_state1">
+                                <el-input v-model="editForm.appl_state1" :disabled="true" auto-complete="off" ></el-input>
+                            </el-form-item>
+                            <el-form-item label="准许提取金额" prop="tqje">
+                                <el-input v-model="editForm.tqje"  auto-complete="off" ></el-input>
+                            </el-form-item>
+                        </el-main>
+                    </el-container>
+                </el-main>
+            </el-container>
+         </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button type="danger" @click.native="XHSubmit('editForm')" icon="el-icon-circle-close" :loading="editLoading"  v-if="aa==0">确认销户</el-button>
+            <el-button type="primary" @click.native="loseSubmit('editForm')" :loading="editLoading" >驳回</el-button>
+            <el-button type="primary" @click.native="passSubmit('editForm')" :loading="editLoading" v-if="aa==1">通过</el-button>
+            <el-button @click.native="editFormVisible = false" >关闭</el-button>
+        </div>
+    </el-dialog>
+
+</div>
+
+<script type="text/javascript">
+    var app = new Vue({
+        el: '#app',
+        data: {
+            message: '公积金普通提取审核'
+        }
+    });
+    var tableView = new Vue({
+        el: '#tableView',
+        data: {
+            aa:0,
+            //列表数据
+            tableData: [],
+            //显示加载中样式
+            loading:false,
+            //搜索表单
+            searchForm: {
+                pre_account: '',
+                appl_name: ''
+            },
+            //多选值
+            multipleSelection: [],
+            //当前页
+            currentPage:1,
+            //分页大小
+            pageSize:10,
+            //总记录数
+            total:800,
+            //删除的弹出框
+            deleteVisible:false,
+            //编辑界面是否显示
+            editFormVisible: false,
+            editLoading: false,
+            goUrl:'',
+            rules2: {
+                tqje: [
+                    { required: true,message: '请输入准许提取金额', trigger: 'blur' },
+                    {pattern: /^[0-9]*$/, message: '请输入正确的格式', trigger: 'blur' }
+                ],
+            },
+
+            //编辑界面数据
+            editForm: {
+                extract_application_id:'',
+                delivery: false,
+                pre_account:'',
+                appl_name: '',
+                tb_idcard:'',
+                appl_idnum: '',
+                comp_name: '',
+                extract_money: '',
+                appl_bank_account: '',
+                application_way1: '',
+                application_type1: '',
+                extract_reason1:'',
+                appl_time:'',
+
+                appl_bank_name:'',
+                bailor_name:'',
+                bilor_idnum:'',
+                appl_state1:'',
+                appl_idnum:'',
+                tqje:''
+            },
+        },
+        created:function(){
+            //在 then的内部不能使用Vue的实例化的this, 因为在内部 this 没有被绑定。
+            var self = this;
+            var start =(this.currentPage-1)*this.pageSize;
+            var end =this.pageSize;
+            axios.post('/sb/extract/examine',{'start':start,'end':end}).then(function(response){
+                // console.log(response.data);
+                //alert(response.data.total);
+                self.total=response.data.total;
+                self.tableData = response.data.pageData;
+                // self.multipleSelection=response.data.data;
+            })
+        },
+        methods:{
+            //表格重新加载数据
+            loadingData:function() {
+                var _self = this;
+                _self.loading = true;
+                var self = this;
+                var start =(this.currentPage-1)*this.pageSize;
+                var end =this.pageSize;
+                var searchForm={'start':start,'end':end,'pre_account':this.searchForm.pre_account,'appl_name':this.searchForm.appl_name};
+                //   alert(JSON.stringify(searchForm));
+                axios.post('/sb/extract/examine',searchForm).then(function(response){
+                    // console.log(response.data);
+                    // alert(222);
+                    _self.total=response.data.total;
+                    _self.tableData = response.data.pageData;
+                    //_self.multipleSelection=response.data.data;
+                })
+                console.log(_self.currentPage);
+                setTimeout(function(){
+                    console.info("加载数据成功");
+                    _self.loading = false;
+                },300);
+            },
+            //表格编辑事件
+            editClick:function(row,formName) {
+                if(row.appl_state==2||row.appl_state==3){
+                    this.$message({
+                        showClose: true,
+                        message: '警告哦，该职工已经审核过了！',
+                        type: 'warning'
+                    });
+                }else{
+                    if(row.application_type=="2"){
+                        this.aa=0;
+                    }else {
+                        this.aa=1;
+                    }
+                this.goUrl="/sb/extract/auditPass";
+                this.editFormVisible = true;
+                this.editForm.tqje='';
+                this.editForm = Object.assign({}, row);
+                if(row.application_way=="2"){
+                    this.editForm.application_way1="银行"
+                }else {
+                    this.editForm.application_way1="现金"
+                };
+                if(row.application_type=="1"){
+                    this.editForm.application_type1="部分提取"
+                }else{
+                    this.editForm.application_type1="销户提取"
+                };
+                if(row.extract_reason=="1"){
+                    this.editForm.extract_reason1="房屋超出家庭工资收入的规定比例"
+                }else if(row.extract_reason=="2"){
+                    this.editForm.extract_reason1="建造、翻修、大修住房"
+                }else if(row.extract_reason=="3"){
+                    this.editForm.extract_reason1="偿还购房贷款本息"
+                }else{
+                    this.editForm.extract_reason1="销户提取"
+                };
+                if(row.appl_state ==1){
+                    this.editForm.appl_state1="未审核"
+                }else if(row.appl_state ==2){
+                    this.editForm.appl_state1="通过"
+                }else{
+                    this.editForm.appl_state1="驳回"
+                };
+                this.$refs[formName].resetFields();
+                }
+
+            },
+            //表格查询事件
+            searchClick:function() {
+                var self = this;
+                /* var start =(this.currentPage-1)*this.pageSize;
+                 var end =this.currentPage*this.pageSize+1;
+                 //var searchForm =this.searchForm;
+
+                 var searchForm={'start':start,'end':end,'id':this.id,'name':this.name,'deptNo':this.deptNo};
+                 alert(searchForm);
+                 //formData.push({'start':start}).push({'end':end})
+                 axios.post('/emp/list',searchForm).then(function(response){
+                     // console.log(response.data);
+                     //alert(response.data.total);
+                     self.total=response.data.total;
+                     self.tableData = response.data.data;
+                     // self.multipleSelection=response.data.data;
+                 })*/
+                self.loadingData();//重新加载数据
+            },
+            //分页大小修改事件
+            pageSizeChange:function(val) {
+                console.log('每页 ' + val +' 条');
+                this.pageSize = val;
+                var _self = this;
+                _self.loadingData();//重新加载数据
+            },
+            //当前页修改事件
+            currentPageChange:function(val) {
+                this.currentPage = val;
+                console.log('当前页: ' + val);
+                var _self = this;
+                _self.loadingData();//重新加载数据
+            },
+
+            //驳回保存点击事件
+            loseSubmit:function() {
+                        var _self = this;
+                        _self.loading = true;
+                        var formData =this.editForm;
+                        //alert(formData);
+                        var goUrl="/sb/extract/auditLose";
+                        axios.post(goUrl,formData).then(function(response){
+                            // console.log(response.data);
+                            // alert(222);
+                            // self.total=response.data.total;
+                            if(response.data>0){
+                                _self.editFormVisible = false;
+                                _self.loadingData();//重新加载数据
+                                _self.rest()
+                            }else{
+                                _self.$message({
+                                    message: '操作失败',
+                                    type: 'error'
+                                });
+                            }
+                            _self.loadingData();//重新加载数据
+                        })
+                console.info(this.editForm);
+            },
+
+            //销户保存点击事件
+            XHSubmit:function() {
+                var _self = this;
+                _self.loading = true;
+                var formData =this.editForm;
+                //alert(formData);
+                var goUrl="/sb/extract/XHAuditPass";
+                axios.post(goUrl,formData).then(function(response){
+                    // console.log(response.data);
+                    // alert(222);
+                    // self.total=response.data.total;
+                    if(response.data>0){
+                        _self.editFormVisible = false;
+                        _self.loadingData();//重新加载数据
+                        _self.rest()
+                    }else{
+                        _self.$message({
+                            message: '操作失败',
+                            type: 'error'
+                        });
+                    }
+                    _self.loadingData();//重新加载数据
+                })
+                console.info(this.editForm);
+            },
+            //通过保存点击事件
+            passSubmit:function(formName){
+                        this.$refs[formName].validate((valid) => {
+                            if (valid) {
+                                var _self = this;
+                                _self.loading = true;
+                                var formData =this.editForm;
+                                //alert(formData);
+                                var goUrl=this.goUrl;
+                                axios.post(goUrl,formData).then(function(response){
+                                    // console.log(response.data);
+                                    // alert(222);
+                                    // self.total=response.data.total;
+                                    if(response.data>0){
+                                        _self.editFormVisible = false;
+                                        _self.loadingData();//重新加载数据
+                                        _self.rest()
+                                    }else{
+                                        _self.$message({
+                                            message: '操作失败',
+                                            type: 'error'
+                                        });
+                                    }
+                                    _self.loadingData();//重新加载数据
+                                })
+                            } else {
+                                console.log('error submit!!');
+                                return false;
+                            }
+                        });
+                console.info(this.editForm);
+            }
+        }
+
+    })
+</script>
+
+</body>
+</html>

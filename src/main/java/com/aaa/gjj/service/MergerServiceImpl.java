@@ -170,18 +170,13 @@ public class MergerServiceImpl implements MergerService{
     //12121652查看审批
 
     @Override
-    public int accraditationCount1(Map map) {
-        List<Map> pageCount = mergeDao.accraditationCount1(map);
-        //判断总数量列表是否有值
-        if(pageCount!=null&&pageCount.size()>0){
-            return Integer.parseInt(pageCount.get(0).get("cnt")+"");
-        }
-        return 0;
-    }
-
-    @Override
-    public List<Map> accraditation1(Map map) {
-        return mergeDao.accraditation1(map);
+    public List<Map> accraditation1() {
+        List<Map> list = mergeDao.accraditation1();
+        mergeDao.addAccraditationCount(mergeDao.accraditationCount(),"个人贷款");//把信息个数   存入个人贷款类型信息
+        mergeDao.addAccraditationCount(mergeDao.accraditationCountb(),"人员转移审批");//把信息个数   存入人员转移审批类型信息
+        mergeDao.addAccraditationCount(mergeDao.accraditationCountt(),"公积金提取");//把信息个数   存入公积金提取类型信息
+        mergeDao.addAccraditationCount(mergeDao.accraditationCounts(),"封存、启封、销户审批");//把信息个数   存入公积金提取类型信息
+        return list;
     }
 
     @Override
@@ -216,7 +211,9 @@ public class MergerServiceImpl implements MergerService{
 
     @Override
     public List<Map> transfer(Map map) {
-        return mergeDao.transfer(map);
+        System.out.println("前台传来的值："+map);
+        List<Map> transfer = mergeDao.transfer(map);
+        return transfer;
     }
 
     @Override

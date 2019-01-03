@@ -1,5 +1,6 @@
 package com.aaa.gjj.controller;
 
+import com.aaa.gjj.entity.Node;
 import com.aaa.gjj.service.PowerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,8 +35,8 @@ public class PowerController {
      */
     @ResponseBody
     @RequestMapping("/tree")
-    public Object tree(){
-        return powerService.getList();
+    public Object tree(@RequestBody Map map){
+        return powerService.getList(map);
     }
 
     /**

@@ -17,7 +17,7 @@ public interface PowerService {
      * 列表查询方法
      * @return
      */
-    List<Node> getList();
+    List<Node> getList(Map map);
 
     /**
      * 权限添加

@@ -1,7 +1,9 @@
 package com.aaa.gjj.dao;
 
 import org.apache.ibatis.annotations.Insert;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.util.List;
 import java.util.Map;
@@ -112,15 +114,44 @@ public interface MergeDao {
      * 审批工作类别查询
      * @return
      */
-    @Select("<script>select * from accraditation limit #{start},#{end}</script>")
-    List<Map> accraditation1(Map map);
+    @Select("<script>select * from accraditation</script>")
+    List<Map> accraditation1();
     /**
-     * 查看审批信息总条数
-     * @param map
+     * 审批工作类别查询   查询   个人贷款  共多少条信息
      * @return
      */
-    @Select("<script>select count(*) as cnt from accraditation </script>")
-    List<Map> accraditationCount1(Map map);
+    @Select("select count(*) as flux from tb_loanapproval_end")
+    int  accraditationCount();
+    /**
+     * 添加到审批表中  共有多少条信息
+     * 把信息个数   存入个人贷款类型信息
+     * @param flux  信息条数
+     * @param name	工作类别
+     * @return
+     */
+    @Update("update accraditation set Accraditation_flux = #{flux} where Accraditation_name= #{name} ")
+    int addAccraditationCount(@Param("flux") int flux,@Param("name") String name);
+
+    /**
+     * 审批工作类别查询   查询 人员转移审批   共多少条信息
+     * @return
+     */
+    @Select("select count(*) as flux from tb_transfer_audit_jl")
+    int accraditationCountb();
+
+    /**
+     *审批工作类别查询   查询 公积金提取   共多少条信息
+     * @return
+     */
+    @Select("select count(*) as flux from tab_extract_application")
+    int accraditationCountt();
+
+    /**
+     * 审批工作类别查询   查询 封存、启封、销户审批    共多少条信息
+     * @return
+     */
+    @Select("select count(*) as flux from tb_unseal_audit")
+    int accraditationCounts();
 
     /**
      * 查询贷款记录表中的信息 录入查看审批表中

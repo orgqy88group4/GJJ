@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>单位开户</title>
@@ -73,7 +73,7 @@
                         <el-option label="其他经济" value = "其他经济" ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="机构代码:">
+                <el-form-item label="机构代码:" prop="uNetworkCode" key="12">
                     <el-input v-model="editForm.uNetworkCode" @blur="blurSearchFor2" style="width:220px;height:35px;" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="月发薪日:">
@@ -107,8 +107,8 @@
                     <el-form-item label="*证件类型:">
                         <el-select v-model="editForm.JBRZJLX"  style="width:220px;height:35px;" auto-complete="off">
                             <el-option label="--请选择--" :disabled="true" value="0"></el-option>
-                            <option label="身份证"  value = "身份证"></option>
-                            <option label="户口本" value = "户口本"></option>
+                            <el-option label="身份证"  value = "身份证"></el-option>
+                            <el-option label="户口本" value = "户口本"></el-option>
                         </el-select>
                     </el-form-item>
                     <el-form-item label="证件号码:" prop="JBRZJHM" key="5">
@@ -202,7 +202,7 @@
         </el-container>
         <div style="text-align: center">
             <!--@click.native="editSubmit('editForm')"-->
-            <el-button type="primary" @click.native="editSubmit1" :loading="editLoading">保存</el-button>
+            <el-button type="primary"  round :plain="true" @click.native="editSubmit1" :loading="editLoading">保存</el-button>
         </div>
     </el-form>
 </div>
@@ -248,10 +248,10 @@
                 STYH:'',
                 uaState:'正常',
                 KHRQ:new Date().toLocaleString()+'',
-                uCreater:'',
+                uCreater:'[[${session.account_name}]]',
 
                 YYZZ:'',
-                YWBLR:''
+                YWBLR:'[[${session.account_name}]]',
             },
             editFormRules:{
                 uname:[
@@ -285,6 +285,10 @@
                 uaBankNumber:[
                     { required: true, message: '请输入开户银行账号', trigger: 'blur' },
                     {pattern:/([\d]{4})([\d]{4})([\d]{4})([\d]{4})([\d]{0,})?/, trigger: 'blur', message: '你输入的开户银行账号格式不正确'}
+                ],
+                uNetworkCode:[
+                    { required: true, message: '请输入机构代码', trigger: 'blur' },
+                    {pattern:/(^\d{8,}$)/,trigger: 'blur',  message: '你输入的机构代码格式不正确'}
                 ]
             }
         },
@@ -303,8 +307,8 @@
                 if (_self.editForm.uname!=''&&_self.editForm.uname!=null){
                     axios.post('/sb/company/unitCheckName',{uName:_self.editForm.uname}).then(function (response) {
                         //alert(JSON.stringify(response.data));
-                        _self.editForm.uname='';
                         if (response.data==1){
+                            _self.editForm.uname='';
                             _self.$message({
                                 message: '该公司已注册',
                                 type: 'warning'
@@ -316,11 +320,12 @@
             //机构代码唯一验证
             blurSearchFor2:function () {
                 var _self=this;
+                alert("机构代码："+_self.editForm.uNetworkCode);
                 if (_self.editForm.uNetworkCode!=''&&_self.editForm.uNetworkCode!=null){
                     axios.post('/sb/company/unitCheckName',{uNetworkCode:_self.editForm.uNetworkCode}).then(function (response) {
                         //alert(JSON.stringify(response.data));
-                        _self.editForm.uNetworkCode='';
                         if (response.data==1){
+                            _self.editForm.uNetworkCode='';
                             _self.$message({
                                 message: '该机构代码已被使用',
                                 type: 'warning'
@@ -372,9 +377,9 @@
             },
             editSubmit1:function () {
                 var _self=this;
-                alert("12112")
+                //alert("12112")
                 axios.post('/sb/company/registerInfo', _self.editForm).then(function (response) {
-                    alert("12112")
+                    //alert("12112")
                     if (response.data==1){
                         _self.editForm = Object.assign({}, '');
                         _self.$message({

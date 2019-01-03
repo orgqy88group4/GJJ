@@ -13,7 +13,7 @@
 </head>
 <body>
 <div id="app">
-    <h2>{{ message }}</h2>
+    <h4>{{ message }}</h4>
 </div>
 <div id="tableView">
     <el-steps :active="active" align-center>
@@ -32,7 +32,7 @@
                     </el-row>
                     <el-container>
                         <el-aside width="400px">
-                            <el-form-item label="个人账号:" key="111" prop="GRZH">
+                            <el-form-item label="个人账号:" key="1" prop="GRZH">
                                 <el-input v-model="editForm.GRZH"  @blur="blurSearchFor" style="width:220px;height:20px;" auto-complete="off"></el-input>
                             </el-form-item>
                             <el-form-item label="*姓名:">
@@ -243,7 +243,7 @@
                     </el-row>
                     <el-container>
                         <el-aside width="400px">
-                            <el-form-item label="个人账号:" key="222" prop="ggrzh">
+                            <el-form-item label="个人账号:" key="2" prop="ggrzh">
                                 <el-input v-model="editForm.ggrzh"  @blur="blurSearchFor1" style="width:220px;height:20px;" auto-complete="off"></el-input>
                             </el-form-item>
                             <el-form-item label="*姓名:">
@@ -412,9 +412,9 @@
             </h1>
         </div>
         <div style="text-align: center">
-            <el-button type="danger"  round @click="upstep" v-if="active==1||active==2||active==3">上一步</el-button>
-            <el-button type="primary" round @click="next" v-if="active==0||active==1||active==2">下一步</el-button>
-            <el-button type="primary" @click.native="editSubmit" :loading="editLoading" v-if="active==3">提交</el-button>
+            <el-button type="danger" :plain="true" icon="el-icon-caret-left" round @click="upstep" v-if="active==1||active==2||active==3">上一步</el-button>
+            <el-button type="primary" :plain="true" icon="el-icon-caret-right" round @click="next" v-if="active==0||active==1||active==2">下一步</el-button>
+            <el-button type="primary" :plain="true" icon="el-icon-circle-check-outline" @click.native="editSubmit" :loading="editLoading" v-if="active==3">提交</el-button>
         </div>
     </el-form>
 </div>
@@ -514,7 +514,7 @@
             editFormRules:{
                 GRZH:[
                     { required: true, message: '请输入申请人账号', trigger: 'blur' },
-                    { min: 10, max: 11, message: '长度在 10 到 11 个数字', trigger: 'blur' }
+                    { min: 5, max: 15, message: '长度在 5到 15 个数字', trigger: 'blur' }
                 ],
                 bcname:[
                     { required: true, message: '请输入操作人', trigger: 'blur' },
@@ -549,7 +549,7 @@
                 ],
                 ggrzh:[
                     { required: true, message: '请输入共同借款人账号', trigger: 'blur' },
-                    { min: 10, max: 11, message: '长度在 10 到 11 个数字', trigger: 'blur' }
+                    { min: 5, max: 15, message: '长度在 5 到 15 个数字', trigger: 'blur' }
                 ]
             }
         },
@@ -573,7 +573,7 @@
                 var _self = this;
                 var url = "/sb/Loan/getgrzh";
                 axios.post(url,{grzh:_self.editForm.GRZH}).then(function (response) {
-                    //alert(JSON.stringify(response.data.infos))//true 该账号不能进行重复贷款
+                    alert(JSON.stringify(response.data))//true 该账号不能进行重复贷款
                     if (response.data.infof==false){
                         axios.post('/sb/Loan/user',{grzh:_self.editForm.GRZH}).then(function (response) {
                             //alert(JSON.stringify(response.data[0]));
@@ -602,7 +602,11 @@
                                 _self.editForm.miPledgeMonery = '0';
                                 _self.editForm.miThState = '正常';
                             }else if(response.data[0].peraccState==2){
-                                alert("账号封存状态,不能进行贷款操作。");
+                                //alert("账号封存状态,不能进行贷款操作。");
+                                _self.$message({
+                                    message: '账号封存状态,不能进行贷款操作。',
+                                    center: true
+                                });
                                 _self.editForm = Object.assign({}, '');
                                 _self.editForm.bcRepaymentDate= '放款日起';
                                 _self.editForm.miType= '房屋抵押';
@@ -610,7 +614,11 @@
                                 _self.editForm.miPledgeMonery = '0';
                                 _self.editForm.miThState = '正常';
                             }else {
-                                alert("账号销户状态,不能进行贷款操作。");
+                                //alert("账号销户状态,不能进行贷款操作。");
+                                _self.$message({
+                                    message: '账号销户状态,不能进行贷款操作。',
+                                    center: true
+                                });
                                 _self.editForm = Object.assign({}, '');
                                 _self.editForm.bcRepaymentDate= '放款日起';
                                 _self.editForm.miType= '房屋抵押';
@@ -620,7 +628,7 @@
                             }
                         });
                     }else {
-                        alert(response.data.infos);
+                        //alert(response.data.infos);
                         _self.editForm = Object.assign({}, '');
                         _self.editForm.bcRepaymentDate= '放款日起';
                         _self.editForm.miType= '房屋抵押';
@@ -634,7 +642,11 @@
             blurSearchFor1:function () {
                 var _self = this;
                 if (_self.editForm.ggrzh == _self.editForm.GRZH){
-                    alert("同志，该睡觉了！");
+                    //alert("同志，该睡觉了！");
+                    _self.$message({
+                        message: '共同借款人不能是同一个人',
+                        center: true
+                    });
                     _self.editForm.ggrzh = '';
                 }else{
                     var url = "/sb/Loan/getgrzh";
@@ -656,7 +668,11 @@
                                     _self.editForm.Dalance = response.data[0].dalance;
                                     _self.editForm.LastNaydate = response.data[0].lastNaydate;
                                 }else if(response.data[0].peraccState==2){
-                                    alert("账号封存状态,不能进行贷款操作。");
+                                    //alert("账号封存状态,不能进行贷款操作。");
+                                    _self.$message({
+                                        message: '账号封存状态,不能进行贷款操作。',
+                                        center: true
+                                    });
                                     _self.editForm.State ='';
                                     _self.editForm.ggrzh = '';
                                     _self.editForm.pName = '';
@@ -669,7 +685,11 @@
                                     _self.editForm.Dalance = '';
                                     _self.editForm.LastNaydate = '';
                                 }else {
-                                    alert("账号销户状态,不能进行贷款操作。");
+                                    //alert("账号销户状态,不能进行贷款操作。");
+                                    _self.$message({
+                                        message: '账号销户状态,不能进行贷款操作。',
+                                        center: true
+                                    });
                                     _self.editForm.State ='';
                                     _self.editForm.ggrzh = '';
                                     _self.editForm.pName = '';
@@ -713,7 +733,11 @@
                 var _self = this;
                 _self.loading = true;
                 if (_self.editForm.bcMoney > _self.editForm.miPledgeMonery){
-                    alert("贷款总金额大于抵押物金额不能进行贷款操作！");
+                    //alert("贷款总金额大于抵押物金额不能进行贷款操作！");
+                    _self.$message({
+                        message: '贷款总金额大于抵押物金额不能进行贷款操作！',
+                        center: true
+                    });
                 }else {
                     if (_self.editForm.GRZH != '' && _self.editForm.GRZH != null &&
                         _self.editForm.bcApplyIcome != '' && _self.editForm.bcApplyIcome != null &&
@@ -797,7 +821,11 @@
                             }
                         });
                     } else {
-                        alert("请完善未填写的信息");
+                        //alert("请完善未填写的信息");
+                        _self.$message({
+                            message: '请完善未填写的信息',
+                            center: true
+                        });
                     }
                 }
             },
@@ -805,7 +833,6 @@
                 var _self = this;
                 _self.editForm = Object.assign({}, '');
                 _self.active=0;
-
             },
             blurSearchForFWZJ:function () {
                 var _self = this;

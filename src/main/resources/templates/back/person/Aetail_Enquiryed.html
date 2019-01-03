@@ -24,22 +24,22 @@
                 <el-input v-model="searchForm.tb_pName" placeholder="用户名"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" icon="search" @click="searchClick">查询</el-button>
+                <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick">查询</el-button>
             </el-form-item>
         </el-form>
     </el-row>
     <!--列表-->
     <el-row>
         <el-table :data="tableData" v-loading.body="loading" border @selection-change="selectionChange" style="width: 100%">
-            <el-table-column prop="grzh" label="个人账号" width="150"></el-table-column>
-            <el-table-column prop="tb_pName" label="员工姓名" width="80"></el-table-column>
-            <el-table-column prop="uname" label="所在单位" width="200"></el-table-column>
-            <el-table-column prop="unitMonPaysum" label="单位缴纳" width="120"></el-table-column>
-            <el-table-column prop="perMonPaysum" label="个人缴纳" width="120"></el-table-column>
-            <el-table-column prop="sumPayment" label="总共缴纳" width="120"></el-table-column>
-            <el-table-column prop="time" label="业务日期" width="150"></el-table-column>
-            <el-table-column prop="paOp" label="创建人" width="120"></el-table-column>
-            <el-table-column prop="time" label="创建日期" width="120"></el-table-column>
+            <el-table-column prop="grzh" align="center"  label="个人账号" width="180"></el-table-column>
+            <el-table-column prop="tb_pName" align="center"  label="员工姓名" width="180"></el-table-column>
+            <el-table-column prop="uname" align="center"  label="所在单位" width="295"></el-table-column>
+            <el-table-column prop="unitMonPaysum" align="center"  label="单位缴纳" width="160"></el-table-column>
+            <el-table-column prop="perMonPaysum" align="center"  label="个人缴纳" width="160"></el-table-column>
+            <el-table-column prop="sumPayment" align="center"  label="总共缴纳" width="160"></el-table-column>
+            <el-table-column prop="time" align="center"  label="业务日期" width="160"></el-table-column>
+            <el-table-column prop="paOp" align="center"  label="创建人" width="160"></el-table-column>
+            <el-table-column prop="time" align="center"  label="创建日期" width="180"></el-table-column>
         </el-table>
     </el-row>
 

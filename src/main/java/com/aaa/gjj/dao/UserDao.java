@@ -24,12 +24,28 @@ public interface UserDao {
     @Select("select empno,ename,job from tbq_user4 where ename=#{ename}")
     List<User> getUserByuserName(String ename);
 
+//    /**
+//     * 通过id找用户
+//     * @return
+//     */
+//    @Select("select empno,ename,job,perms from tbq_user4 where empno=#{empNo}")
+//    List<User> getUserById(Integer empNo);
+
+    /**
+     * 根据用户名找用户
+     * @param userName
+     * @return
+     */
+    @Select("select * from tb_account where userName=#{userName}")
+    List<Map> selByUserName(String userName);
+
     /**
      * 通过id找用户
      * @return
      */
     @Select("select empno,ename,job,perms from tbq_user4 where empno=#{empNo}")
     List<User> getUserById(Integer empNo);
+
 
 
 
@@ -87,7 +103,7 @@ public interface UserDao {
      */
     @Select("<script>select tb_pName,tb_idNUmber,tb_pid,GRZH,dalance,peraccState from tb_person_info a ,tb_paccountutil b  where a.tb_pid = b.pid " +
             "<if test=\"tb_pName!=null and tb_pName!=''\"> and tb_pName like concat('%',#{tb_pName},'%')</if>" +
-            " limit  #{start},#{end}</script>" )
+            " limit #{start},#{end}</script>" )
     List<Map> getPage1(Map map);
 
     /**
@@ -142,6 +158,6 @@ public interface UserDao {
      * 公司动态下拉框
      * @return
      */
-    @Select("select a.uid,uname from tb_unit a,tb_unitaccount b where b.uaid=a.uid and uaState = 1")
+    @Select("select a.uid,uname from tb_unit a,tb_unitaccount b where b.uid=a.uid and uaState = 1")
     List<Map> select();
 }

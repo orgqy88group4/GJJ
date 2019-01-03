@@ -82,23 +82,11 @@ public interface MergerService {
 
 
     //12121648查看审批
-
-//    /**
-//     * 审批工作类别查询
-//     * @return
-//     */
-//    List<Map> accraditation();
-    /**
-     * 获取分页数据总数量
-     * @param map
-     * @return
-     */
-    int accraditationCount1(Map map);
     /**
      * 审批工作类别查询
      * @return
      */
-    List<Map> accraditation1(Map map);
+    List<Map> accraditation1();
 
     /**
      * 查询贷款记录表中的信息 录入查看审批表中

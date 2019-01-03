@@ -19,23 +19,15 @@
     <!--列表-->
     <el-row>
         <el-table :data="tableData" v-loading.body="loading" border @selection-change="selectionChange" style="width: 100%">
-            <el-table-column prop="Accraditation_name" label="工作流程名称" type="center" width="500"></el-table-column>
-            <el-table-column prop="Accraditation_describe" label="工作流程描述" width="500"></el-table-column>
-            <el-table-column prop="Accraditation_flux" label="工作流量" width="300"></el-table-column>
-            <el-table-column prop="Accraditation_id" label="操作" width="159">
+            <el-table-column prop="Accraditation_name" align="center"  label="工作流程名称" type="center" width="500"></el-table-column>
+            <el-table-column prop="Accraditation_describe" align="center"  label="工作流程描述" width="500"></el-table-column>
+            <el-table-column prop="Accraditation_flux" align="center"  label="工作流量" width="500"></el-table-column>
+            <el-table-column prop="Accraditation_id" align="center"  label="操作" width="159">
                 <template scope="scope">
-                    <div><el-button type="primary" @click="editClick(scope.row)">查看</el-button></div>
+                    <div><el-button type="primary" round :plain="true" icon="el-icon-document" @click="editClick(scope.row)">查看</el-button></div>
                 </template>
             </el-table-column>
         </el-table>
-    </el-row>
-    <!--列表底部工具条和分页符-->
-    <el-row style="margin-top: 20px" type="flex" justify="end">
-        <el-col :span="18" >
-            <el-pagination style="float: right" @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage"
-                           :page-sizes="[5, 10, 15, 20]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
-            </el-pagination>
-        </el-col>
     </el-row>
     <!--点击查看人员转移审批所弹出的页面-->
     <el-dialog title="人员转移" width="1200px" :visible.sync="editFormVisibleQ" :close-on-click-modal="false">
@@ -302,15 +294,10 @@
         created:function(){
             //在 then的内部不能使用Vue的实例化的this, 因为在内部 this 没有被绑定。
             var self = this;
-            var start =(this.currentPage-1)*this.pageSize;
-            var end =this.pageSize;
             //第一进来后进入的发法
-            axios.post('/sb/AccountMerge/accraditation1',{'start':start,'end':end}).then(function(response){
-                alert("后台传来的数据"+JSON.stringify(response.data.pageDate));
-                self.total=response.data.total;
-                self.tableData = response.data.pageDate;
-                //alert(self.total);
-                //alert(JSON.stringify(response.data.pageDate))//查看后台返回的数据
+            axios.post('/sb/AccountMerge/accraditation1').then(function(response){
+                alert("后台传来的数据"+JSON.stringify(response.data));
+                self.tableData = response.data;
                 tableView.self.tableData;
             });
         },
@@ -330,11 +317,6 @@
                         self.total2=response.data.total;
                         self.tableDataRYZY = response.data.pageDate;
                 });
-//                axios.post('/sb/AccountMerge/accraditation1',searchForm).then(function(response){
-//                    alert("1111");
-//                    _self.total=response.data.total;
-//                    _self.tableData = response.data.pageDate;
-//                });
                 axios.post('/sb/AccountMerge/breaka1',searchForm).then(function(response) {
                         self.total3 = response.data.total;
                         self.tableDataFQX = response.data.pageDate;
@@ -372,56 +354,53 @@
                 //alert(JSON.stringify(row.Accraditation_name));
                 if (row.Accraditation_name=='人员转移审批'){
                     var self = this;
-                    var start =(this.currentPage-1)*this.pageSize;
-                    var end =this.pageSize;
+                    var start =(self.currentPage-1)*self.pageSize;
+                    var end =self.pageSize;
                     axios.post('/sb/AccountMerge/transfer1',{'start':start,'end':end}).then(function(response){
                         self.total2=response.data.total;
                         self.tableDataRYZY = response.data.pageDate;
-                        //alert(self.total);
-                        alert("后台返回的值"+JSON.stringify(response.data));
-                        alert(JSON.stringify(response.data.pageDate))//查看后台返回的数据
                         self.editFormVisibleQ = true;
                         tableView.self.tableDataRYZY;
                     })
                 }
                 if (row.Accraditation_name=='封存、启封、销户审批'){
                     var self = this;
-                    var start =(this.currentPage-1)*this.pageSize;
-                    var end =this.pageSize;
+                    var start =(self.currentPage-1)*self.pageSize;
+                    var end =self.pageSize;
                     axios.post('/sb/AccountMerge/breaka1',{'start':start,'end':end}).then(function(response) {
                         self.total3 = response.data.total;
                         self.tableDataFQX = response.data.pageDate;
                         //alert(self.total);
-                        alert("后台返回的值2" + JSON.stringify(response.data));
-                        alert("后台返回的值222"+JSON.stringify(response.data.pageDate))//查看后台返回的数据
+                        //alert("后台返回的值2" + JSON.stringify(response.data));
+                        //alert("后台返回的值222"+JSON.stringify(response.data.pageDate))//查看后台返回的数据
                         self.editFormVisibleFQX = true;
                         tableView.self.tableDataFQX;
                     });
                 }
                 if (row.Accraditation_name=='个人贷款'){
                     var self = this;
-                    var start =(this.currentPage-1)*this.pageSize;
-                    var end =this.pageSize;
+                    var start =(self.currentPage-1)*self.pageSize;
+                    var end =self.pageSize;
                     axios.post('/sb/AccountMerge/loans1',{'start':start,'end':end}).then(function(response) {
                         self.total4 = response.data.total;
                         self.tableDataGRDK = response.data.pageDate;
                         //alert(self.total);
-                        alert("后台返回的值2" + JSON.stringify(response.data));
-                        alert("后台返回的值222"+JSON.stringify(response.data.pageDate))//查看后台返回的数据
+                        //alert("后台返回的值2" + JSON.stringify(response.data));
+                        //alert("后台返回的值222"+JSON.stringify(response.data.pageDate))//查看后台返回的数据
                         self.editFormVisibleGRDK = true;
                         tableView.self.tableDataGRDK;
                     });
                 }
                 if (row.Accraditation_name=='公积金提取'){
                     var self = this;
-                    var start =(this.currentPage-1)*this.pageSize;
-                    var end =this.pageSize;
+                    var start =(self.currentPage-1)*self.pageSize;
+                    var end =self.pageSize;
                     axios.post('/sb/AccountMerge/extract1',{'start':start,'end':end}).then(function(response) {
                         self.total5 = response.data.total;
                         self.tableDataGJJTQ = response.data.pageDate;
                         //alert(self.total);
-                        alert("后台返回的值2" + JSON.stringify(response.data));
-                        alert("后台返回的值222"+JSON.stringify(response.data.pageDate))//查看后台返回的数据
+                        //alert("后台返回的值2" + JSON.stringify(response.data));
+                        //alert("后台返回的值222"+JSON.stringify(response.data.pageDate))//查看后台返回的数据
                         self.editFormVisibleGJJTQ = true;
                         tableView.self.tableDataGJJTQ;
                     });
@@ -429,7 +408,7 @@
             },
             //一串数字转时间格式
             createTime:function (v){
-                alert("222");
+                //alert("222");
                 var date = new Date(v);
                 var y = date.getFullYear();
                 var m = date.getMonth()+1;

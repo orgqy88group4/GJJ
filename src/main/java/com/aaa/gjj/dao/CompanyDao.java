@@ -146,7 +146,7 @@ public interface CompanyDao {
      * @param map
      * @return
      */
-    @Insert("insert into tb_paccountutil values (null,#{uid},concat(DATE_FORMAT(now(),'%Y-%m-%d')),0,1,#{baseNummber},#{uDepositRatio},#{uPersonRatio},concat(DATE_FORMAT(now(),'%Y-%m-%d')),#{baseNummber}*#{uDepositRatio}*0.01,#{baseNummber}*#{uPersonRatio}*0.01,'注册成功',#{baseNummber}*#{uDepositRatio}*0.01+#{baseNummber}*#{uPersonRatio}*0.01,0,#{paOp},null,concat(lpad(floor(RAND()*100000),8,0)),#{pid},#{KHYH},#{YHZH},000000)")
+    @Insert("insert into tb_paccountutil values (null,#{uid},concat(DATE_FORMAT(now(),'%Y-%m-%d')),0,1,#{baseNummber},#{uDepositRatio},#{uPersonRatio},concat(DATE_FORMAT(now(),'%Y-%m-%d')),#{baseNummber}*#{uDepositRatio}*0.01,#{baseNummber}*#{uPersonRatio}*0.01,'注册成功',#{baseNummber}*#{uDepositRatio}*0.01+#{baseNummber}*#{uPersonRatio}*0.01,0,#{paOp},null,concat(lpad(floor(RAND()*100000),8,0)),#{pid},#{KHYH},#{YHZH},concat(lpad(floor(RAND()*100000),8,0)))")
     int addPersonAccountInfo1(Map map);
 
     /**

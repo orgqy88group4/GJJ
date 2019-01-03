@@ -83,9 +83,9 @@ public class LoanController {
     @ResponseBody
     @RequestMapping("/save")
     public Object getSave(@RequestBody Map map){
-        System.out.println(map);
+        //System.out.println(map);
         int saveid = loanService.getInfo(map);
-        System.out.println("后台返回的值为："+saveid);
+        //System.out.println("后台返回的值为："+saveid);
         return saveid;
     }
 
@@ -181,7 +181,6 @@ public class LoanController {
     @ResponseBody
     @RequestMapping("/sureReject")
     public Object SureReject(@RequestBody Map map){
-        System.out.println("确认驳回前台传来的值："+map);
         return loanService.SureReject(map);
     }
 
@@ -193,15 +192,15 @@ public class LoanController {
     @ResponseBody
     @RequestMapping("/finalPass")
     public Object FinalPass(@RequestBody Map map){
-        System.out.println("终审通过前台传来的值："+map);
+        System.out.println("贷款终审前台传来的值："+map);
         int i = loanService.FinalPass(map);
+        System.out.println("finalpass====="+i);
         //新增到还款表
         insertRepay(Integer.valueOf(map.get("Loan_id")+""));
         //修改个人账户余额
         updateGRZHDanlance(map.get("GRZH")+"");
         if (i == 1){
             int passFinal = loanService.passFinal(map);
-            System.out.println("终审通过返回前台的值："+passFinal);
             return passFinal;
         }
         return 0;
@@ -212,10 +211,14 @@ public class LoanController {
      * @param id
      */
     private void insertRepay(Integer id){
+        System.out.println("id===="+id);
         //获取还款表信息
         Map map = (Map) loanService.getrepayinfo(id).get(0);
+        System.out.println("map===="+map);
         if(map!=null&&map.size()>0){
-            loanService.insertRepay(map);
+            System.out.println("进入了这里");
+            int i = loanService.insertRepay(map);
+            System.out.println("这里有值吗："+i);
         }
     }
     /**
@@ -223,6 +226,7 @@ public class LoanController {
      * @param GRZH
      */
     private void updateGRZHDanlance(String GRZH){
+        System.out.println("GRZH======"+GRZH);
         Map map = loanService.updateGRZHBalance(GRZH).get(0);
         if(map!=null&&map.size()>0){
             //修改账户余额
@@ -265,7 +269,7 @@ public class LoanController {
                 loanService.unitsMoney(map);
             }
         }
-        return i;
+        return null;
     }
 
     /**

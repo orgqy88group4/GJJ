@@ -147,6 +147,15 @@ public class RoleController {
         return resultMap;
     }
     /**
+     * 账户表
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/count1")
+    public Object count1(@RequestBody Map map){
+        return roleService.getPageByParamC1(map);
+    }
+    /**
      * 账户添加
      * @return
      */
@@ -161,6 +170,7 @@ public class RoleController {
             response.getWriter().print(1);
         }
     }
+
     /**
      * 角色信息修改
      * @param paramMap

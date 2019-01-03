@@ -44,6 +44,25 @@
         .el-container:nth-child(7) .el-aside {
             line-height: 320px;
         }
+        .el-input__inner {
+            -webkit-appearance: none;
+            background-color: #fff;
+            background-image: none;
+            border-radius: 4px;
+            border: 1px solid #dcdfe6;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            color: #606266;
+            display: inline-block;
+            font-size: inherit;
+            height: 40px;
+            line-height: 40px;
+            outline: 0;
+            padding: 0 15px;
+            -webkit-transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+            transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+            width: 300px;
+        }
     </style>
 </head>
 <body>
@@ -52,43 +71,43 @@
         <el-container>
             <el-aside width="200px" style="height: 600px;">
                 <el-tree id="tt"
-                        :data="treeData"
-                        accordion
-                        @node-click="handleNodeClick"
-                        :icon-class="iconClass"
+                         :data="treeData"
+                         accordion
+                         @node-click="handleNodeClick"
+                         :icon-class="iconClass"
                 >
                 </el-tree>
             </el-aside>
             <el-main style="height: auto;">
-                        <el-row>
-                            <el-form  :label-position="labelPosition" label-width="80px" :model="power" >
-                                <el-form-item label="节点名称" >
-                                    <el-input v-model="power.name" clearable resize="horizontal"></el-input>
-                                </el-form-item>
+                <el-row>
+                    <el-form  :label-position="labelPosition" label-width="80px" :model="power" >
+                        <el-form-item label="节点名称" >
+                            <el-input v-model="power.name" clearable resize="horizontal"></el-input>
+                        </el-form-item>
 
-                                <el-form-item label="父节点" >
-                                    <el-select v-model="power.parentid"  placeholder="请选择父节点" >
-                                        <el-option label="0级节点" :value="0"></el-option>
-                                        <el-option v-for="t in treeData"  :key="t.id" :label="t.label" :value="t.id"></el-option>
-                                    </el-select>
-                                </el-form-item>
+                        <el-form-item label="父节点" >
+                            <el-select v-model="power.parentid"  placeholder="请选择父节点" >
+                                <el-option label="0级节点" :value="0"></el-option>
+                                <el-option v-for="t in treeData"  :key="t.id" :label="t.label" :value="t.id"></el-option>
+                            </el-select>
+                        </el-form-item>
 
-                                <el-form-item label="图标" >
-                                    <el-select v-model="power.iconcls"  placeholder="请选择图标" >
-                                        <el-option v-for="t in icons"  :label="t.name" :value="t.value"></el-option>
-                                    </el-select>
-                                </el-form-item>
+                        <el-form-item label="图标" >
+                            <el-select v-model="power.iconcls"  placeholder="请选择图标" >
+                                <el-option v-for="t in icons"  :label="t.name" :value="t.value"></el-option>
+                            </el-select>
+                        </el-form-item>
 
-                                <el-form-item label="URL" >
-                                    <el-input v-model="power.url" clearable></el-input>
-                                </el-form-item>
+                        <el-form-item label="URL" >
+                            <el-input v-model="power.url" clearable></el-input>
+                        </el-form-item>
 
-                                <el-form-item size="large">
-                                    <el-button type="success" @click="onSubmit" round>更新</el-button>
-                                    <el-button type="danger" @click="OnDel" round>删除</el-button>
-                                </el-form-item>
-                            </el-form>
-                        </el-row>
+                        <el-form-item size="large">
+                            <el-button type="success" @click="onSubmit" round>更新</el-button>
+                            <el-button type="danger" @click="OnDel" round>删除</el-button>
+                        </el-form-item>
+                    </el-form>
+                </el-row>
             </el-main>
         </el-container>
     </el-container>
@@ -116,10 +135,9 @@
         },
         created:function(){
             var _self =this
-            axios.post("/sb/power/tree").then(function(response){
+            axios.post("/sb/power/tree",{userName:''}).then(function(response){
                 _self.treeData = response.data;
             });
-
         },
         methods: {
             handleNodeClick: function (node) {

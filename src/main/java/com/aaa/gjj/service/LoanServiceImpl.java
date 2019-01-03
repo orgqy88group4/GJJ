@@ -486,7 +486,7 @@ public class LoanServiceImpl implements LoanService {
         double money2= Double.parseDouble(map.get("repayed_interests")+"");//已还利息 取值
         map.put("residue_money",a);//剩余应还本金
         map.put("residue_interests",c);//剩余应还利息
-        int i=0;
+        int i=1;
 		/*for(int i=1;i<p;i++){*/
 			/*Map map2 = new HashMap();*/
         //double interests = ((a*r)/p)/12;//计算出每月应还利息

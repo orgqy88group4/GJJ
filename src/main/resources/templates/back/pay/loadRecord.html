@@ -51,36 +51,43 @@
             <el-table-column
                     prop="GRZH"
                     label="个人账号"
+                    align="center"
                     sortable
                     width="130">
             </el-table-column>
             <el-table-column
                     prop="pName"
                     label="姓名"
+                    align="center"
                     sortable
                     width="80">
             </el-table-column>
             <el-table-column
                     prop="loan_money"
                     sortable
-                    label="贷款总额">
+                    label="贷款总额"
+                    align="center" >
             </el-table-column>
             <el-table-column
                     prop="loan_periods"
                     sortable
-                    label="贷款期数">
+                    label="贷款期数"
+                    align="center" >
             </el-table-column>
             <el-table-column
                     prop="repay_bank"
-                    label="还款银行">
+                    label="还款银行"
+                    align="center" >
             </el-table-column>
             <el-table-column
                     prop="repay_account"
-                    label="还款账户">
+                    label="还款账户"
+                    align="center" >
             </el-table-column>
             <el-table-column
                     prop="repay_money"
-                    label="应还本金">
+                    label="应还本金"
+                    align="center" >
             </el-table-column>
             <el-table-column
                     prop="repay_interests"
@@ -88,15 +95,18 @@
             </el-table-column>
             <el-table-column
                     prop="repay_month"
-                    label="月还款">
+                    label="月还款"
+                    align="center" >
             </el-table-column>
             <el-table-column
                 prop="ctime"
-                label="贷款时间">
+                label="贷款时间"
+                align="center" >
             </el-table-column>
             <el-table-column
                     prop="repay_state"
-                    label="还款状态">
+                    label="还款状态"
+                    align="center" >
                 <!--状态数字转文字-->
                 <template scope="scope">
                     <div style="text-align: center" v-if="scope.row.repay_state=='1'">

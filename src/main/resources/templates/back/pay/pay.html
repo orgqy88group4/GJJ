@@ -41,8 +41,8 @@
                 <el-input v-model="searchForm.loan_periods" placeholder="按贷款期数查询"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" icon="search" @click="searchClick" round>查询</el-button>
-                <el-button type="success" icon="plus" @click="toFlush" round>刷新</el-button>
+                <el-button type="primary" round :plain="true" icon="el-icon-search"  @click="searchClick">查询</el-button>
+                <el-button type="success" icon="plus" :plain="true" @click="toFlush" round>刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -59,54 +59,65 @@
             <el-table-column
                     prop="repay_id"
                     label="编号"
+                    align="center"
                     sortable
                     width="80">
             </el-table-column>
             <el-table-column
                     prop="GRZH"
-                    label="个人账号">
+                    label="个人账号"
+                    align="center">
             </el-table-column>
             <el-table-column
                     prop="pName"
                     label="姓名"
+                    align="center"
                     width="80">
             </el-table-column>
             <el-table-column
                     prop="loan_money"
-                    label="贷款金额(元)">
+                    label="贷款金额(元)"
+                    align="center">
             </el-table-column>
             <el-table-column
                     prop="loan_periods"
                     label="贷款期数"
+                    align="center"
                     width="80">
             </el-table-column>
             <el-table-column
                     prop="repay_money"
-                    label="应还本金(元)">
+                    label="应还本金(元)"
+                    align="center">
             </el-table-column>
             <el-table-column
                     prop="repay_interests"
-                    label="应还利息(元)">
+                    label="应还利息(元)"
+                    align="center">
             </el-table-column>
             <el-table-column
                     prop="repayed_All_money"
                     label="已还(元)"
+                    align="center"
                     width="80">
             </el-table-column>
             <el-table-column
                     prop="residue_periods"
                     label="剩余期数"
+                    align="center"
                     width="80">
             </el-table-column>
             <el-table-column
                     prop="repayed_date"
-                    label="最近还款日期">
+                    label="最近还款日期"
+                    align="center" >
             </el-table-column>
             <el-table-column
                     prop="repay_month"
-                    label="月还(元)">
+                    label="月还(元)"
+                    align="center">
             </el-table-column>
-            <el-table-column prop="repay_state" label="还款状态" width="80">
+            <el-table-column prop="repay_state" label="还款状态"  align="center"  width="80">
                 <!--状态数字转文字-->
                 <template scope="scope">
                     <div style="text-align: center" v-if="scope.row.repay_state=='1'">
@@ -122,7 +133,7 @@
             </el-table-column>
 
             <!--操作列-->
-            <el-table-column label="操作">
+            <el-table-column label="操作"  align="center" >
                 <template scope="scope">
                     <el-button :plain="true" type="primary" size="small" icon="edit" @click="editClick(scope.row)" round>详情</el-button>
                     <el-button :plain="true" type="warning" size="small" :disabled="isabled" icon="edit" @click="clickSubmit(scope.row)" round>还款</el-button>
@@ -241,8 +252,8 @@
                 <el-row style="margin-bottom: 20px">
                     <div align="center">
                         <el-button type="primary" icon="el-icon-success" :disabled="isDisabled" @click.native="editSubmit" :loading="editLoading" round>提前还款</el-button>
-                        <el-button type="primary" icon="el-icon-date" @click.native="historySubmit" :loading="editLoading" round>还款记录</el-button>
-                        <el-button type="danger" @click.native="editFormVisible = false" round>关闭</el-button>
+                        <el-button type="primary" icon="el-icon-date" @click.native="historySubmit" :plain="true" :loading="editLoading" round>还款记录</el-button>
+                        <el-button type="danger" :plain="true" @click.native="editFormVisible = false" round>关闭</el-button>
                     </div>
                 </el-row>
             </el-footer>
@@ -270,30 +281,35 @@
             <el-table-column
                     prop="GRZH"
                     label="个人账号"
+                    align="center"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="pName"
                     label="姓名"
+                    align="center"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="repay_month_money"
-                    label="月还本金">
+                    label="月还本金"
+                    align="center" >
             </el-table-column>
             <el-table-column
                     prop="repay_month_interest"
-                    label="月还利息">
+                    label="月还利息"
+                    align="center" >
             </el-table-column>
             <el-table-column
                     prop="repayed_date"
                     sortable
-                    label="还款时间">
+                    label="还款时间"
+                    align="center" >
             </el-table-column>
         </el-table>
         <el-row style="margin-bottom: 20px">
-            <div align="center">
-                <el-button type="danger" @click.native="editFormVisible2 = false" round>关闭</el-button>
+            <div align="center" >
+                <el-button type="danger" :plain="true"  @click.native="editFormVisible2 = false" round>关闭</el-button>
             </div>
         </el-row>
     </el-dialog>

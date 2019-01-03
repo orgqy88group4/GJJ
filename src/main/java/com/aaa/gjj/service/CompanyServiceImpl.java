@@ -209,7 +209,7 @@ public class CompanyServiceImpl implements CompanyService{
      */
     @Override
     public int unitRegister(Map map) {
-        int i = companyDao.unitRegister(map);
+        int i = companyDao.unitRegister(map);//业务操作人员
         if (i==1){
             return companyDao.unitRegister1();
         }

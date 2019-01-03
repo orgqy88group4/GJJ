@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>前台新闻管理</title>
+    <!-- 引入样式 -->
+    <script type="text/javascript" src="/sb/js/vue.js"></script>
+    <script type="text/javascript" src="/sb/js/axios.min.js"></script>
+    <!-- 引入样式 -->
+    <link rel="stylesheet" href="/sb/css/elementui.css">
+    <!-- 引入组件库 -->
+    <script src="/sb/js/elementui.js"></script>
+</head>
+<body>
+<div id="tableView">
+    <!--列表顶部搜索和工具条-->
+    <el-row>
+        <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+            <!--vue双向显示所以会给表搜索表单中默认的空值-->
+            <el-form-item>
+                <el-button type="success" :plain="true" icon="el-icon-check" round @click="editClick1">新闻添加</el-button>
+            </el-form-item>
+        </el-form>
+    </el-row>
+    <!--列表-->
+    <el-row>
+        <el-table :data="tableData" v-loading.body="loading" border @selection-change="selectionChange" style="width: 100%">
+            <el-table-column prop="id" align="center" label="编号" width="60"></el-table-column>
+            <el-table-column prop="title" align="center" label="新闻标题" width="450"></el-table-column>
+            <el-table-column prop="details" align="center" label="新闻内容" width="550"></el-table-column>
+            <el-table-column prop="informType" align="center" label="通知类型" width="260">
+                <template scope="scope">
+                    <div v-if="scope.row.informType=='1'">
+                        <span style="color:green;">国务院文件及相关部委文件</span>
+                    </div>
+                    <div v-if="scope.row.informType=='2'">
+                        <span style="color:green;">中心文件</span>
+                    </div>
+                    <div v-if="scope.row.informType=='3'">
+                        <span style="color:green;">市政府及相关部门文件</span>
+                    </div>
+                    <div v-if="scope.row.informType=='4'">
+                        <span style="color:green;">通知公告</span>
+                    </div>
+                    <div v-if="scope.row.informType=='5'">
+                        <span style="color:green;">工作动态</span>
+                    </div>
+                    <div v-if="scope.row.informType=='6'">
+                        <span style="color:green;">执法公告</span>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column prop="informStatus" align="center" label="发布状态" width="100">
+                <template scope="scope">
+                    <div v-if="scope.row.informStatus=='1'">
+                        <span style="color:green;">已发布</span>
+                    </div>
+                    <div v-if="scope.row.informStatus=='2'">
+                        <span style="color:red;">未发布</span>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column  align="center" label="操作">
+                <template scope="scope">
+                    <el-button type="success" :plain="true" icon="el-icon-check" round @click="editClick(scope.row)">修改</el-button>
+                    <el-button type="danger" :plain="true" icon="el-icon-circle-close" round @click="editClickB(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
+        </el-table>
+    </el-row>
+
+    <!--列表底部工具条和分页符-->
+    <el-row style="margin-top: 20px" type="flex" justify="end">
+        <el-col :span="18" >
+            <el-pagination style="float: right" @size-change="pageSizeChange" @current-change="currentPageChange" :current-page="currentPage"
+                           :page-sizes="[7, 14, 21, 28]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+            </el-pagination>
+        </el-col>
+    </el-row>
+    <!--点击修改所弹出的页面-->
+    <el-dialog title="新闻修改" :visible.sync="editFormVisibleQ" :close-on-click-modal="false">
+        <el-form :model="editForm" label-width="80px" :rules="editFormRules" ref="editForm">
+            <el-form-item label="通知标题">
+                <el-input v-model="editForm.title" cols="143" rows="2"  auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="通知内容">
+                <el-input v-model="editForm.details" cols="143" rows="10" auto-complete="off" ></el-input>
+                <el-input v-model="editForm.id" type="hidden" auto-complete="off" ></el-input>
+            </el-form-item>
+            <el-form-item label="通知类型">
+                <template>
+                    <el-select v-model="editForm.informType" style="width:220px;height:35px;" auto-complete="off">
+                        <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                        <el-option label="国家文件及相关部委文件" value = "1"></el-option>
+                        <el-option label="中心文件" value = "2"></el-option>
+                        <el-option label="市政府及相关部门文件" value = "3"></el-option>
+                        <el-option label="外资企业通知公告" value = "4"></el-option>
+                        <el-option label="工作状态" value = "5"></el-option>
+                        <el-option label="执法公告" value = "6"></el-option>
+                    </el-select>
+                </template>
+            </el-form-item>
+            <el-form-item label="是否发布">
+                <template>
+                    <el-select v-model="editForm.informStatus" style="width:220px;height:35px;" auto-complete="off">
+                        <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                        <el-option label="发布" value = "1"></el-option>
+                        <el-option label="不发布" value = "2"></el-option>
+                    </el-select>
+                </template>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button round @click.native="editFormVisibleQ = false">取消</el-button>
+            <el-button type="primary" round :plain="true" icon="el-icon-success" @click.native="editSubmitQ" :loading="editLoading">提交</el-button>
+        </div>
+    </el-dialog>
+    <!--点击添加所弹出的页面-->
+    <el-dialog title="新闻添加" :visible.sync="editFormVisibleQ1" :close-on-click-modal="false">
+        <el-form :model="editForm1" label-width="80px" :rules="editFormRules" ref="editForm">
+            <el-form-item label="通知标题">
+                <el-input v-model="editForm1.title" cols="143" rows="2"  auto-complete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="通知内容">
+                <el-input v-model="editForm1.details" cols="143" rows="10" ></el-input>
+            </el-form-item>
+            <el-form-item label="通知类型">
+                <template>
+                    <el-select v-model="editForm1.informType" style="width:220px;height:35px;" auto-complete="off">
+                        <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                        <el-option label="国家文件及相关部委文件" value = "1"></el-option>
+                        <el-option label="中心文件" value = "2"></el-option>
+                        <el-option label="市政府及相关部门文件" value = "3"></el-option>
+                        <el-option label="外资企业通知公告" value = "4"></el-option>
+                        <el-option label="工作状态" value = "5"></el-option>
+                        <el-option label="执法公告" value = "6"></el-option>
+                    </el-select>
+                </template>
+            </el-form-item>
+            <el-form-item label="是否发布">
+                <template>
+                    <el-select v-model="editForm1.informStatus" style="width:220px;height:35px;" auto-complete="off">
+                        <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                        <el-option label="发布" value = "1"></el-option>
+                        <el-option label="不发布" value = "2"></el-option>
+                    </el-select>
+                </template>
+            </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+            <el-button round @click.native="editFormVisibleQ1 = false">取消</el-button>
+            <el-button type="primary" round :plain="true" icon="el-icon-success" @click.native="editSubmitQ1" :loading="editLoading">提交</el-button>
+        </div>
+    </el-dialog>
+</div>
+<script type="text/javascript">
+    var tableView = new Vue({
+        el: '#tableView',
+        data: {
+            //列表数据
+            tableData: [],
+            //显示加载中样式
+            loading:false,
+            //当前页
+            currentPage:1,
+            //分页大小
+            pageSize:7,
+            //总记录数
+            total:800,
+            editFormVisibleQ:false,
+            editFormVisibleQ1:false,
+            editForm:{
+                title:'',
+                details:'',
+                informType:'',
+                informStatus:'',
+                id:''
+            },
+            editForm1:{
+                title:'',
+                details:'',
+                informType:'',
+                informStatus:'',
+            }
+        },
+        created:function(){
+            //在 then的内部不能使用Vue的实例化的this, 因为在内部 this 没有被绑定。
+            var self = this;
+            var start =(self.currentPage-1)*self.pageSize;
+            var end =self.pageSize;
+            //第一进来后进入的发法
+            axios.post('/sb/qiantai/infomation',{'start':start,'end':end}).then(function(response){
+                self.total=response.data.total;
+                self.tableData = response.data.pageDate;
+                //alert(self.total);
+                //alert(JSON.stringify(response.data.pageDate))//查看后台返回的数据
+                tableView.self.tableData;
+            })
+        },
+        methods:{
+            //表格重新加载数据
+            loadingData:function() {
+                var _self = this;
+                _self.loading = true;
+                var start =(_self.currentPage-1)*_self.pageSize;
+                var end =_self.pageSize;
+                var searchForm={'start':start,'end':end};
+                //   alert(JSON.stringify(searchForm));
+                axios.post('/sb/qiantai/infomation',searchForm).then(function(response){
+                    _self.total=response.data.total;
+                    _self.tableData = response.data.pageDate;
+                })
+                console.log(_self.currentPage);
+                setTimeout(function(){
+                    console.info("加载数据成功");
+                    _self.loading = false;
+                },300);
+            },
+            //分页大小修改事件
+            pageSizeChange:function(val) {
+                console.log('每页 ' + val +' 条');
+                this.pageSize = val;
+                var _self = this;
+                _self.loadingData();//重新加载数据
+            },
+            //当前页修改事件
+            currentPageChange:function(val) {
+                this.currentPage = val;
+                console.log('当前页: ' + val);
+                var _self = this;
+                _self.loadingData();//重新加载数据
+            },
+            //新闻修改按钮
+            editClick:function (row) {
+                var _self=this;
+                alert(JSON.stringify(row));
+                _self.editFormVisibleQ=true;
+                if (row.informType==1){
+                    _self.editForm.informType='国务院文件及相关部委文件';
+                }else if(row.informType==2){
+                    _self.editForm.informType='中心文件';
+                }else if(row.informType==3){
+                    _self.editForm.informType='市政府及相关部门文件';
+                }else if(row.informType==4){
+                    _self.editForm.informType='通知公告';
+                }else if(row.informType==5){
+                    _self.editForm.informType='工作动态';
+                }else if(row.informType==6){
+                    _self.editForm.informType='执法公告';
+                }
+                if (row.informStatus==1){
+                    _self.editForm.informStatus='发布';
+                }else if(row.informStatus==2){
+                    _self.editForm.informStatus='不发布';
+                }
+                _self.editForm.title=row.title;
+                _self.editForm.details=row.details;
+                _self.editForm.id=row.id;
+            },
+            //修改页面提交按钮
+            editSubmitQ:function () {
+                var _self=this;
+                //alert(JSON.stringify(_self.editForm));
+                if (_self.editForm.informType=='国务院文件及相关部委文件'){
+                    _self.editForm.informType=1;
+                }else if(_self.editForm.informType=='中心文件'){
+                    _self.editForm.informType=2;
+                }else if(_self.editForm.informType=='市政府及相关部门文件'){
+                    _self.editForm.informType=3;
+                }else if(_self.editForm.informType=='通知公告'){
+                    _self.editForm.informType=4;
+                }else if(_self.editForm.informType=='工作动态'){
+                    _self.editForm.informType=4;
+                }else if(_self.editForm.informType=='执法公告'){
+                    _self.editForm.informType=6;
+                }
+                if (_self.editForm.informStatus=='发布'){
+                    _self.editForm.informStatus=1;
+                }else if(_self.editForm.informStatus=='不发布'){
+                    _self.editForm.informStatus=2;
+                }
+                var tempMap = {informType:_self.editForm.informType,informStatus:_self.editForm.informStatus,title:_self.editForm.title,details:_self.editForm.details,id:_self.editForm.id};
+                alert(JSON.stringify(tempMap));
+                axios.post('/sb/qiantai/updateInformation',tempMap).then(function(response){
+                    if (response.data==1){
+                        _self.editFormVisibleQ=false;
+                        _self.$message({
+                            showClose: true,
+                            message: '修改成功',
+                            type: 'success'
+                        });
+                    }else{
+                        _self.editFormVisibleQ=false;
+                        //_self.editForm = Object.assign({}, '');
+                        _self.$message({
+                            showClose: true,
+                            message: '修改失败',
+                            type: 'error'
+                        });
+                    }
+                    _self.loadingData();//重新加载数据
+                })
+            },
+            //新闻添加按钮
+            editClick1:function () {
+                var _self=this;
+                _self.editFormVisibleQ1=true;
+            },
+            //添加提交按钮
+            editSubmitQ1:function () {
+                var _self=this;
+                if (_self.editForm1.informType=='国务院文件及相关部委文件'){
+                    _self.editForm1.informType=1;
+                }else if(_self.editForm1.informType=='中心文件'){
+                    _self.editForm1.informType=2;
+                }else if(_self.editForm1.informType=='市政府及相关部门文件'){
+                    _self.editForm1.informType=3;
+                }else if(_self.editForm1.informType=='通知公告'){
+                    _self.editForm1.informType=4;
+                }else if(_self.editForm1.informType=='工作动态'){
+                    _self.editForm1.informType=4;
+                }else if(_self.editForm1.informType=='执法公告'){
+                    _self.editForm1.informType=6;
+                }
+//                if (_self.editForm1.informStatus=='发布'){
+//                    _self.editForm1.informStatus=1;
+//                }else{
+//                    _self.editForm1.informStatus=2;
+//                }
+                var tempMap = {informType:_self.editForm1.informType,informStatus:_self.editForm1.informStatus,title:_self.editForm1.title,details:_self.editForm1.details};
+                alert(JSON.stringify(tempMap));
+                axios.post('/sb/qiantai/addInformation',tempMap).then(function(response){
+                    alert(JSON.stringify(response.data));
+                    if (response.data==1){
+                        _self.editFormVisibleQ1=false;
+                        _self.$message({
+                            showClose: true,
+                            message: '添加成功',
+                            type: 'success'
+                        });
+                    }else{
+                        _self.editFormVisibleQ1=false;
+//                        _self.editForm1 = Object.assign({}, '');
+                        _self.$message({
+                            showClose: true,
+                            message: '添加失败',
+                            type: 'error'
+                        });
+                    }
+                    _self.loadingData();//重新加载数据
+                })
+            },
+            //新闻删除
+            editClickB:function (row) {
+                var _self = this;
+                this.$confirm('确认删除' + row.title +'吗?', '提示', {
+                    type: 'warning'
+                }).then(function(){
+                    axios.post('/sb/qiantai/deleteInformation',{id:row.id}).then(function(response){
+                        if (response.data==1){
+                            _self.$message({
+                                showClose: true,
+                                message: '删除成功',
+                                type: 'success'
+                            });
+                        }else{
+                            _self.$message({
+                                showClose: true,
+                                message: '删除失败',
+                                type: 'error'
+                            });
+                        }
+                        _self.loadingData();//重新加载数据
+                    })
+                });
+            }
+        }
+    })
+</script>
+</body>
+</html>

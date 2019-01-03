@@ -22,18 +22,18 @@ public class PowerServiceImpl implements PowerService {
     private PowerDao powerDao;
 
     @Override
-    public List<Node> getList() {
-        List<Node> list = powerDao.getList();
+    public List<Node> getList(Map map) {
+        List<Node> list = powerDao.getList(map);
         //拼装后的临时集合，用于返回数据
         List<Node> tempList = new ArrayList<Node>();
         if(list!=null&&list.size()>0){
             for (Node node : list) {
                 //找出父节点为0的一级节点
-                 if(node.getPid()==0){
-                     tempList.add(node);
-                     //调用递归方法，找当前节点的子节点
-                     bindChildren(node,list);
-                 }
+                if(node.getPid()==0){
+                    tempList.add(node);
+                    //调用递归方法，找当前节点的子节点
+                    bindChildren(node,list);
+                }
             }
         }
         return tempList;
@@ -45,7 +45,7 @@ public class PowerServiceImpl implements PowerService {
      * @param list
      */
     private void bindChildren(Node curNode, List<Node> list){
-         for(Node node : list) {
+        for(Node node : list) {
             //如果当前节点的id和循环节点的父ID相等，说明是当前节点的孩子
             if(curNode.getId()==node.getPid()){
                 //取出当前节点的孩子集合

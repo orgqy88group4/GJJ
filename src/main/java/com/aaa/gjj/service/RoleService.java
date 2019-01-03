@@ -81,6 +81,12 @@ public interface RoleService {
     List<Map> getPageByParamC(Map map);
 
     /**
+     * 添加账户名时防止用户名重复
+     * @return
+     */
+    int getPageByParamC1(Map map);
+
+    /**
      * 分页总数量
      * @param map
      * @return

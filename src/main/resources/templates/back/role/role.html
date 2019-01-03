@@ -32,9 +32,9 @@
                 <el-input v-model="searchForm.roleFlag" placeholder="按角色状态查询"></el-input>
             </el-form-item>-->
             <el-form-item>
-                <el-button type="primary" icon="search" @click="searchClick" round>查询</el-button>
-                <el-button type="success" icon="plus" @click="addClick" round>新增</el-button>
-                <el-button type="success" icon="plus" @click="toFlush" round>刷新</el-button>
+                <el-button type="primary" :plain="true" icon="el-icon-search" @click="searchClick" round>查询</el-button>
+                <el-button type="success" :plain="true" icon="el-icon-circle-plus" @click="addClick" round>新增</el-button>
+                <el-button type="success" :plain="true" icon="el-icon-refresh"  @click="toFlush" round>刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -60,26 +60,30 @@
             <el-table-column
                     prop="roleId"
                     label="角色ID"
+                    align="center"
                     sortable
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="roleName"
                     label="角色名称"
+                    align="center"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="roleDesc"
-                    label="角色描述">
+                    label="角色描述"
+                    align="center">
             </el-table-column>
             <el-table-column
                     prop="roleFlag"
                     label="角色状态"
+                    align="center"
                     :formatter="roleFlagFormatter"
                     sortable>
             </el-table-column>
             <!--操作列-->
-            <el-table-column label="操作">
+            <el-table-column label="操作" align="center">
                 <template scope="scope">
                     <el-button :plain="true" type="success" size="small" icon="edit" @click="powerClick(scope.row)" round>查看权限</el-button>
                     <el-button :plain="true" type="success" size="small" icon="edit" @click="editClick(scope.row)" round>编辑</el-button>
@@ -141,22 +145,22 @@
     <!--查看权限-->
     <el-dialog title="角色授权" :visible.sync="editFormVisible2" :close-on-click-modal="false" width="30%">
         <center>
-        <!--权限列表-->
-        <!--:default-expanded-keys="[2, 3]"-->
-        <el-tree
-                :data="props"
-                show-checkbox
-                node-key="id"
-                ref="tree"
-                :default-checked-keys="selected"
-                @check-change="selectedChange">
+            <!--权限列表-->
+            <!--:default-expanded-keys="[2, 3]"-->
+            <el-tree
+                    :data="props"
+                    show-checkbox
+                    node-key="id"
+                    ref="tree"
+                    :default-checked-keys="selected"
+                    @check-change="selectedChange">
                 :props="defaultProps">
-        >
-        </el-tree>
-        <div slot="footer" class="dialog-footer">
-            <el-button @click.native="editFormVisible2 = false">取消</el-button>
-            <el-button type="primary" @click.native="powerCommit" :disabled="isDisabled" :loading="editLoading">提交</el-button>
-        </div>
+                >
+            </el-tree>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click.native="editFormVisible2 = false">取消</el-button>
+                <el-button type="primary" @click.native="powerCommit" :disabled="isDisabled" :loading="editLoading">提交</el-button>
+            </div>
         </center>
     </el-dialog>
 </div>
@@ -239,7 +243,7 @@
                 self.total=response.data.total;
                 self.roleData = response.data.pageData;
                 self.multipleSelection=response.data.data;
-              });
+            });
             axios.post("/sb/power/tree").then(function(response){
                 //alert(JSON.stringify(response.data));
                 self.props= response.data;
@@ -250,10 +254,10 @@
             //刷新
             toFlush:function(){
                 this.roleForm={
-                        roleId:0,
-                        roleName:'',
-                        roleDesc:'',
-                        roleFlag:0,
+                    roleId:0,
+                    roleName:'',
+                    roleDesc:'',
+                    roleFlag:0,
                 }
                 this.loadingData();
             },
@@ -321,11 +325,11 @@
                     });
                 }
                 this.ids='';
-               // this.selected=[];
+                // this.selected=[];
                 this.roleId=row.roleId;
                 var roleId=row.roleId;
                 axios.post("/sb/role/getPower",roleId).then(function(response){
-                    axios.post("/sb/power/tree").then(function(respons){
+                    axios.post("/sb/power/tree",{}).then(function(respons){
                         //alert(JSON.stringify(response.data));
                         _self.props= respons.data;
                         var powerIdList=response.data;
@@ -339,11 +343,11 @@
                             //_self.$refs.tree.setCheckedKeys(_self.selected);
                             //alert("roleId=="+row.roleId+"    选项=="+JSON.stringify(_self.selected));
                         }
-                        _self.editFormVisible2 = true;
+
                     });
 
                 });
-
+                _self.editFormVisible2 = true;
             },
             //表格删除事件
             deleteClick:function(row) {
@@ -387,13 +391,13 @@
                 var _self = this;
                 //清空原有数据
                 this.roleForm={
-                        roleId:0,
-                        roleName:'',
-                        roleDesc:'',
-                        roleFlag:0,
+                    roleId:0,
+                    roleName:'',
+                    roleDesc:'',
+                    roleFlag:0,
                 },
-                //显示隐藏form表单
-                this.editFormVisible = true;
+                    //显示隐藏form表单
+                    this.editFormVisible = true;
                 //重新加载数据
                 _self.loadingData();
             },
@@ -467,18 +471,18 @@
                 var formData =this.roleForm;
                 var goUrl=this.goUrl;
                 axios.post(goUrl,formData).then(function(response){
-                     if(response.data>0){
-                         _self.$message({
-                             message:'操作成功',
-                             type: 'success'
-                         });
-                         _self.editFormVisible = false;
-                     }else{
-                         _self.$message({
-                             message:'操作失败',
-                             type: 'error'
-                         });
-                     }
+                    if(response.data>0){
+                        _self.$message({
+                            message:'操作成功',
+                            type: 'success'
+                        });
+                        _self.editFormVisible = false;
+                    }else{
+                        _self.$message({
+                            message:'操作失败',
+                            type: 'error'
+                        });
+                    }
                     _self.loadingData();//重新加载数据
                 })
                 console.info(this.roleForm);

@@ -29,33 +29,33 @@
                 <el-input v-model="searchForm.ctime" placeholder="贷款时间"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" icon="search" @click="searchClick">查询</el-button>
+                <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick">查询</el-button>
             </el-form-item>
         </el-form>
     </el-row>
     <!--列表-->
     <el-row>
         <el-table :data="tableData" v-loading.body="loading" border @selection-change="selectionChange" style="width: 100%">
-            <el-table-column prop="Loan_id" label="编号" width="60"></el-table-column>
-            <el-table-column prop="GRZH" label="个人账户" width="150"></el-table-column>
-            <el-table-column prop="tb_pName" label="贷款人姓名" width="150"></el-table-column>
-            <el-table-column prop="loan_money" label="贷款金额" width="120"></el-table-column>
-            <el-table-column prop="loan_periods" label="贷款期数" width="120"></el-table-column>
-            <el-table-column prop="loan_rate" label="贷款利率(%)" width="120"></el-table-column>
-            <el-table-column prop="loan_bank" label="受委托银行" width="120"></el-table-column>
-            <el-table-column prop="loan_repay" label="还款方式" width="80"></el-table-column>
-            <el-table-column prop="ctime" label="创建时间" width="120"></el-table-column>
-            <el-table-column prop="status" label="审核状态" width="80">
+            <el-table-column prop="Loan_id" align="center" label="编号" width="65"></el-table-column>
+            <el-table-column prop="GRZH" align="center" label="个人账户" width="160"></el-table-column>
+            <el-table-column prop="tb_pName" align="center" label="贷款人姓名" width="160"></el-table-column>
+            <el-table-column prop="loan_money" align="center" label="贷款金额" width="160"></el-table-column>
+            <el-table-column prop="loan_periods" align="center" label="贷款期数" width="157"></el-table-column>
+            <el-table-column prop="loan_rate" align="center" label="贷款利率(%)" width="157"></el-table-column>
+            <el-table-column prop="loan_bank" align="center" label="受委托银行" width="160"></el-table-column>
+            <el-table-column prop="loan_repay" align="center" label="还款方式" width="160"></el-table-column>
+            <el-table-column prop="ctime" align="center" label="创建时间" width="160"></el-table-column>
+            <el-table-column prop="status" align="center" label="审核状态" width="160">
                 <template scope="scope">
                     <div style="text-align: center" v-if="scope.row.status=='1'">
                         <span style="color:red;">待审核</span>
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column prop="status" label="操作" width="120">
+            <el-table-column prop="status" align="center" label="操作" width="160">
                 <template scope="scope">
                     <div style="text-align: center" v-if="scope.row.status=='1'">
-                        <el-button type="primary" round @click="editClick(scope.row)">详细</el-button>
+                        <el-button type="primary" round :plain="true" icon="el-icon-message" @click="editClick(scope.row)">详细</el-button>
                     </div>
                 </template>
             </el-table-column>
@@ -252,8 +252,8 @@
         </el-form>
         <div slot="footer" class="dialog-footer">
             <el-button @click.native="editFormVisibleP = false" round>取消</el-button>
-            <el-button type="primary" round  @click.native="passCheck" icon="el-icon-success" :loading="editLoading">通过</el-button>
-            <el-button type="danger" round  @click.native="reject" icon="el-icon-circle-close" :loading="editLoading">驳回</el-button>
+            <el-button type="primary" round :plain="true" icon="el-icon-success"  @click.native="passCheck" :loading="editLoading">通过</el-button>
+            <el-button type="danger" round :plain="true" icon="el-icon-circle-close"  @click.native="reject" :loading="editLoading">驳回</el-button>
         </div>
     </el-dialog>
 </div>
@@ -385,12 +385,17 @@
                                 pid:_self.editForm.pid,GRZH:_self.editForm.GRZH,repay_bank:_self.editForm.repay_bank,repay_account:_self.editForm.repay_account
                                 };
                 axios.post('/sb/Loan/passCheck',formData).then(function(response){
-                    alert("后台的值="+JSON.stringify(response.data));
+                    //alert("后台的值="+JSON.stringify(response.data));
                     if (response.data==1){
                         _self.editFormVisibleP = false;
                         _self.loadingData();//重新加载数据
                     }else {
-                        alert("通过失败");
+                        //alert("通过失败");
+                        _self.$message({
+                            showClose: true,
+                            message: '通过失败',
+                            type: 'error'
+                        });
                         _self.loadingData();//重新加载数据
                     }
                 })
