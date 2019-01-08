@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>在线支付</title>
+	<meta name="Keywords" content="大融小贷 个人主页" />
+	<meta name="Description" content="大融小贷 个人主页" />
+	<link href="/sb/css/UserCSS.css" rel="stylesheet" type="text/css" />
+	<script src="/sb/easyui/jquery.min.js" type="text/javascript"></script>
+	<script src="/sb/js/ops.js" type="text/javascript"></script>
+	<script src="/sb/js/UserJS.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="/sb/css/nav.css">
+	<link rel="stylesheet" type="text/css" href="/sb/font/iconfont.css">
+	<script type="text/javascript" src="/sb/easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="/sb/js/nav.js"></script>
+	<script>
+        $(function () {
+            $.post(
+                "/sb/Page/paypay",
+                {},
+                function (data) {
+                   // alert(JSON.stringify(data));
+                    $("#span").html(data.payables);
+                },
+                "json"
+            );
+        });
+	</script>
+	<link rel="stylesheet" href="/sb/css/style.css" type="text/css"><script type="text/javascript" src="/sb/js/jquery-1.7.2.min.js"></script></head>
+<body style="font-size: 20px; background-image: url(images/6f8d784640b645ce537e93613863d3ca.gif) ">
+<div class="zxcf_nav_wper">
+	<div class="zxcf_nav clearfix px1000">
+		<div class="zxcf_nav_l fl"><img src="/sb/images/yingye.png"></img></div>
+		<div class="zxcf_nav_r fr">
+			<img src="/sb/images/zxcf_perinfo.png">
+			<span th:text="${session.list[0].tb_pName}"></span>
+			<span><a href="/sb/Page/denglu"  style="color:red">注销账户</a></span>
+		</div>
+	</div>
+</div>
+<div class="zxcf_menu_wper">
+	<div class="zxcf_menu px1000" >
+		<a href="/sb/Page/green" style="color:#ffffff" class="zm_cura">个人主页</a>
+		<a href="/sb/Page/jiaona" style="color:#ffffff">缴纳记录</a>
+		<a href="/sb/Page/daikuan"style="color:#ffffff">我的贷款</a>
+		<a href="/sb/Page/huankuan" style="margin-right:0;">偿还贷款</a>
+	</div>
+</div>
+   
+    <marquee><span style="font-weight: bolder;font-size:15px;color: red;">住房公积金制度是你住房的保障！欢迎登录公积金营业厅</span></marquee>
+<center>
+	<h3 style="color: black">您已成功偿还本期贷款<span id="span" style="color: red"></span>元，<a href="/sb/Page/daikuan" style="color: #3a8ee6">点击此处返回主页!</a></h3>
+</center>
+            <!-- JQ切换方法 -->
+            <script type="text/javascript">
+                     
+       $.ajax({
+       url:"queryHJ.action",
+       data:{
+        "u.uid":$("#uid").val()
+       },
+       dataType:"json",
+       success:function(data){
+         $("#dwzh").val(data[5].dwzh)
+         $("#dwyjce").val(data[5].dwyjce)
+         $("#gryjce").val(data[5].gryjce)
+         $("#zj").val(parseFloat(data[5].dwyjce)+parseFloat(data[5].gryjce))
+       }
+     })
+                var $div_li = $("#tab_menu ul li");
+
+                $div_li.click(function () {
+
+                    $(this).addClass("current").siblings().removeClass("current");
+
+                    var div_index = $div_li.index(this);
+
+                    $("#tab_box>div").eq(div_index).show().siblings().hide();
+
+                }).hover(function () {
+
+                    $(this).addClass("hover");
+
+                }, function () {
+
+                    $(this).removeClass("hover");
+
+                });
+
+            </script>
+        </div>
+    </div>
+    <div class="zscf_aboutus_wper" id="foot">
+	  <div class="zscf_aboutus px1000 clearfix">
+	  	    <div class="zscf_aboutus_l fl">
+	  	    	   <ul class="zscf_aboutus_lul clearfix">
+	  	    	   	  <li class="pt10"><a href="#"><img src="/images/app.png" alt=""></a>
+	  	    	   	  </li>
+	  	    	   	  <li>
+	  	    	   	  <p class="pb20">服务热线</p>
+	  	    	   	  <strong>400-027-0101</strong>
+	  	    	   	  </li>
+	  	    	   	  <li>
+	  	    	   	  	  <p class="pb10 linkpic">
+	  	    	   	  	     <a href="#"><img src="/images/ft_sina.png" alt=""></a>
+	  	    	   	  	     <a href="#"><img src="/images/ft_weixin.png" alt=""></a>
+	  	    	   	  	     <a href="#"><img src="/images/ft_erji.png" alt=""></a>
+	  	    	   	  	  </p>
+	  	    	   	  	  <p><a href="#">kefu@zhongxincaifu.com</a></p>
+	  	    	   	  </li>
+	  	    	   </ul>
+	  	    </div>
+	  	    <!-- end left -->
+	  	    <div class="zscf_aboutus_r fl clearfix">
+	  	    	 <a href="#" class="fl ft_ewm"><img src="/images/ft_erweima.png" alt=""></a>
+	  	    	 <ul class="fl clearfix">
+	  	    	 	<li><a href="#">联系我们</a></li>
+	  	    	 	<li><a href="#">我要融资</a></li>
+	  	    	 	<li><a href="/qian/problem">帮助中心</a></li>
+	  	    	 	<li><a href="#">友情链接</a></li>
+	  	    	 	<li><a href="#">招贤纳士</a></li>
+	  	    	 	<li><a href="#">收益计算器</a></li>
+	  	    	 </ul>
+	  	    </div>
+	  	    <!-- end right -->
+
+	  </div>
+</div>
+
+<div class="zscf_bottom_wper" id="foot2">
+	<div class="zscf_bottom px1000 clearfix">
+		  <p class="fl">© 2014 zhongxincaifu &nbsp;  &nbsp;&nbsp;   中兴财富金融信息服务股份有限公司 &nbsp;&nbsp;&nbsp;    来源:<a href="http://www.mycodes.net/" target="_blank">源码之家</a></p>
+		  <p class="fr">
+		    <a href="#"><img src="/images/360.png" alt=""></a>
+		    <a href="#"><img src="/images/kexin.png" alt=""></a>
+		    <a href="#"><img src="/images/norton.png" alt=""></a>
+		  </p>
+	</div>
+</div>
+    
+</body>
+</html>

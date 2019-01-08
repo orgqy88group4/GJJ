@@ -98,17 +98,6 @@ public class RoleServiceImpl implements RoleService{
     }
 
     @Override
-    public int getPageByParamC1(Map map) {
-        List<Map> pageByParamC1 = roleDao.getPageByParamC1();
-        for (Map map1 : pageByParamC1) {
-            if (map1.get("userName").equals(map.get("userName"))){//重复不能使用，向前台返回1
-                return 1;
-            }
-        }
-        return 0;
-    }
-
-    @Override
     public int getPageCountC(Map map) {
         return roleDao.getPageCountC(map);
     }

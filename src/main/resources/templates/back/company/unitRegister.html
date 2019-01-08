@@ -73,8 +73,11 @@
                         <el-option label="其他经济" value = "其他经济" ></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="机构代码:" prop="uNetworkCode" key="12">
-                    <el-input v-model="editForm.uNetworkCode" @blur="blurSearchFor2" style="width:220px;height:35px;" auto-complete="off"></el-input>
+                <!--<el-form-item label="机构代码:" prop="uNetworkCode" key="12">-->
+                    <!--<el-input v-model="editForm.uNetworkCode" @blur="blurSearchFor2" style="width:220px;height:35px;" auto-complete="off"></el-input>-->
+                <!--</el-form-item>-->
+                <el-form-item label="*催缴人:">
+                    <el-input v-model="editForm.YWBLR" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="月发薪日:">
                     <el-input-number v-model="editForm.uPayDate" :min="1" :max="31" style="width:220px;height:35px;" auto-complete="off"></el-input-number>
@@ -192,17 +195,14 @@
                                     </template>
                                 </el-input>
                             </el-form-item>
-                            <el-form-item label="*催缴人:">
-                                <el-input v-model="editForm.YWBLR" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
-                            </el-form-item>
                         </el-aside>
                     </el-container>
                 </el-container>
             </el-container>
         </el-container>
         <div style="text-align: center">
-            <!--@click.native="editSubmit('editForm')"-->
-            <el-button type="primary"  round :plain="true" @click.native="editSubmit1" :loading="editLoading">保存</el-button>
+            <!--@click.native="editSubmit1"-->
+            <el-button type="primary"  round :plain="true" @click.native="editSubmit('editForm')" :loading="editLoading">保存</el-button>
         </div>
     </el-form>
 </div>
@@ -228,7 +228,7 @@
                 SSHY:'',
                 LSGX:'',
                 JJLX:'',
-                uNetworkCode:'',
+                //uNetworkCode:'',
                 uPayDate:'',
 
                 uLegalPerson:'',
@@ -286,10 +286,10 @@
                     { required: true, message: '请输入开户银行账号', trigger: 'blur' },
                     {pattern:/([\d]{4})([\d]{4})([\d]{4})([\d]{4})([\d]{0,})?/, trigger: 'blur', message: '你输入的开户银行账号格式不正确'}
                 ],
-                uNetworkCode:[
-                    { required: true, message: '请输入机构代码', trigger: 'blur' },
-                    {pattern:/(^\d{8,}$)/,trigger: 'blur',  message: '你输入的机构代码格式不正确'}
-                ]
+//                uNetworkCode:[
+//                    { required: true, message: '请输入机构代码', trigger: 'blur' },
+//                    {pattern:/(^\d{8,}$)/,trigger: 'blur',  message: '你输入的机构代码格式不正确'}
+//                ]
             }
         },
         created:function(){
@@ -320,7 +320,7 @@
             //机构代码唯一验证
             blurSearchFor2:function () {
                 var _self=this;
-                alert("机构代码："+_self.editForm.uNetworkCode);
+                //alert("机构代码："+_self.editForm.uNetworkCode);
                 if (_self.editForm.uNetworkCode!=''&&_self.editForm.uNetworkCode!=null){
                     axios.post('/sb/company/unitCheckName',{uNetworkCode:_self.editForm.uNetworkCode}).then(function (response) {
                         //alert(JSON.stringify(response.data));
@@ -352,7 +352,7 @@
             //点击保存按钮
             editSubmit(formName){
                 var _self = this;
-                this.$refs[formName].validate((valid) => {
+                _self.$refs[formName].validate((valid) => {
                     if (valid) {
                         axios.post('/sb/company/registerInfo', _self.editForm).then(function (response) {
                             if (response.data==1){
@@ -370,31 +370,34 @@
                             }
                         })
                     } else {
-                        console.log('error submit!!');
+                        _self.$message({
+                            message: '请填写完整信息！！！',
+                            type: 'warning'
+                        });
                         return false;
                     }
                 })
             },
-            editSubmit1:function () {
-                var _self=this;
-                //alert("12112")
-                axios.post('/sb/company/registerInfo', _self.editForm).then(function (response) {
-                    //alert("12112")
-                    if (response.data==1){
-                        _self.editForm = Object.assign({}, '');
-                        _self.$message({
-                            message: '恭喜你！开户成功。',
-                            type: 'success'
-                        });
-                        location.href="/sb/Page/UnitInfo1"
-                    }else{
-                        _self.$message({
-                            message: '开户失败！！！',
-                            type: 'warning'
-                        });
-                    }
-                })
-            },
+//            editSubmit1:function () {
+//                var _self=this;
+//                //alert("12112")
+//                axios.post('/sb/company/registerInfo', _self.editForm).then(function (response) {
+//                    //alert("12112")
+//                    if (response.data==1){
+//                        _self.editForm = Object.assign({}, '');
+//                        _self.$message({
+//                            message: '恭喜你！开户成功。',
+//                            type: 'success'
+//                        });
+//                        location.href="/sb/Page/UnitInfo1"
+//                    }else{
+//                        _self.$message({
+//                            message: '开户失败！！！',
+//                            type: 'warning'
+//                        });
+//                    }
+//                })
+//            },
             //上传成功后的方法
             uploadSuc:function(response, file, fileList){
                 // alert(response);

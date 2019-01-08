@@ -49,6 +49,21 @@ public class QianTaiServiceImpl implements QianTaiService {
     }
 
     /**
+     * 核实银行卡是否正确
+     * @param map
+     * @return
+     */
+    @Override
+    public List<Map> YHK(Map map) {
+        return qianTaiDao.YHK(map);
+    }
+
+    @Override
+    public int XGSJ(Map map) {
+        return qianTaiDao.XGSJ(map);
+    }
+
+    /**
      * 单位账号登录前台
      * @param map
      * @return
@@ -56,6 +71,16 @@ public class QianTaiServiceImpl implements QianTaiService {
     @Override
     public List<Map> ChackUnitLogin(Map map) {
         return qianTaiDao.ChackUnitLogin(map);
+    }
+
+    @Override
+    public int DWHJUpdateXX(Map map) {
+        return qianTaiDao.DWHJUpdateXX(map);
+    }
+
+    @Override
+    public int DWHJUpdate(Map map) {
+        return qianTaiDao.DWHJUpdate(map);
     }
 
     /**

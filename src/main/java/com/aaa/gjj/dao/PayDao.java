@@ -26,9 +26,11 @@ public interface PayDao {
     @Select("<script>select * from tb_repay  \n" +
             "where 1=1 " +
             "<if test=\"repay_id!=null and repay_id!=''\"> and repay_id=#{repay_id} </if>" +
+            "<if test=\"GRZH!=null and GRZH!=''\"> and GRZH=#{GRZH} </if>" +
             "<if test=\"pName!=null and roleName!=''\"> and pName like concat('%',#{pName},'%') </if>" +
             "<if test=\"loan_money!=null and loan_money!=''\"> and loan_money like concat('%',#{loan_money},'%') </if>" +
             "<if test=\"loan_periods!=null and loan_periods!=''\">  and loan_periods =#{loan_periods} </if>" +
+            "<if test=\"repay_state==3 \">  and repay_state =#{repay_state} and residue_periods!=0 </if>" +
             " limit #{start},#{end} </script>")
     List<Map> getPageByParam(Map map);
 
@@ -39,9 +41,11 @@ public interface PayDao {
      */
     @Select("<script> select count(*) from tb_repay <where>" +
             "<if test=\"repay_id!=null and repay_id!=''\"> and repay_id=#{repay_id} </if>" +
+            "<if test=\"GRZH!=null and GRZH!=''\"> and GRZH=#{GRZH} </if>" +
             "<if test=\"pName!=null and roleName!=''\"> and pName like concat('%',#{pName},'%') </if>" +
             "<if test=\"loan_money!=null and loan_money!=''\"> and loan_money like concat('%',#{loan_money},'%') </if>" +
             "<if test=\"loan_periods!=null and loan_periods!=''\">  and loan_periods =#{loan_periods} </if>" +
+            "<if test=\"repay_state==3 \">  and repay_state =#{repay_state} and residue_periods!=0 </if>" +
             " </where></script>")
     int getPageCount(Map map);
 
@@ -55,6 +59,7 @@ public interface PayDao {
             "<if test=\"repay_id!=null and repay_id!=''\"> and repay_id=#{repay_id} </if>" +
             "<if test=\"GRZH!=null and GRZH!=''\"> and GRZH=#{GRZH} </if>" +
             "<if test=\"repayed_date !=null and repayed_date !=''\"> and timestampdiff(month,#{repayed_date},date_format(now(),'%Y-%m-%d')) &lt;=1 </if>" +
+            "<if test=\"desc!=null and desc!=''\"> order by repayed_date desc limit 0,10 </if>" +
             "  </script>")
     List<Map> getRecord(Map map);
 
@@ -97,19 +102,27 @@ public interface PayDao {
      * @return
      */
     @Update("<script> update tb_repay set " +
-            "residue_money = #{residue_money}, " +
-            "residue_interests = #{residue_interests}, " +
-            "repayed_money = #{repayed_money}, " +
-            "repayed_interests = #{repayed_interests}," +//residue_interests
-            "repayed_period = #{repayed_period}," +
-            "<if test=\"status!=null and status!=''\"> repay_state=#{status}, </if>" +
-            "<if test=\"month!=null and month!=''\"> repay_month=#{month}, </if>" +
-            "<if test=\"mmonth!=null and mmonth!=''\"> repay_mmonth=#{mmonth}, </if>" +
+            "<if test=\"residue_money!=null and residue_money!=''\"> residue_money = #{residue_money}, </if> " +
+            "<if test=\"residue_interests!=null and residue_interests!=''\"> residue_interests = #{residue_interests}, </if> " +
+            "<if test=\"repayed_money!=null and repayed_money!=''\"> repayed_money = #{repayed_money}, </if> " +
+            "<if test=\"repayed_interests!=null and repayed_interests!=''\"> repayed_interests = #{repayed_interests}, </if>" +//residue_interests
+            "<if test=\"repayed_period!=null and repayed_period!=''\"> repayed_period = #{repayed_period}, </if>" +
+            "<if test=\"repay_state!=null and repay_state!=''\"> repay_state=#{repay_state}, </if>" +
+            "<if test=\"repay_month!=null and repay_month!=''\"> repay_month=#{repay_month}, </if>" +
+            "<if test=\"repay_mmonth!=null and repay_mmonth!=''\"> repay_mmonth=#{repay_mmonth}, </if>" +
             "<if test=\"repayed_All_money !=null and repayed_All_money !=''\"> repayed_All_money=#{repayed_All_money}, </if>" +
-            "residue_periods = #{residue_periods} " +
-            " where repay_id = #{repay_id} </script>")
+            "<if test=\"residue_periods!=null and residue_periods!=''\"> residue_periods = #{residue_periods}, </if> " +
+            "<if test=\"repay_month_interest!=null and repay_month_interest!=''\"> repay_month_interest = #{repay_month_interest}, </if> " +
+            "<if test=\"repay_month_money!=null and repay_month_money!=''\"> repay_month_money = #{repay_month_money}, </if> " +
+            "<if test=\"repay_date !=null and repay_date !=''\"> repayed_date= date_format(now(),'%Y-%m-%d'), " +
+            "repay_date= date_format(DATE_ADD(#{repay_date},INTERVAL 1 MONTH),'%Y-%m-%d') </if>" +
+
+            "  where repay_id = #{repay_id} </script>")
     int repayMoney(Map map);
 
+    @Update("update tb_repay set " +
+            "repay_state=#{repay_state}  where repay_id = #{repay_id}")
+    int repayStatus(Map map);
     /**
      * 查询还款信息表
      * @param id
@@ -122,8 +135,8 @@ public interface PayDao {
      * @param map
      * @return
      */
-    @Insert("insert into tb_repay_record(repay_id,GRZH,pName,repay_month_money,repay_month_interest,repayed_date) " +
-            " values(#{repay_id},#{GRZH},#{pName},#{repay_month_money},#{repay_month_interest},#{repayed_date})")
+    @Insert("insert into tb_repay_record(repay_id,GRZH,pName,repay_month_money,repay_month_interest,repayed_date,repay_state) " +
+            " values(#{repay_id},#{GRZH},#{pName},#{repay_month_money},#{repay_month_interest},#{repayed_date},#{repay_state})")
     int repayRecord(Map map);
 
     /**
@@ -131,7 +144,7 @@ public interface PayDao {
      * @param map 可选项  用于拼接查询条件
      * @return
      */
-    @Select("<script>select * from tb_repay_detail where 1=1 " +
+    @Select("<script>select * from tb_repay where 1=1 " +
             "<if test=\"GRZH!=null and GRZH!=''\">  and GRZH=#{GRZH} </if>" +
             "<if test=\"pName!=null and pName!=''\">  and pName=#{pName} </if>" +
             " limit #{start},#{end} </script>")
@@ -142,11 +155,18 @@ public interface PayDao {
      * @param map
      * @return
      */
-    @Select("<script>select count(*) from tb_repay_detail where 1=1 " +
+    @Select("<script>select count(*) from tb_repay where 1=1 " +
             "<if test=\"GRZH!=null and GRZH!=''\">  and GRZH=#{GRZH} </if>" +
             "<if test=\"pName!=null and pName!=''\">  and pName=#{pName} </if>" +
             "</script>")
     int getRepayCount(Map map);
 
-
+    /**
+     * 逾期信息
+     * @param map
+     * @return
+     */
+    @Select("select timestampdiff(day,#{date},date_format(now(),'%Y-%m-%d')) as over_days," +
+            " (timestampdiff(month,#{date},date_format(now(),'%Y-%m-%d'))+1)*(#{money}) as over_money")
+    Map getOverPay(Map map);
 }

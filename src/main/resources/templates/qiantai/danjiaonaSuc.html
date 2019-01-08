@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>单位基金缴纳</title>
+    <meta name="Keywords" content="大融小贷 个人主页" />
+    <meta name="Description" content="大融小贷 个人主页" />
+    <link href="/sb/css/UserCSS.css" rel="stylesheet" type="text/css" />
+    <script src="/sb/js/ops.js" type="text/javascript"></script>
+    <script src="/sb/js/UserJS.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="/sb/css/nav.css">
+    <link rel="stylesheet" type="text/css" href="/sb/font/iconfont.css">
+    <script type="text/javascript" src="/sb/js/nav.js"></script>
+    <link rel="stylesheet" href="/sb/css/style.css" type="text/css"></link><script type="text/javascript" src="/sb/js/jquery-1.7.2.min.js"></script></head>
+<body style="font-size: 20px; background-image: url('sb/images/6f8d784640b645ce537e93613863d3ca.gif') ">
+<div class="zxcf_nav_wper">
+    <div class="zxcf_nav clearfix px1000">
+        <div class="zxcf_nav_l fl"><img src="/sb/images/yingye.png"></img></div>
+        <div class="zxcf_nav_r fr">
+            <img src="/sb/images/zxcf_perinfo.png"></img>
+            <span th:text="${session.list[0].uname}"></span>
+            <span><a href="/sb/Page/danwei"  style="color:red">注销账户</a></span>
+        </div>
+    </div>
+</div>
+<div class="zxcf_menu_wper">
+    <div class="zxcf_menu px1000" >
+        <a href="/sb/Page/dxinxi" style="color:#ffffff" >单位主页</a>
+        <a href="/sb/Page/danjiaona" style="color:#ffffff">积金缴纳</a>
+        <a href="/sb/Page/seldanjiao" style="color:#ffffff">公司缴纳记录</a>
+    </div>
+</div>
+<marquee><span style="font-weight: bolder;font-size:15px;color: red;">住房公积金制度是你住房的保障！欢迎登录公积金营业厅</span></marquee>
+<center>
+    <h3 style="color: black">您已成功偿还本期贷款<span id="span" style="color: red"></span>元，<a href="/sb/Page/dxinxi" style="color: #3a8ee6">点击此处返回主页!</a></h3>
+</center>
+<!-- /.u-menu -->
+
+<!-- JQ切换方法 -->
+<script type="text/javascript">
+    $.ajax({
+        url:"/sb/qiantai/danjiaona",
+        data:{DWXZ:"[[${session.list[0].DWZH}]]"},
+        dataType:"json",
+        success:function(data){
+            $("#span").html(data[0].uaOweMonery);
+        }
+    })
+</script>
+<div class="zscf_aboutus_wper" id="foot">
+    <div class="zscf_aboutus px1000 clearfix">
+        <div class="zscf_aboutus_l fl">
+            <ul class="zscf_aboutus_lul clearfix">
+                <li class="pt10"><a href="#"><img src="/sb/images/app.png" alt=""></a>
+                </li>
+                <li>
+                    <p class="pb20">服务热线</p>
+                    <strong>400-027-0101</strong>
+                </li>
+                <li>
+                    <p class="pb10 linkpic">
+                        <a href="#"><img src="/sb/images/ft_sina.png" alt=""></a>
+                        <a href="#"><img src="/sb/images/ft_weixin.png" alt=""></a>
+                        <a href="#"><img src="/sb/images/ft_erji.png" alt=""></a>
+                    </p>
+                    <p><a href="#">kefu@zhongxincaifu.com</a></p>
+                </li>
+            </ul>
+        </div>
+        <!-- end left -->
+        <div class="zscf_aboutus_r fl clearfix">
+            <a href="#" class="fl ft_ewm"><img src="/sb/images/ft_erweima.png" alt=""></a>
+            <ul class="fl clearfix">
+                <li><a href="#">联系我们</a></li>
+                <li><a href="#">我要融资</a></li>
+                <li><a href="#">帮助中心</a></li>
+                <li><a href="#">友情链接</a></li>
+                <li><a href="#">招贤纳士</a></li>
+                <li><a href="#">收益计算器</a></li>
+            </ul>
+        </div>
+        <!-- end right -->
+    </div>
+</div>
+<div class="zscf_bottom_wper" id="foot2">
+    <div class="zscf_bottom px1000 clearfix">
+        <p class="fl">© 2014 zhongxincaifu &nbsp;  &nbsp;&nbsp;   中兴财富金融信息服务股份有限公司 &nbsp;&nbsp;&nbsp;    来源:<a href="http://www.mycodes.net/" target="_blank">源码之家</a></p>
+        <p class="fr">
+            <a href="#"><img src="/sb/images/360.png" alt=""></a>
+            <a href="#"><img src="/sb/images/kexin.png" alt=""></a>
+            <a href="#"><img src="/sb/images/norton.png" alt=""></a>
+        </p>
+    </div>
+</div>
+</body>
+</html>

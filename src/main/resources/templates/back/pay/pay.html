@@ -41,8 +41,8 @@
                 <el-input v-model="searchForm.loan_periods" placeholder="按贷款期数查询"></el-input>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary" round :plain="true" icon="el-icon-search"  @click="searchClick">查询</el-button>
-                <el-button type="success" icon="plus" :plain="true" @click="toFlush" round>刷新</el-button>
+                <el-button type="primary" icon="search" @click="searchClick" round>查询</el-button>
+                <el-button type="success" icon="plus" @click="toFlush" round>刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -59,66 +59,84 @@
             <el-table-column
                     prop="repay_id"
                     label="编号"
-                    align="center"
                     sortable
                     width="80">
             </el-table-column>
             <el-table-column
                     prop="GRZH"
-                    label="个人账号"
-                    align="center">
+                    label="个人账号">
             </el-table-column>
             <el-table-column
                     prop="pName"
                     label="姓名"
-                    align="center"
                     width="80">
             </el-table-column>
             <el-table-column
                     prop="loan_money"
-                    label="贷款金额(元)"
-                    align="center">
+                    label="贷款金额(元)">
             </el-table-column>
             <el-table-column
                     prop="loan_periods"
                     label="贷款期数"
-                    align="center"
                     width="80">
             </el-table-column>
             <el-table-column
                     prop="repay_money"
-                    label="应还本金(元)"
-                    align="center">
+                    width="100"
+                    label="应还本金(元)">
             </el-table-column>
             <el-table-column
                     prop="repay_interests"
-                    label="应还利息(元)"
-                    align="center">
+                    width="100"
+                    label="应还利息(元)">
             </el-table-column>
             <el-table-column
                     prop="repayed_All_money"
                     label="已还(元)"
-                    align="center"
-                    width="80">
+                    width="100">
             </el-table-column>
-            <el-table-column
-                    prop="residue_periods"
-                    label="剩余期数"
-                    align="center"
-                    width="80">
+            <el-table-column prop="residue_periods" label="剩余期数" width="80">
+                <template scope="scope">
+                    <div style="text-align: center" v-if="scope.row.residue_periods!='0'">
+                        <span>{{scope.row.residue_periods}}</span>
+                    </div>
+                    <div style="text-align: center" v-if="scope.row.residue_periods=='0'">
+                        <span style="color:#00bb00;">还款完成</span>
+                    </div>
+                </template>
             </el-table-column>
-            <el-table-column
-                    prop="repayed_date"
-                    label="最近还款日期"
-                    align="center" >
+            <el-table-column prop="repayed_date" label="最近还款日期">
+                <template scope="scope">
+                    <div style="text-align: center" v-if="scope.row.residue_periods<scope.row.loan_periods">
+                        <span>{{scope.row.repayed_date}}</span>
+                    </div>
+                    <div style="text-align: center" v-if="scope.row.residue_periods==scope.row.loan_periods">
+                        <span>---</span>
+                    </div>
+                </template>
             </el-table-column>
-            <el-table-column
-                    prop="repay_month"
-                    label="月还(元)"
-                    align="center">
+            <el-table-column prop="repay_month" width="100" label="月预还(元)">
+                <template scope="scope">
+                    <div style="text-align: center" v-if="scope.row.residue_periods!='0'">
+                        <span style="color:#ffab4d;">{{scope.row.repay_month}}</span>
+                    </div>
+                    <div style="text-align: center" v-if="scope.row.residue_periods=='0'">
+                        <span>---</span>
+                    </div>
+                </template>
             </el-table-column>
-            <el-table-column prop="repay_state" label="还款状态"  align="center"  width="80">
-                <!--状态数字转文字-->
+            <el-table-column prop="repay_date" label="预还款日期">
+                <template scope="scope">
+                    <div style="text-align: center" v-if="scope.row.residue_periods!='0'">
+                        <span style="color:#ffab4d;">{{scope.row.repay_date}}</span>
+                    </div>
+                    <div style="text-align: center" v-else-if="scope.row.residue_periods=='0'">
+                        <span>---</span>
+                    </div>
+                </template>
+            </el-table-column>
+            <!--<el-table-column prop="repay_state" label="还款状态" width="80">
+                &lt;!&ndash;状态数字转文字&ndash;&gt;
                 <template scope="scope">
                     <div style="text-align: center" v-if="scope.row.repay_state=='1'">
                         <span style="color:#2d51ff;">还款中</span>
@@ -130,10 +148,10 @@
                         <span style="color:#ff0000;">已逾期</span>
                     </div>
                 </template>
-            </el-table-column>
+            </el-table-column>-->
 
             <!--操作列-->
-            <el-table-column label="操作"  align="center" >
+            <el-table-column label="操作">
                 <template scope="scope">
                     <el-button :plain="true" type="primary" size="small" icon="edit" @click="editClick(scope.row)" round>详情</el-button>
                     <el-button :plain="true" type="warning" size="small" :disabled="isabled" icon="edit" @click="clickSubmit(scope.row)" round>还款</el-button>
@@ -207,7 +225,7 @@
                 <el-row>
                     <el-form :model="payData" label-position="right"  :inline="true" class="demo-table-expand" size="mini">
                         <el-form-item label="应还本金" :label-width="formLabelWidth">
-                            <el-input v-model="payForm.repay_money" :readonly="true" style="width: 100px;border:1px solid red"></el-input>
+                            <el-input v-model="payForm.repay_money" :readonly="true" style="border:1px solid red"></el-input>
                         </el-form-item>
                         <el-form-item label="应还利息" :label-width="formLabelWidth">
                             <el-input v-model="payForm.repay_interests" :readonly="true"></el-input>
@@ -252,8 +270,8 @@
                 <el-row style="margin-bottom: 20px">
                     <div align="center">
                         <el-button type="primary" icon="el-icon-success" :disabled="isDisabled" @click.native="editSubmit" :loading="editLoading" round>提前还款</el-button>
-                        <el-button type="primary" icon="el-icon-date" @click.native="historySubmit" :plain="true" :loading="editLoading" round>还款记录</el-button>
-                        <el-button type="danger" :plain="true" @click.native="editFormVisible = false" round>关闭</el-button>
+                        <el-button type="primary" icon="el-icon-date" @click.native="historySubmit" :loading="editLoading" round>还款记录</el-button>
+                        <el-button type="danger" @click.native="editFormVisible = false" round>关闭</el-button>
                     </div>
                 </el-row>
             </el-footer>
@@ -281,35 +299,40 @@
             <el-table-column
                     prop="GRZH"
                     label="个人账号"
-                    align="center"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="pName"
                     label="姓名"
-                    align="center"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="repay_month_money"
-                    label="月还本金"
-                    align="center" >
+                    label="月还本金">
             </el-table-column>
             <el-table-column
                     prop="repay_month_interest"
-                    label="月还利息"
-                    align="center" >
+                    label="月还利息">
             </el-table-column>
             <el-table-column
                     prop="repayed_date"
                     sortable
-                    label="还款时间"
-                    align="center" >
+                    label="还款时间">
+            </el-table-column>
+            <el-table-column prop="repay_state" sortable label="还款状态">
+                <template scope="scope">
+                    <div style="text-align: center" v-if="scope.row.repay_state!='3'">
+                        <span style="color:#2d51ff;">正常</span>
+                    </div>
+                    <div style="text-align: center" v-if="scope.row.repay_state=='3'">
+                        <span style="color:#ff0000;">逾期</span>
+                    </div>
+                </template>
             </el-table-column>
         </el-table>
         <el-row style="margin-bottom: 20px">
-            <div align="center" >
-                <el-button type="danger" :plain="true"  @click.native="editFormVisible2 = false" round>关闭</el-button>
+            <div align="center">
+                <el-button type="danger" @click.native="editFormVisible2 = false" round>关闭</el-button>
             </div>
         </el-row>
     </el-dialog>
@@ -385,13 +408,15 @@
             //按钮失效
             isDisabled:false,
             isabled:false,
+            nowTime:new Date().toLocaleDateString(),
+            repay_date:'',
         },
         created:function(){
             //在 then的内部不能使用Vue的实例化的this, 因为在内部 this 没有被绑定。
             var self = this;
             var start =(this.currentPage-1)*this.pageSize;
             var end =this.currentPage*this.pageSize;
-            axios.post('/sb/pay/page',{'pageNo':this.currentPage,'pageSize':this.pageSize,'start':start,'end':end}).then(function(response){
+            axios.post('/sb/pay/page',{'start':start,'end':end}).then(function(response){
                 self.total=response.data.total;
                 self.payData = response.data.pageData;
             });
@@ -401,25 +426,25 @@
             toFlush:function(){
                 this.payForm={
                     repay_id:'',
-                        GRZH:'',
-                        loan_money:'',
-                        loan_periods:'',
-                        ctime:'',
-                        loan_repay:'',
-                        loan_rate:'',
-                        repay_bank:'',
-                        repay_account:'',
-                        repay_money:'',
-                        repay_interests:'',
-                        repayed_money:'',
-                        repayed_interests:'',
-                        residue_money:'',
-                        residue_interests:'',
-                        residue_periods:'',
-                        repayed_period:'',
-                        repay_month:'',
-                        repay_mmonth:'',
-                        repay_state:'',
+                    GRZH:'',
+                    loan_money:'',
+                    loan_periods:'',
+                    ctime:'',
+                    loan_repay:'',
+                    loan_rate:'',
+                    repay_bank:'',
+                    repay_account:'',
+                    repay_money:'',
+                    repay_interests:'',
+                    repayed_money:'',
+                    repayed_interests:'',
+                    residue_money:'',
+                    residue_interests:'',
+                    residue_periods:'',
+                    repayed_period:'',
+                    repay_month:'',
+                    repay_mmonth:'',
+                    repay_state:'',
                 };
                 this.loadingData();
             },
@@ -429,10 +454,11 @@
                 _self.loading = true;
                 var start =(this.currentPage-1)*this.pageSize;
                 var end =this.pageSize;
+                //alert(this.nowTime)
                 var searchForm={'start':start,'end':end,'repay_id':this.searchForm.repay_id,'pName':this.searchForm.pName,'loan_periods':this.searchForm.loan_periods};
                 axios.post('/sb/pay/page',searchForm).then(function(response){
                     _self.total=response.data.total;
-                    _self.payData = response.data.pageData;
+                    _self.payData = response.data.pageData;//repayed_date
                 });
                 console.log(_self.currentPage);
                 setTimeout(function(){
@@ -446,7 +472,7 @@
                 var goUrl="/sb/pay/getRecord";
                 var self = this;
                 var repay_id=this.payForm.repay_id;
-                axios.post(goUrl,{'repay_id':repay_id}).then(function(response){
+                axios.post(goUrl,{'repay_id':repay_id,'desc':1}).then(function(response){
                     self.hisData = response.data.RecordData;
                 });
             },
@@ -471,7 +497,7 @@
             //还款按钮失效
             disabledIs:function (row) {
                 if(row.residue_periods<1){
-                     //提交按钮失效
+                    //提交按钮失效
                     _self.$message({
                         message: '已还款完毕,不能继续还款',
                         type: 'error'
@@ -489,14 +515,61 @@
                 this.goUrl="/sb/pay/repayMoney";
                 this.editFormVisible = true;
                 this.payForm = Object.assign({}, row);
+                this.repay_date=row.repay_date;
                 if(_self.residue_periods<1){
                     _self.isDisabled=true //提交按钮失效
-                    /*_self.$message({
+                }
+            },
+            //提前还款确认点击事件
+            editSubmit:function(){
+                var _self = this;
+                _self.loading = true;
+                var time=this.nowTime;
+                var formData =this.payForm;
+                var goUrl=this.goUrl;
+                if(_self.residue_periods<1){
+                    //_self.isabled=true //提交按钮失效
+                    _self.$message({
                         message: '已还款完毕,不能继续还款',
                         type: 'error'
-                    });*/
-                    //alert("已还款完毕,祝您生活愉快");
+                    });
+                    _self.loadingData();//重新加载数据
+                };
+                var d1 = new Date(_self.repay_date.replace(/\-/g, "\/"));//预期时间
+                var d2 = new Date(time.replace(/\-/g, "\/"));//当前时间
+                //alert(d1+"  "+d2);return;
+                if(d1<d2){
+                    //alert("由于亲未及时还款，您的贷款已逾期，请联系管理员")
+                    axios.post("/sb/pay/overDate",{'repay_state':3,'repay_id':formData.repay_id}).then(function (response) {
+                        _self.$message({
+                            message: '由于亲未及时还款，您的贷款已逾期',
+                            type: 'error'
+                        });
+                    })
+                    _self.loadingData();//重新加载数据
+                }else{
+                    this.$confirm('确认还款吗?', '提示', {
+                        type: 'warning'
+                    }).then(function() {
+                        axios.post(goUrl, formData).then(function (response) {
+                            if (response.data > 0) {
+                                _self.$message({
+                                    message: '还款成功',//loan_repay
+                                    type: 'success'
+                                });
+                                _self.editFormVisible = false;
+                            } else {
+                                _self.$message({
+                                    message: '还款失败',
+                                    type: 'error'
+                                });
+                            }
+                            _self.loadingData();//重新加载数据
+                        })
+                    })
                 }
+
+                _self.repay_date=''
             },
             //还款点击事件
             clickSubmit:function (row) {
@@ -506,26 +579,37 @@
                 var formData =row;
                 var repayed_date=_self.payForm.repayed_date;
                 var GRZH=_self.payForm.GRZH;
-
-                this.$confirm('确认还款吗?', '提示', {
-                    type: 'warning'
-                }).then(function () {
-                    if(row.residue_periods<1){
-                        //_self.isabled=true //提交按钮失效
-                        _self.$message({
-                            message: '已还款完毕,不能继续还款',
-                            type: 'error'
-                        });
-                        _self.loadingData();//重新加载数据
-                    }else{
-                        axios.post("/sb/pay/getRecord",{'GRZH':GRZH,'repayed_date':repayed_date}).then(function(response){
+                var time=this.nowTime;
+                if(row.residue_periods<1) {
+                    //_self.isabled=true //提交按钮失效
+                    _self.$message({
+                        message: '已还款完毕,不能继续还款',
+                        type: 'error'
+                    });
+                    _self.loadingData();//重新加载数
+                }else{
+                    this.$confirm('确认还款吗?', '提示', {
+                        type: 'warning'
+                    }).then(function () {
+                        var d1 = new Date(row.repay_date.replace(/\-/g, "\/"));//预期时间
+                        var d2 = new Date(time.replace(/\-/g, "\/"));//当前时间
+                        //alert(d1+"   "+d2);
+                        if(d1<d2){
+                            _self.$message({
+                                message: '由于亲未及时还款，您的贷款已逾期',
+                                type: 'error'
+                            });
+                            //alert("由于亲未及时还款，您的贷款已逾期")
+                            axios.post("/sb/pay/overDate",{'repay_state':3,'repay_id':row.repay_id});
+                            _self.loadingData();//重新加载数
+                        }else{
+                            axios.post("/sb/pay/getRecord",{'GRZH':row.GRZH,'repayed_date':repayed_date}).then(function(resp){
                                 //alert("接受数据===="+JSON.stringify(obj['GRZH'])+"++====="+row.GRZH);
-                                if(response.data.RecordData.length>0){
+                                if(resp.data.RecordData.length>1){
                                     _self.$message({
                                         message: '本月已还清',//loan_repay
                                         type: 'error'
                                     });
-                                    //alert('本月已还清');
                                 }else{
                                     axios.post(goUrl, formData).then(function (response) {
                                         if (response.data > 0) {
@@ -543,56 +627,25 @@
                                         _self.loadingData();//重新加载数据
                                     });
                                 }
-                        });
+                            });
 
-                    }
-                })
-            },
-            //提前还款确认点击事件
-            editSubmit:function(){
-                var _self = this;
-                _self.loading = true;
-                var formData =this.payForm;
-                var goUrl=this.goUrl;
-                if(_self.residue_periods<1){
-                    //_self.isabled=true //提交按钮失效
-                    _self.$message({
-                        message: '已还款完毕,不能继续还款',
-                        type: 'error'
-                    });
-                    _self.loadingData();//重新加载数据
-                }
-                this.$confirm('确认还款吗?', '提示', {
-                    type: 'warning'
-                }).then(function() {
-                    axios.post(goUrl, formData).then(function (response) {
-                        if (response.data > 0) {
-                            _self.$message({
-                                message: '还款成功',//loan_repay
-                                type: 'success'
-                            });
-                            _self.editFormVisible = false;
-                        } else {
-                            _self.$message({
-                                message: '还款失败',
-                                type: 'error'
-                            });
                         }
-                        _self.loadingData();//重新加载数据
                     })
-                })
+                }
+
             },
+
             //还款状态数字转文字
             numFormatter:function(){
                 //alert("repay_state=="+row.repay_state);
                 if(this.payForm.repay_state=='1'){
-                   // return '<span style="color:green;">还款中</span>';
+                    // return '<span style="color:green;">还款中</span>';
                     return '还款中';
                 }else if(this.payForm.repay_state == '2'){
-                   // return '<span style="color:red;">还款完毕</span>';
+                    // return '<span style="color:red;">还款完毕</span>';
                     return '还款完毕';
                 }else {
-                   // return '<span style="color:grey;">逾期</span>';
+                    // return '<span style="color:grey;">逾期</span>';
                     return '已逾期';
                 }
             }

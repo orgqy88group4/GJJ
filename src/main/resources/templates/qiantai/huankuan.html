@@ -13,6 +13,24 @@
     <link rel="stylesheet" type="text/css" href="/sb/font/iconfont.css">
     <script type="text/javascript" src="/sb/easyui/jquery.min.js"></script>
     <script type="text/javascript" src="/sb/js/nav.js"></script>
+    <script>
+        $(function () {
+            $.ajax({
+                url:"/sb/qiantai/hkMessage",
+                data:{},
+                type:"post",
+                dataType:"json",
+                success:function (data) {
+                   // alert(JSON.stringify(data));
+                    $("#dwzh").val(data[0].GRZH);
+                    $("#dwyjce").val(data[0].repay_all_mmonth);
+                }
+            });
+        });
+        function tt() {
+
+        }
+    </script>
     <link rel="stylesheet" href="/sb/css/style.css" type="text/css"><script type="text/javascript" src="/sb/js/jquery-1.7.2.min.js"></script></head>
 <body style="font-size: 20px;  background-image: url('/sb/Page/images/beijing.png') ">
 <div class="zxcf_nav_wper">
@@ -79,15 +97,15 @@
                 <div style="margin-bottom: 20px;">
                     <table class="u-table th12 td12">
                         <tr>
-                            <form action="<%= path%>/aaa" method="post">
+                            <form action="pay" method="post">
                                 <br>
                                 </span><input id="bh" name="userID" value="${list[0].pAccid}" style="display:none;"/>
                                 &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-                                <span class="span">个人账号：</span><input id="dwzh" style="widht:220px;height:25px;"  th:value="${session.list[0].GRZH}" readonly="readonly"><br><br>
+                                <span class="span">个人账号：</span><input id="dwzh" style="widht:220px;height:25px;"   readonly="readonly"><br><br>
                                 &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;
-                                <span class="span">本期应交金额</span><input name="payables" id="dwyjce" style="widht:220px;height:25px;color:red;" value="${listq[0].LaCAllMon}" readonly="readonly"><br><br>
+                                <span class="span">本期应交金额</span><input name="payables" id="dwyjce" style="widht:220px;height:25px;color:red;"  readonly="readonly"><br><br>
                                 <div class="i-item-btn">
-                                    <button type="submit" id="recharge_online_submit" class="i-btn-recharge">
+                                    <button type="submit"  id="recharge_online_submit" class="i-btn-recharge">
                                     </button>
                                 </div>
                             </form>

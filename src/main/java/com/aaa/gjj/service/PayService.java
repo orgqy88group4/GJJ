@@ -81,4 +81,25 @@ public interface PayService {
      * @return
      */
     int getRepayCount(Map map);
+
+    /**
+     * 逾期修改状态
+     * @param map
+     * @return
+     */
+    int updateStatus(Map map);
+
+    /**
+     * 逾期信息
+     * @param map
+     * @return
+     */
+    Map getOverPay(Map map);
+
+    /**
+     * 逾期信息
+     * @param map
+     * @return
+     */
+    Map overPay(Map map);
 }

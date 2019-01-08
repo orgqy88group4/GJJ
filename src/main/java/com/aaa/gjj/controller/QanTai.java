@@ -31,6 +31,8 @@ public class QanTai {
 
     @Autowired
     private HttpSession httpSession;
+    private String grzh;
+    private String grmm;
 
     /**
      * 前台个人登录
@@ -40,8 +42,10 @@ public class QanTai {
     @RequestMapping("/denglu")
     public Object tree(@RequestBody Map map){
         System.out.println("登录进来了"+map);
-        String phone = MessageUtil.getCode(map.get("phone") + "");
-        System.out.println("phone="+phone);
+        //String phone = MessageUtil.getCode(map.get("phone") + "");
+        //System.out.println("phone="+phone);
+        grzh=map.get("grzh")+"";
+        grmm=map.get("grmm")+"";
         List<Map> list = qianTaiService.ChackPersonLogin(map);
         System.out.println("后台返回的值："+list);
         httpSession.setAttribute("list",list);
@@ -223,4 +227,33 @@ public class QanTai {
         System.out.println("新闻传输到前台后台返回的值："+tid);
         return tid;
     }
+    /**
+     * 偿还贷款显示信息
+     */
+    @ResponseBody
+    @RequestMapping("hkMessage")
+    public Object hkMessage(@RequestParam Map map){
+        map.put("GRZH",grzh);
+        List<Map> list=qianTaiService.SelectCheckDaiKuanJiLu(map);
+        return list;
+    }
+    /**
+     * 核实银行卡是否正确
+     */
+    @ResponseBody
+    @RequestMapping("YHK")
+    public int yhk(@RequestParam Map map){
+        System.out.println("*-*-*-*--*--*-:"+map);
+        List<Map> list=qianTaiService.YHK(map);
+        int i=0;
+        if(list.size()>0){
+            qianTaiService.XGSJ(map);
+            i=1;
+            return i;
+        }else{
+            i=2;
+            return i;
+        }
+    }
+
 }

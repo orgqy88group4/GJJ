@@ -113,8 +113,6 @@ public class UserController {
         //2 封装用户数据
         UsernamePasswordToken token = new UsernamePasswordToken(userName,passWord);
         //3 执行登录方法
-        System.out.println("ssss="+userName);
-
         try {
             //执行过程中把token传递给shiro，然后shiro执行登录操作,根据有无异常判断登录成功还是失败
             subject.login(token);

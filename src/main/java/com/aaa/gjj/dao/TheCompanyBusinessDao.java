@@ -57,7 +57,7 @@ public interface TheCompanyBusinessDao {
     int insertDtail(Map map);
     //单位汇缴之后，个人账户余额会增加 汇缴办理之后单位人员的汇缴状态会变成已汇缴
     @Update("update tb_paccountutil set dalance=(dalance+yDrawAmt),yinterestBal = 1  " +
-            "where uaid=(select uid from tb_unitaccount where DWZH = #{ DWZH}) and yinterestBal = 0 and peraccState = 1")
+            "where uaid=(select uid from tb_unitaccount where DWZH = #{DWZH}) and yinterestBal = 0 and peraccState = 1")
     int updateState(Map map );
     /**
      * 获取明细表分页数据

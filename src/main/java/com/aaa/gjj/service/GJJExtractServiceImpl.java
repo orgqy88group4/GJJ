@@ -130,7 +130,7 @@ public class GJJExtractServiceImpl implements GJJExtractService {
                 return  gjjExtractDao.addCloseExtract(map);
             }else if(tiquCause!=null&&!tiquCause.equals("")){
                 if(tiquCause.equals("3")){
-                 return   gjjExtractDao.addAppointExtract(map);
+                    return   gjjExtractDao.addAppointExtract(map);
                 }else {
                     return  gjjExtractDao.addExtract(map);
                 }
@@ -180,7 +180,7 @@ public class GJJExtractServiceImpl implements GJJExtractService {
     }
 
     @Override
-    public List<Map> TQHDEdit(Map map) {
+    public int TQHDEdit(Map map) {
         int repayType = Integer.valueOf(map.get("repayType")+"");
         gjjExtractDao.TQHDReviseMoney(map);
         gjjExtractDao.addRecord(map);

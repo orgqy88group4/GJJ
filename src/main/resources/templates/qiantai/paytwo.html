@@ -1,0 +1,198 @@
+<!DOCTYPE html >
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>在线支付</title>
+	<meta name="Keywords" content="大融小贷 个人主页" />
+	<meta name="Description" content="大融小贷 个人主页" />
+	<link href="/sb/css/UserCSS.css" rel="stylesheet" type="text/css" />
+	<script src="/sb/easyui/jquery.min.js" type="text/javascript"></script>
+	<script src="/sb/js/ops.js" type="text/javascript"></script>
+	<script src="/sb/js/UserJS.js" type="text/javascript"></script>
+	<link rel="stylesheet" type="text/css" href="/sb/css/nav.css">
+	<link rel="stylesheet" type="text/css" href="/sb/font/iconfont.css">
+	<script type="text/javascript" src="/sb/easyui/jquery.min.js"></script>
+	<script type="text/javascript" src="/sb/js/nav.js"></script>
+	<script>
+		$(function () {
+			$.post(
+			    "/sb/Page/paypay",
+				{},
+				function (data) {
+				alert(JSON.stringify(data));
+				$("#money").val(data.payables);
+                },
+				"json"
+			);
+        });
+        $(function () {
+            $.ajax({
+                url:"/sb/qiantai/hkMessage",
+                data:{},
+                type:"post",
+                dataType:"json",
+                success:function (data) {
+                    // alert(JSON.stringify(data));
+                    $("#GRZH").val(data[0].GRZH);
+                    $("#repay_month_money").val(data[0].repay_month_money);
+                    $("#repay_month_interest").val(data[0].repay_month_interest);
+                }
+            });
+        });
+	</script>
+	<link rel="stylesheet" href="/sb/css/style.css" type="text/css"><script type="text/javascript" src="/sb/js/jquery-1.7.2.min.js"></script></head>
+<body style="font-size: 20px; background-image: url(images/6f8d784640b645ce537e93613863d3ca.gif) ">
+<div class="zxcf_nav_wper">
+	<div class="zxcf_nav clearfix px1000">
+		<div class="zxcf_nav_l fl"><img src="/sb/images/yingye.png"></img></div>
+		<div class="zxcf_nav_r fr">
+			<img src="/sb/images/zxcf_perinfo.png">
+			<span th:text="${session.list[0].tb_pName}"></span>
+			<span><a href="/sb/Page/denglu"  style="color:red">注销账户</a></span>
+		</div>
+	</div>
+</div>
+<div class="zxcf_menu_wper">
+	<div class="zxcf_menu px1000" >
+		<a href="/sb/Page/green" style="color:#ffffff" class="zm_cura">个人主页</a>
+		<a href="/sb/Page/jiaona" style="color:#ffffff">缴纳记录</a>
+		<a href="/sb/Page/daikuan"style="color:#ffffff">我的贷款</a>
+		<a href="/sb/Page/huankuan" style="margin-right:0;">偿还贷款</a>
+	</div>
+</div>
+   
+    <marquee><span style="font-weight: bolder;font-size:15px;color: red;">住房公积金制度是你住房的保障！欢迎登录公积金营业厅</span></marquee>
+<center>
+<div class="lg_section_r fl" style="margin-left:500px ">
+
+    <form action="/findYHK" method="post">
+        <fieldset>
+            <h2 class="lg_sec_tit clearfix">
+                <span class="fl">请输入银行卡号：</span>
+            </h2>
+            <p class="mt20">
+				<input type="text" id="aaa" name="card_account" placeholder="银行卡号" onblur="kahao()" class="lg_input01 lg_input"><span id="span1" style="font-size: 16px"></span>
+            </p>
+            <h2 class="lg_sec_tit clearfix">
+                <span class="fl">请输入支付密码：</span>
+            </h2>
+            <p class="mt20">
+				<input type="password" name="pay_password" id="bbb" placeholder="支付密码" onblur="mima()" class="lg_input02 lg_input"><span id="span2" style="font-size: 16px"></span>
+                <input type="hidden" id="money" name="payables" placeholder="隐藏金额数" class="lg_input02 lg_input">
+				<input type="hidden" id="repay_month_money" name="repay_month_money" placeholder="隐藏还款本金" class="lg_input02 lg_input">
+				<input type="hidden" id="repay_month_interest" name="repay_month_interest" placeholder="隐藏还款利息" class="lg_input02 lg_input">
+				<input type="hidden" id="GRZH" name="GRZH" placeholder="个人账号" class="lg_input02 lg_input">
+            </p>
+            <p><input type="button" id="tt" onclick="sb()" class="lg_btn" value="立即支付"></p>
+        </fieldset>
+    </form>
+</div>
+</center>
+            <!-- JQ切换方法 -->
+            <script type="text/javascript">
+                     
+       $.ajax({
+       url:"queryHJ.action",
+       data:{
+        "u.uid":$("#uid").val()
+       },
+       dataType:"json",
+       success:function(data){
+         $("#dwzh").val(data[5].dwzh)
+         $("#dwyjce").val(data[5].dwyjce)
+         $("#gryjce").val(data[5].gryjce)
+         $("#zj").val(parseFloat(data[5].dwyjce)+parseFloat(data[5].gryjce))
+       }
+     })
+                var $div_li = $("#tab_menu ul li");
+
+                $div_li.click(function () {
+
+                    $(this).addClass("current").siblings().removeClass("current");
+
+                    var div_index = $div_li.index(this);
+
+                    $("#tab_box>div").eq(div_index).show().siblings().hide();
+
+                }).hover(function () {
+
+                    $(this).addClass("hover");
+
+                }, function () {
+
+                    $(this).removeClass("hover");
+
+                });
+
+function sb() {
+
+        $.post(
+            "/sb/qiantai/YHK",
+            {card_account: $("#aaa").val(), pay_password: $("#bbb").val(),payables: $("#money").val(),repay_month_money: $("#repay_month_money").val(),repay_month_interest: $("#repay_month_interest").val(),GRZH: $("#GRZH").val()},
+            function (data) {
+              //     alert(JSON.stringify(data));
+                if (data == 2) {
+                    $("#span1").html("银行卡账号或密码错误");
+                }
+                if (data == 1) {
+                    window.location.href = "/sb/Page/success";
+                }
+            },
+            "json"
+        );
+
+}
+            </script>
+        </div>
+    </div>
+    <div class="zscf_aboutus_wper" id="foot">
+	  <div class="zscf_aboutus px1000 clearfix">
+	  	    <div class="zscf_aboutus_l fl">
+	  	    	   <ul class="zscf_aboutus_lul clearfix">
+	  	    	   	  <li class="pt10"><a href="#"><img src="/sb/images/app.png" alt=""></a>
+	  	    	   	  </li>
+	  	    	   	  <li>
+	  	    	   	  <p class="pb20">服务热线</p>
+	  	    	   	  <strong>400-027-0101</strong>
+	  	    	   	  </li>
+	  	    	   	  <li>
+						  <p class="pb10 linkpic">
+							  <a href="#"><img src="/sb/images/ft_sina.png" alt=""></a>
+							  <a href="#"><img src="/sb/images/ft_weixin.png" alt=""></a>
+							  <a href="#"><img src="/sb/images/ft_erji.png" alt=""></a>
+						  </p>
+	  	    	   	  	  <p><a href="#">kefu@zhongxincaifu.com</a></p>
+	  	    	   	  </li>
+	  	    	   </ul>
+	  	    </div>
+	  	    <!-- end left -->
+	  	    <div class="zscf_aboutus_r fl clearfix">
+	  	    	 <a href="#" class="fl ft_ewm"><img src="/images/ft_erweima.png" alt=""></a>
+	  	    	 <ul class="fl clearfix">
+	  	    	 	<li><a href="#">联系我们</a></li>
+	  	    	 	<li><a href="#">我要融资</a></li>
+	  	    	 	<li><a href="/qian/problem">帮助中心</a></li>
+	  	    	 	<li><a href="#">友情链接</a></li>
+	  	    	 	<li><a href="#">招贤纳士</a></li>
+	  	    	 	<li><a href="#">收益计算器</a></li>
+	  	    	 </ul>
+	  	    </div>
+	  	    <!-- end right -->
+
+	  </div>
+</div>
+
+<div class="zscf_bottom_wper" id="foot2">
+	<div class="zscf_bottom px1000 clearfix">
+		  <p class="fl">© 2014 zhongxincaifu &nbsp;  &nbsp;&nbsp;   中兴财富金融信息服务股份有限公司 &nbsp;&nbsp;&nbsp;    来源:<a href="http://www.mycodes.net/" target="_blank">源码之家</a></p>
+		  <p class="fr">
+		    <a href="#"><img src="/images/360.png" alt=""></a>
+		    <a href="#"><img src="/images/kexin.png" alt=""></a>
+		    <a href="#"><img src="/images/norton.png" alt=""></a>
+		  </p>
+	</div>
+</div>
+    
+</body>
+</html>

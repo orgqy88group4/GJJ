@@ -23,10 +23,9 @@ public interface PowerDao {
      */
     @Select("<script>select id, name as label, iconcls as iconClass, url, parentid pid from tb_treemenu " +
             "where 1=1 " +
-            " <if test=\"userName!=null and userName!=''\"> and id in (" +
-            "select powerid from tb_role_power where roleid= " +
-            "(select roleid from tb_account where userName=#{userName}))</if> " +
-            "</script>")
+            "<if test=\"userName!=null and userName!=''\"> and id in (" +
+            " select powerid from tb_role_power where roleid= " +
+            " (select roleid from tb_account where userName=#{userName}))</if> </script>")
     List<Node> getList(Map map);
 
     /**

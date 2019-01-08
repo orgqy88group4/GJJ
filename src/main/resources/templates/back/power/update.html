@@ -135,9 +135,11 @@
         },
         created:function(){
             var _self =this
-            axios.post("/sb/power/tree",{userName:''}).then(function(response){
+            axios.post("/sb/power/tree",{'userName':''}).then(function(response){
                 _self.treeData = response.data;
+                //alert(JSON.toString(response.data))
             });
+
         },
         methods: {
             handleNodeClick: function (node) {

@@ -101,7 +101,7 @@ public interface GJJExtractDao {
      * @param map
      * @return
      */
-    @Select("select a.*,b.* from tb_agreed_to_extract a, tb_appoint_update b where a.GRZH=b.GRZH and a.GRZH=#{GRZH}")
+    @Select("select a.*,b.* from tb_agreed_to_extract a, tb_appoint_update b where a.GRZH=b.GRZH and a.GRZH=#{GRZH} and b.upState=2")
     List<Map>  getView(Map map);
 
     /**
@@ -212,7 +212,7 @@ public interface GJJExtractDao {
      * @param map
      * @return
      */
-    @Select("select count(*) as cut from tb_agreed_to_extract where GRZH= #{GRZH}")
+    @Select("select count(*) as cut from tb_agreed_to_extract,tab_extract_application where GRZH= #{GRZH} or (pre_account=#{GRZH} and appl_state=1 )")
     int yanZhengYDTQrenyuan(Map map);
 
     /**
@@ -232,7 +232,7 @@ public interface GJJExtractDao {
      */
     @Update("update tb_repay set repay_money = repay_money+#{corpus},repayed_interests=repayed_interests+#{interest},repayed_All_money=repayed_All_money+#{repayMoney},residue_money=residue_money-#{corpus},residue_interests=residue_interests-#{interest}," +
             "repayed_period=repayed_period+1,residue_periods=residue_periods-1,repayed_date=NOW() where GRZH=#{GRZH}")
-    List<Map>  getTQHDBF(Map map);
+    int  getTQHDBF(Map map);
 
     /**
      * 提取一次性还贷修改还款表
@@ -241,7 +241,7 @@ public interface GJJExtractDao {
      */
     @Update("update tb_repay set repay_money =repay_money+#{corpus},repayed_interests=repayed_interests+#{interest},repayed_All_money=repayed_All_money+#{repayMoney},residue_money=0,residue_interests=0," +
             "repayed_period=repayed_period+1,residue_periods=0,repay_state=2,repayed_date=NOW() where GRZH=#{GRZH}")
-    List<Map>  getTQHDYC(Map map);
+    int  getTQHDYC(Map map);
 
     /**
      *提取还贷修改余额
@@ -284,7 +284,7 @@ public interface GJJExtractDao {
      * @param
      * @return
      */
-        @Insert("insert into tb_repayment (GRZH,toGRZH) values (#{GRZH},#{toGRZH})")
+    @Insert("insert into tb_repayment (GRZH,toGRZH) values (#{GRZH},#{toGRZH})")
     int addBatchPerson(Map map);
 
     /**
@@ -292,7 +292,7 @@ public interface GJJExtractDao {
      * @param
      * @return
      */
-   @Select("select a.*,b.*,c.*,d.*,e.*,f.* from tb_person_info a,tb_loanapproval e,tb_unitaccount c,tb_unit d,tb_repayment f left join tb_paccountutil b  on f.GRZH = b.GRZH  where a.tb_pid = e.pid and a.tb_pid = b.pid and a.unit_Id=c.DWZH and c.uid=d.uid and peraccState = 1 and f.toGRZH=#{toGRZH}")
+    @Select("select a.*,b.*,c.*,d.*,e.*,f.* from tb_person_info a,tb_loanapproval e,tb_unitaccount c,tb_unit d,tb_repayment f left join tb_paccountutil b  on f.GRZH = b.GRZH  where a.tb_pid = e.pid and a.tb_pid = b.pid and a.unit_Id=c.DWZH and c.uid=d.uid and peraccState = 1 and f.toGRZH=#{toGRZH}")
     List<Map> getBatchPerson(Map map);
 
     /**
@@ -300,7 +300,7 @@ public interface GJJExtractDao {
      * @param
      * @return
      */
-   @Delete("delete from tb_repayment where GRZH in (#{_parameter}) and toGRZH = #{toGRZH}")
+    @Delete("delete from tb_repayment where GRZH in (#{_parameter}) and toGRZH = #{toGRZH}")
     int delBatchPerson(Map map);
 
 

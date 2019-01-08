@@ -1,5 +1,7 @@
 package com.aaa.gjj.service;
 
+import org.apache.ibatis.annotations.Select;
+
 import java.util.List;
 import java.util.Map;
 
@@ -102,4 +104,22 @@ public interface QianTaiService {
      * @return
      */
     List<Map> selnewgall(int tid);
+    /**
+     * 核实银行卡信息是否正确
+     */
+    List<Map> YHK(Map map);
+
+    /**
+     * 还款后更新数据
+     */
+    int XGSJ(Map map);
+
+    /**
+     * 单位汇缴后更新数据
+     */
+    int DWHJUpdate(Map map);
+    /**
+     * 单位汇缴后更新详细表数据
+     */
+    int DWHJUpdateXX(Map map);
 }

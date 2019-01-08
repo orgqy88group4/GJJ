@@ -1,14 +1,18 @@
 package com.aaa.gjj.controller;
 
 import com.aaa.gjj.service.PowerService;
+import com.aaa.gjj.service.QianTaiService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -23,6 +27,8 @@ public class JumpPageController {
 
     @Autowired
     private PowerService powerService;
+    @Autowired
+    private QianTaiService qianTaiService;
 
     //个人信息页面
     @RequestMapping("/PersonaInfo1")
@@ -232,6 +238,35 @@ public class JumpPageController {
         return "Login";
     }
     //=====================前台页面跳转==========================================
+    //支付页面跳转
+    @RequestMapping("pay")
+    public String pay(@RequestParam Map map, HttpSession session){
+        Object payables = map.get("payables");
+        session.setAttribute("payables",payables);
+        return "qiantai/paytwo";
+    }
+
+    /**
+     * 跳转支付陈宫页面
+     * @param session
+     * @return
+     */
+    @RequestMapping("success")
+    public String success(@RequestParam Map map, HttpSession session){
+        return "qiantai/success";
+    }
+    @ResponseBody
+    @RequestMapping("paypay")
+    public Object paypay(HttpSession session){
+        Object payables = session.getAttribute("payables");
+        Object GRZH = session.getAttribute("GRZH");
+        Map map=new HashMap();
+        map.put("payables",payables);
+        map.put("GRZH",GRZH);
+        return map;
+    }
+
+
     //前台首页
     @RequestMapping("/shouye1")
     public String ShouYe(){
@@ -278,6 +313,16 @@ public class JumpPageController {
     public String DanJiaoNa(){
         return "qiantai/danjiaona";
     }
+
+    //单位缴纳成功
+    @RequestMapping("/danjiaonaSuc")
+    public String danjiaonaSuc(@RequestParam Map map){
+        qianTaiService.DWHJUpdate(map);
+        qianTaiService.DWHJUpdateXX(map);
+
+        return "qiantai/danjiaonaSuc";
+    }
+
     //单位登录缴纳记录
     @RequestMapping("/seldanjiao")
     public String DanJiaoNaJiLu(){
@@ -299,7 +344,7 @@ public class JumpPageController {
     public String GongZuo11(){
         return "qiantai/gongzuo11";
     }
-//==========================================================================
+    //==========================================================================
     //后台新闻模块
     @RequestMapping("/newsInfo")
     public String NewsInfo(){

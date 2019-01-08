@@ -380,7 +380,7 @@ public interface LoanDao {
             "#{repay_interests},#{repay_month},#{ctime},#{repayed_money},#{repayed_interests}," +
             "#{residue_money},#{residue_interests},#{repayed_period},#{residue_periods}," +
             "#{repay_mmonth},#{repay_all_mmonth},#{repayed_date},1,#{repay_month_money}," +
-            "#{repay_month_interest},#{repayed_All_money},DATE_ADD(now(),INTERVAL 1 MONTH))")
+            "#{repay_month_interest},#{repayed_All_money},date_format(DATE_ADD(now(),INTERVAL 1 MONTH),'%Y-%m-%d'))")
     int insertRepay(Map map);
     /**
      * 查询还款信息表

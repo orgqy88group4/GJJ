@@ -178,7 +178,7 @@ public interface CompanyDao {
      * @return
      */
     @Insert("insert into tb_unit values ( null,#{uname},#{uAddress},#{uLegalPerson},#{ULegalType},#{ULegalCard}," +
-            "#{uPayDate},#{uOperator},#{uOpIphone},#{JBRZJLX},#{JBRZJHM},#{UnitBeginDate},#{uNetworkCode}," +
+            "#{uPayDate},#{uOperator},#{uOpIphone},#{JBRZJLX},#{JBRZJHM},#{UnitBeginDate},concat(DATE_FORMAT(now(),'%Y%m'),lpad(floor(RAND()*100),4,0))," +
             "#{GSLX},#{SSHY},#{LSGX},#{JJLX},#{YYZZ},#{uCreater},null);")
     int unitRegister(Map map);
 
@@ -194,6 +194,12 @@ public interface CompanyDao {
      * @param map
      * @return
      */
-    @Insert("insert into tb_unitaccount (uaID,uaBankName,uaBankNumber,uDepositRatio,uPersonRatio,STYH,uaState,YWBLR,KHRQ,uDepositedPnum,uSealPnum,uARemain,uACancellDate,uacReason,uaPayEndDate,uaOweMonery,uaOweMonths,uaTebalance,DWZH,uid) values ( null,#{uaBankName},#{uaBankNumber},#{uDepositRatio},#{uPersonRatio},#{STYH},#{uaState1},#{YWBLR},#{KHRQ},1,0,0,null,null,null,0,0,null,concat(DATE_FORMAT(now(),'%Y%m'),lpad(floor(RAND()*100000),10,0)),#{uid})")
+    @Insert("insert into tb_unitaccount (uaID,uaBankName,uaBankNumber,uDepositRatio," +
+            "uPersonRatio,STYH,uaState,YWBLR,KHRQ,uDepositedPnum," +
+            "uSealPnum,uARemain,uACancellDate,uacReason,uaPayEndDate," +
+            "uaOweMonery,uaOweMonths,uaTebalance,DWZH,uid) values ( null,#{uaBankName}," +
+            "#{uaBankNumber},#{uDepositRatio},#{uPersonRatio},#{STYH},#{uaState1}," +
+            "#{YWBLR},date_format(now(),'%Y-%m-%d'),1,0,0,null,null,null,0,0," +
+            "null,concat(DATE_FORMAT(now(),'%Y%m'),lpad(floor(RAND()*100000),10,0)),#{uid})")
     int unitAccount(Map map);
 }

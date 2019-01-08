@@ -130,7 +130,7 @@ public interface GJJExtractService {
      * @param map
      * @return
      */
-    List<Map>  TQHDEdit(Map map);
+    int  TQHDEdit(Map map);
 
     /**
      * 添加共同还贷人分页
@@ -146,12 +146,12 @@ public interface GJJExtractService {
      */
     int addPersonCount(Map map);
 
-   /**
-    * 添加共同还贷人
-    * @param
-    * @return
-    */
-   int addBatchPerson(Map map);
+    /**
+     * 添加共同还贷人
+     * @param
+     * @return
+     */
+    int addBatchPerson(Map map);
 
     /**
      * 查询共同还贷人

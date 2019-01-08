@@ -139,7 +139,7 @@
                             <el-option label="其他经济" value="其他经济"></el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="单 位 编 号:">
+                    <el-form-item label="机 构 代 码:">
                         <el-input v-model="editForm.uNetworkCode" :disabled="true" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="月 发 薪 日:">
@@ -246,7 +246,7 @@
         <div slot="footer" class="dialog-footer">
             <el-button type="danger" round :plain="true" @click.native="unlock">解除锁定</el-button>
             <el-button type="primary" round :plain="true" @click.native="pullupdate">提交更改</el-button>
-            <el-button round :plain="true" @click.native="editFormVisibleQ = false">关闭</el-button>
+            <el-button round :plain="true" @click.native="pulludate11">关闭</el-button>
         </div>
     </el-dialog>
 </div>
@@ -388,6 +388,11 @@
                     }
                 })
                 console.info(this.editForm);
+            },
+            pulludate11:function () {
+                var _self = this;
+                _self.editFormVisibleQ = false;
+                _self.abc=true;
             }
         }
     })

@@ -32,9 +32,9 @@
                 <el-input v-model="searchForm.roleFlag" placeholder="按角色状态查询"></el-input>
             </el-form-item>-->
             <el-form-item>
-                <el-button type="primary" :plain="true" icon="el-icon-search" @click="searchClick" round>查询</el-button>
-                <el-button type="success" :plain="true" icon="el-icon-circle-plus" @click="addClick" round>新增</el-button>
-                <el-button type="success" :plain="true" icon="el-icon-refresh"  @click="toFlush" round>刷新</el-button>
+                <el-button type="primary" icon="search" @click="searchClick" round>查询</el-button>
+                <el-button type="success" icon="plus" @click="addClick" round>新增</el-button>
+                <el-button type="success" icon="plus" @click="toFlush" round>刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -60,30 +60,26 @@
             <el-table-column
                     prop="roleId"
                     label="角色ID"
-                    align="center"
                     sortable
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="roleName"
                     label="角色名称"
-                    align="center"
                     width="180">
             </el-table-column>
             <el-table-column
                     prop="roleDesc"
-                    label="角色描述"
-                    align="center">
+                    label="角色描述">
             </el-table-column>
             <el-table-column
                     prop="roleFlag"
                     label="角色状态"
-                    align="center"
                     :formatter="roleFlagFormatter"
                     sortable>
             </el-table-column>
             <!--操作列-->
-            <el-table-column label="操作" align="center">
+            <el-table-column label="操作">
                 <template scope="scope">
                     <el-button :plain="true" type="success" size="small" icon="edit" @click="powerClick(scope.row)" round>查看权限</el-button>
                     <el-button :plain="true" type="success" size="small" icon="edit" @click="editClick(scope.row)" round>编辑</el-button>

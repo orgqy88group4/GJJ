@@ -60,13 +60,13 @@
                     <div>
                         <div>
                             <b>在线缴纳</b></div>
-                        <form action="../cz" method="post">
+                        <form action="/sb/Page/danjiaonaSuc" method="post">
                             <br>
-                            &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="span">单位账号：</span><input id="dwzh" style="widht:220px;height:25px;" name="DWZH" readonly="readonly"><br><br>
-                            &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <span class="span">单位缴存总额：</span><input id="dwyjce" style="widht:220px;height:25px;" readonly="readonly"><br><br>
-                            &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;<span class="span">账户余额：</span><input id="gryjce"  style="widht:220px;height:25px;" readonly="readonly"><br><br>
+                            &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="span">单位账号：</span><input id="dwzh" style="widht:220px;height:25px;" name="DWZH" readonly="readonly"><br><br>
+                            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  <span class="span">单位缴存总额：</span><input id="dwyjce" name="dwyjce" style="widht:220px;height:25px;" readonly="readonly"><br><br>
+                            &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;<span class="span">账户余额：</span><input id="gryjce" name="gryjce"  style="widht:220px;height:25px;" readonly="readonly"><br><br>
                             <div class="i-item-btn">
-                                <button type="submit" id="recharge_online_submit" class="i-btn-recharge">
+                                <button  type="submit" id="recharge_online_submit" class="i-btn-recharge" >
                                 </button>
 
                             </div>
@@ -183,6 +183,30 @@
             $("#gryjce").val(data[0].uARemain)
         }
     })
+    function tijiao() {
+        alert("1111122");
+        $.ajax({
+            url:"/sb/company1/getRemit",
+            data:{DWZH: JSON.stringify([[${session.list[0].DWZH}]])},
+            dataType:"json",
+            type: "get",
+            contentType: 'application/json',
+            success:function(data){
+                alert("11111");
+
+               if(data.issc==true){
+                   alert(data.info);
+               }else{
+                   location.href="/sb/Page/danjiaonaSuc";
+               }
+            },
+            error:function () {
+
+                alert("1234");
+            }
+        })
+    }
+
 </script>
 </div>
 </div>

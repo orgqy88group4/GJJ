@@ -138,13 +138,6 @@ public interface RoleDao {
     List<Map> getPageByParamC(Map map);
 
     /**
-     * 添加账户名时防止用户名重复
-     * @return
-     */
-    @Select("select userName from tb_account")
-    List<Map> getPageByParamC1();
-
-    /**
      * 查询分页总数量
      * @param map
      * @return
