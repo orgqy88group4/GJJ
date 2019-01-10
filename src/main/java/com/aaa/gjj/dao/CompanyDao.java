@@ -199,7 +199,7 @@ public interface CompanyDao {
             "uSealPnum,uARemain,uACancellDate,uacReason,uaPayEndDate," +
             "uaOweMonery,uaOweMonths,uaTebalance,DWZH,uid) values ( null,#{uaBankName}," +
             "#{uaBankNumber},#{uDepositRatio},#{uPersonRatio},#{STYH},#{uaState1}," +
-            "#{YWBLR},date_format(now(),'%Y-%m-%d'),1,0,0,null,null,null,0,0," +
+            "#{YWBLR},date_format(now(),'%Y-%m-%d'),0,0,0,null,null,null,0,0," +
             "null,concat(DATE_FORMAT(now(),'%Y%m'),lpad(floor(RAND()*100000),10,0)),#{uid})")
     int unitAccount(Map map);
 }

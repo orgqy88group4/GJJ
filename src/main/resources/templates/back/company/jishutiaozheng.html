@@ -136,7 +136,7 @@
         <div slot="footer" class="dialog-footer">
             <el-button type="danger" round :plain="true"  @click.native="unlock">解除锁定</el-button>
             <el-button type="primary" round :plain="true" @click.native="pullupdate">保存调整</el-button>
-            <el-button round :plain="true"  @click.native="editFormVisibleQ1 = false">关闭</el-button>
+            <el-button round :plain="true"  @click.native="pullupdate11">关闭</el-button>
         </div>
     </el-dialog>
 </div>
@@ -304,7 +304,13 @@
             },
             //解除锁定按钮
             unlock:function () {
-                this.abc=false;
+                var _self=this;
+                _self.abc=false;
+            },
+            pullupdate11:function () {
+                var _self=this;
+                _self.abc=true;
+                _self.editFormVisibleQ1=false;
             }
         }
     })

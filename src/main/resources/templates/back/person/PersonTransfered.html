@@ -10,15 +10,27 @@
     <link rel="stylesheet" href="/sb/css/elementui.css">
     <!-- 引入组件库 -->
     <script src="/sb/js/elementui.js"></script>
-</head>
+    <style>
+        fieldset {
+            color:#333;
+            border:#06c dashed 1px;
+        }
+    </style>
+
+        </head>
 <body>
 <!--列表-->
 <div id="tableView">
     <el-container>
+
         <el-header width="800px" height="260px">
-            <div id="app" style="text-align: center">
-                <h2>{{ message }}</h2>
-            </div>
+            <!--<div id="app" style="text-align: center">-->
+                <!--<h2>{{ message }}</h2>-->
+            <!--</div>-->
+            <el-aside width="250px">
+            </el-aside>
+            <fieldset>
+                <legend><h2>人员转移信息列表</h2></legend>
             <el-row style="align-content: center">
                 <el-form :model="editForm" label-width="180px" :inline="true" class="demo-form-inline" ref="editForm">
                     <el-form-item >
@@ -57,11 +69,12 @@
                         <el-input v-model="editForm.uid" :readonly="true" type="hidden"  ></el-input>
                     </el-form-item>
                     <div style="text-align: center">
-                        <el-button type="primary" :plain="true" icon="el-icon-check" round @click.native="editSubmit" >提交审核</el-button>
+                        <el-button type="warning" :plain="true" icon="el-icon-check" round @click.native="editSubmit" plain >提交审核</el-button>
                     </div>
                 </el-form>
 
             </el-row>
+            </fieldset>
         </el-header>
 
         <el-container>
