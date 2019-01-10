@@ -411,16 +411,24 @@
                         pid:_self.editForm.pid,GRZH:_self.editForm.GRZH,repay_bank:_self.editForm.repay_bank,repay_account:_self.editForm.repay_account,rejectreason:_self.editForm.rejectreason
                     };
                     axios.post('/sb/Loan/reject',formData).then(function(response){
-                        alert("后台的值="+JSON.stringify(response.data));
+                        //alert("后台的值="+JSON.stringify(response.data));
                         if (response.data==1){
                             _self.editFormVisibleP = false;
                             _self.loadingData();//重新加载数据
                         }else {
-                            alert("通过失败");
+                            //alert("通过失败");
+                            _self.$message({
+                                message: '通过失败',
+                                type: 'error'
+                            });
                         }
                     })
                 }else {
-                    alert("驳回理由不能位空！");
+                    //alert("驳回理由不能位空！");
+                    _self.$message({
+                        message: '驳回理由不能位空！',
+                        type: 'warning'
+                    });
                     _self.loadingData();//重新加载数据
                 }
             }

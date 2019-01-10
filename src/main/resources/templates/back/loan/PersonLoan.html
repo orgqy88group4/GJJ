@@ -328,7 +328,7 @@
                         <el-container>
                             <el-aside width="400px">
                                 <el-form-item label="房屋位置:" prop="hshouseAddress">
-                                    <el-input v-model="editForm.hshouseAddress"  style="width:220px;height:20px;"  auto-complete="off"></el-input>
+                                    <el-input v-model="editForm.hshouseAddress" @blur="blurSearchForFWZJ1" style="width:220px;height:20px;"  auto-complete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="*购房人名称:">
                                     <el-input v-model="editForm.tb_pName" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
@@ -372,8 +372,8 @@
                             <el-form-item label="*抵押类型:">
                                 <el-input v-model="editForm.miType" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
                             </el-form-item>
-                            <el-form-item label="抵押物地址:" prop="miThAddresss">
-                                <el-input v-model="editForm.miThAddresss"  style="width:220px;height:20px;" auto-complete="off"></el-input>
+                            <el-form-item label="抵押物地址:">
+                                <el-input v-model="editForm.miThAddresss" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
                             </el-form-item>
                         </el-aside>
                         <el-container>
@@ -542,10 +542,6 @@
                 hshouseAddress:[
                     { required: true, message: '请输入房屋位置', trigger: 'blur' },
                     { min: 4, max: 22, message: '长度在 5 到 22 个字符', trigger: 'blur' }
-                ],
-                miThAddresss:[
-                    { required: true, message: '请输入抵押物地址', trigger: 'blur' },
-                    { min: 20, max: 35, message: '长度在 20 到 35 个字符', trigger: 'blur' }
                 ],
                 ggrzh:[
                     { required: true, message: '请输入共同借款人账号', trigger: 'blur' },
@@ -839,6 +835,10 @@
                 _self.editForm.hsAllMonery =  _self.editForm.hsFloorSpace * _self.editForm.hsFloorSpacePrice;
                 _self.editForm.hsFirstMonery = _self.editForm.hsAllMonery * 0.25;
                 _self.editForm.miPledgeMonery = _self.editForm.hsAllMonery;
+            },
+            blurSearchForFWZJ1:function () {
+                var _self = this;
+                _self.editForm.miThAddresss = _self.editForm.hshouseAddress;
             }
         }
     })

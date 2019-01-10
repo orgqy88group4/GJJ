@@ -25,7 +25,7 @@
                 <el-form-item label="*公司地址:" prop="uAddress" key="3">
                     <el-input v-model="editForm.uAddress" style="width:220px;height:35px;" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="公司类型:">
+                <el-form-item label="公司类型:" prop="GSLX" key="13">
                     <el-select v-model="editForm.GSLX" style="width:220px;height:35px;" auto-complete="off">
                         <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                         <el-option label="国有企业" value = "国有企业"></el-option>
@@ -36,7 +36,7 @@
                         <el-option label="集体所有制企业" value = "集体所有制企业"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="所属行业:">
+                <el-form-item label="所属行业:" prop="SSHY" key="14">
                     <el-select v-model="editForm.SSHY" style="width:220px;height:35px;" auto-complete="off">
                         <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                         <el-option label="农、林、牧、渔业" value = "农、林、牧、渔业"></el-option>
@@ -48,7 +48,7 @@
                         <el-option label="科技" value = "科技"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="*隶属关系:">
+                <el-form-item label="*隶属关系:" prop="LSGX" key="15">
                     <el-select v-model="editForm.LSGX"  style="width:220px;height:35px;" auto-complete="off">
                         <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                         <el-option label="中央"  value = "中央"></el-option>
@@ -59,7 +59,7 @@
                         <el-option label="街道" value = "街道"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="*经济类型:">
+                <el-form-item label="*经济类型:" prop="JJLX" key="16">
                     <el-select v-model="editForm.JJLX"  style="width:220px;height:35px;" auto-complete="off">
                         <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                         <el-option label="国有经济" value = "国有经济"></el-option>
@@ -91,12 +91,15 @@
                     <el-form-item label="*法人名字:" prop="uLegalPerson" key="4">
                         <el-input v-model="editForm.uLegalPerson"  style="width:220px;height:35px;" auto-complete="off"></el-input>
                     </el-form-item>
+                    <!--<el-form-item label="*证件类型:" prop="ULegalType" key="17">-->
+                        <!--<el-select v-model="editForm.ULegalType"  style="width:220px;height:35px;" auto-complete="off">-->
+                            <!--<el-option label="&#45;&#45;请选择&#45;&#45;" :disabled="true" value="0"></el-option>-->
+                            <!--<el-option label="身份证" value = "身份证"></el-option>-->
+                            <!--<el-option label="户口本" value = "户口本"></el-option>-->
+                        <!--</el-select>-->
+                    <!--</el-form-item>-->
                     <el-form-item label="*证件类型:">
-                        <el-select v-model="editForm.ULegalType"  style="width:220px;height:35px;" auto-complete="off">
-                            <el-option label="--请选择--" :disabled="true" value="0"></el-option>
-                            <el-option label="身份证" value = "身份证"></el-option>
-                            <el-option label="户口本" value = "户口本"></el-option>
-                        </el-select>
+                        <el-input v-model="editForm.ULegalType" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="证件号码:" prop="ULegalCard" key="8">
                         <el-input v-model="editForm.ULegalCard" style="width:220px;height:35px;" auto-complete="off"></el-input>
@@ -107,12 +110,15 @@
                     <el-form-item label="经办人电话:" prop="uOpIphone" key="7">
                         <el-input v-model="editForm.uOpIphone"  style="width:220px;height:20px;" auto-complete="off" ></el-input>
                     </el-form-item>
+                    <!--<el-form-item label="*证件类型:" prop="JBRZJLX" key="18">-->
+                        <!--<el-select v-model="editForm.JBRZJLX"  style="width:220px;height:35px;" auto-complete="off">-->
+                            <!--<el-option label="&#45;&#45;请选择&#45;&#45;" :disabled="true" value="0"></el-option>-->
+                            <!--<el-option label="身份证"  value = "身份证"></el-option>-->
+                            <!--<el-option label="户口本" value = "户口本"></el-option>-->
+                        <!--</el-select>-->
+                    <!--</el-form-item>-->
                     <el-form-item label="*证件类型:">
-                        <el-select v-model="editForm.JBRZJLX"  style="width:220px;height:35px;" auto-complete="off">
-                            <el-option label="--请选择--" :disabled="true" value="0"></el-option>
-                            <el-option label="身份证"  value = "身份证"></el-option>
-                            <el-option label="户口本" value = "户口本"></el-option>
-                        </el-select>
+                        <el-input v-model="editForm.JBRZJLX" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="证件号码:" prop="JBRZJHM" key="5">
                         <el-input v-model="editForm.JBRZJHM" style="width:220px;height:35px;" auto-complete="off"></el-input>
@@ -127,7 +133,7 @@
 
                 <el-container>
                     <el-aside width="400px">
-                        <el-form-item label="*开户银行名称:">
+                        <el-form-item label="*开户银行名称:" prop="uaBankName" key="19">
                             <el-select v-model="editForm.uaBankName"  style="width:220px;height:35px;" auto-complete="off">
                                 <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                                 <el-option label="中国银行" value="中国银行"></el-option>
@@ -143,14 +149,20 @@
                             <el-input v-model="editForm.uaBankNumber"  style="width:220px;height:35px;" auto-complete="off"></el-input>
                         </el-form-item>
                         <!--prop="uPersonRatio" key="11"-->
-                        <el-form-item label="个人缴存比例:">
-                            <el-input-number v-model="editForm.uPersonRatio" :min="5" :max="12" style="width:220px;height:35px;" auto-complete="off"></el-input-number>
+                        <!--<el-form-item label="个人缴存比例:">-->
+                            <!--<el-input-number v-model="editForm.uPersonRatio" :min="5" :max="12" style="width:220px;height:35px;" auto-complete="off"></el-input-number>-->
+                        <!--</el-form-item>-->
+                        <el-form-item label="个人缴存比例:" prop="uPersonRatio" key="11">
+                            <el-input v-model="editForm.uPersonRatio" style="width:220px;height:35px;" auto-complete="off"></el-input>
                         </el-form-item>
                         <!--prop="uDepositRatio" key="10"-->
-                        <el-form-item label="单位缴存比例:" >
-                            <el-input-number v-model="editForm.uDepositRatio" @blur="blurSearchFor4" :min="5" :max="12" style="width:220px;height:35px;" auto-complete="off"></el-input-number>
+                        <!--<el-form-item label="单位缴存比例:" >-->
+                            <!--<el-input-number v-model="editForm.uDepositRatio" @blur="blurSearchFor4" :min="5" :max="12" style="width:220px;height:35px;" auto-complete="off"></el-input-number>-->
+                        <!--</el-form-item>-->
+                        <el-form-item label="单位缴存比例:" prop="uDepositRatio" key="10">
+                            <el-input v-model="editForm.uDepositRatio" style="width:220px;height:35px;" auto-complete="off"></el-input>
                         </el-form-item>
-                        <el-form-item label="*受托银行名称:">
+                        <el-form-item label="*受托银行名称:" prop="STYH" key="20">
                             <el-select v-model="editForm.STYH" style="width:220px;height:35px;" auto-complete="off">
                                 <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                                 <el-option label="中国银行" value="中国银行"></el-option>
@@ -232,11 +244,11 @@
                 uPayDate:'',
 
                 uLegalPerson:'',
-                ULegalType:'',
+                ULegalType:'身份证',
                 ULegalCard:'',
                 uOperator:'',
                 uOpIphone:'',
-                JBRZJLX:'',
+                JBRZJLX:'身份证',
                 JBRZJHM:'',
                 UnitBeginDate:'',
 
@@ -286,6 +298,35 @@
                     { required: true, message: '请输入开户银行账号', trigger: 'blur' },
                     {pattern:/([\d]{4})([\d]{4})([\d]{4})([\d]{4})([\d]{0,})?/, trigger: 'blur', message: '你输入的开户银行账号格式不正确'}
                 ],
+                GSLX:[
+                    { required: true, message: '请选择公司类型', trigger: 'change' }
+                ],
+                SSHY:[
+                    { required: true, message: '请选择所属行业', trigger: 'change' }
+                ],
+                LSGX:[
+                    { required: true, message: '请选择公司隶属关系', trigger: 'change' }
+                ],
+                JJLX:[
+                    { required: true, message: '请选择经济类型', trigger: 'change' }
+                ],
+                uaBankName:[
+                    { required: true, message: '请选择开户银行名称', trigger: 'change' }
+                ],
+                STYH:[
+                    { required: true, message: '请选择受托银行名称', trigger: 'change' }
+                ],
+                uPersonRatio:[
+                    { required: true, message: '个人缴存比例不能为空'},
+                    { pattern:/(^(?:1[0-2]|[1-9])$)/, message: '个人缴存比例必须为数字值'}
+                ],
+                uDepositRatio:[
+                    { required: true, message: '单位缴存比例不能为空'},
+                    { pattern:/(^(?:1[0-2]|[1-9])$)/, message: '单位缴存比例必须为数字值'}
+                ],
+//                UnitBeginDate:[
+//                    { required: true, message: '请选择公司成立日期', trigger: 'change' }
+//                ]
 //                uNetworkCode:[
 //                    { required: true, message: '请输入机构代码', trigger: 'blur' },
 //                    {pattern:/(^\d{8,}$)/,trigger: 'blur',  message: '你输入的机构代码格式不正确'}

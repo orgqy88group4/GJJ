@@ -32,19 +32,22 @@
             <el-form-item label="职工电话:" prop="tb_pIphone" key="3">
                 <el-input v-model="editForm.tb_pIphone" style="width:220px;height:35px;" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="*职工性别:">
+            <el-form-item label="*职工性别:" prop="tb_pSex" key="13">
                 <el-select v-model="editForm.tb_pSex"  style="width:220px;height:35px;" auto-complete="off">
                     <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                     <el-option label="男" value="男"></el-option>
                     <el-option label="女" value="女"></el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="*证件类型:">
-                <el-select v-model="editForm.tb_idcard"  style="width:220px;height:35px;" auto-complete="off">
-                    <el-option label="--请选择--" :disabled="true" value="0"></el-option>
-                    <el-option label="身份证" value="身份证"></el-option>
-                    <el-option label="户口本" value="户口本"></el-option>
-                </el-select>
+            <!--<el-form-item label="*证件类型:">-->
+                <!--<el-select v-model="editForm.tb_idcard"  style="width:220px;height:35px;" auto-complete="off">-->
+                    <!--<el-option label="&#45;&#45;请选择&#45;&#45;" :disabled="true" value="0"></el-option>-->
+                    <!--<el-option label="身份证" value="身份证"></el-option>-->
+                    <!--<el-option label="户口本" value="户口本"></el-option>-->
+                <!--</el-select>-->
+            <!--</el-form-item>-->
+            <el-form-item label="证件类型:">
+                <el-input v-model="editForm.tb_idcard" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="证件号码:" prop="tb_idNUmber" key="4">
                 <el-input v-model="editForm.tb_idNUmber"  style="width:220px;height:35px;" auto-complete="off"></el-input>
@@ -52,7 +55,7 @@
         </el-aside>
         <el-container>
             <el-aside width="400px">
-                <el-form-item label="*职工学历:">
+                <el-form-item label="*职工学历:" prop="tb_pEducation" key="8">
                     <el-select v-model="editForm.tb_pEducation"  style="width:220px;height:35px;" auto-complete="off">
                         <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                         <el-option label="博士"  value = "博士"></el-option>
@@ -64,7 +67,7 @@
                         <el-option label="小学" value = "小学"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="*职工职位:">
+                <el-form-item label="*职工职位:" prop="tb_Profession" key="9">
                     <el-select v-model="editForm.tb_Profession"  style="width:220px;height:35px;" auto-complete="off">
                         <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                         <el-option label="董事长" value = "董事长"></el-option>
@@ -79,10 +82,10 @@
                 <el-form-item label="家庭住址:" prop="tb_pAddress" key="6">
                     <el-input v-model="editForm.tb_pAddress"  style="width:220px;height:35px;" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="*出生年月:">
+                <el-form-item label="*出生年月:" prop="tb_pDate" key="10">
                     <el-date-picker type="date" placeholder="出生年月" v-model="editForm.tb_pDate"  style="width:220px;height:20px;" auto-complete="off" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker>
                 </el-form-item>
-                <el-form-item label="*婚姻状态:">
+                <el-form-item label="*婚姻状态:" prop="tb_pMarriage" key="11">
                     <el-select v-model="editForm.tb_pMarriage"  style="width:220px;height:35px;" auto-complete="off">
                         <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                         <el-option label="已婚" value = "已婚"></el-option>
@@ -95,7 +98,7 @@
             </el-aside>
             <el-container>
                 <el-aside width="400px">
-                    <el-form-item label="*开户银行名称:">
+                    <el-form-item label="*开户银行名称:" prop="KHYH" key="12">
                         <el-select v-model="editForm.KHYH"  style="width:220px;height:35px;" auto-complete="off">
                             <el-option label="--请选择--" :disabled="true" value="0"></el-option>
                             <el-option label="中国银行" value="中国银行"></el-option>
@@ -155,7 +158,7 @@
                 tb_pSex:'',
                 tb_pDate:'',
                 paOp:'[[${session.account_name}]]',
-                tb_idcard:'',
+                tb_idcard:'身份证',
                 tb_idNUmber:'',
                 tb_pMarriage:'',
                 baseNummber:'',
@@ -199,6 +202,24 @@
                 baseNummber:[
                     {required: true,message: '请输入缴存基数',trigger: 'blur'},
                     {pattern:/^(0|[1-9][0-9]*)$/, trigger: 'blur', message: '你输入的缴存基数格式不正确'}
+                ],
+                tb_pMarriage:[
+                    { required: true, message: '请选择婚姻状态', trigger: 'change' }
+                ],
+                tb_pEducation:[
+                    { required: true, message: '请选择职工学历', trigger: 'change' }
+                ],
+                tb_Profession:[
+                    { required: true, message: '请选择职工职位', trigger: 'change' }
+                ],
+                tb_pDate:[
+                    { type: 'date', required: true, message: '请选择出生日期', trigger: 'change' }
+                ],
+                KHYH:[
+                    { required: true, message: '请选择开户银行', trigger: 'change' }
+                ],
+                tb_pSex:[
+                    { required: true, message: '请选择职工性别', trigger: 'change' }
                 ]
             }
         },
@@ -250,7 +271,10 @@
                             }
                         })
                     } else {
-                        console.log('error submit!!');
+                        _self.$message({
+                            message: '请填写完整信息！！！',
+                            type: 'warning'
+                        });
                         return false;
                     }
                 })

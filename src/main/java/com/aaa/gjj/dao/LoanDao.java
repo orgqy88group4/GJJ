@@ -211,7 +211,8 @@ public interface LoanDao {
      */
     @Update("update tb_unitaccount a set a.uDepositedPnum = (select count(*) from" +
             " tb_paccountutil c join tb_unit b on c.uaid = b.uid where c.peraccState = '1' " +
-            "and b.uid = a.uid and a.uid =(select c.uaid from tb_paccountutil c where GRZH = #{grzh} )) ")
+            "and b.uid = a.uid and a.uid =(select c.uaid from tb_paccountutil c where GRZH = #{grzh} )) " +
+            "where a.uid = (select c.uaid from tb_paccountutil c where GRZH = #{grzh} )")
     int unitsUpdate(Map map);
 
     /**
