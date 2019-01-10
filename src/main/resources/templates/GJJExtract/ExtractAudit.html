@@ -468,55 +468,79 @@
             },
 
             //销户保存点击事件
-            XHSubmit:function() {
-                var _self = this;
-                _self.loading = true;
-                var formData =this.editForm;
-                //alert(formData);
-                var goUrl="/sb/extract/XHAuditPass";
-                axios.post(goUrl,formData).then(function(response){
-                    // console.log(response.data);
-                    // alert(222);
-                    // self.total=response.data.total;
-                    if(response.data>0){
-                        _self.editFormVisible = false;
-                        _self.loadingData();//重新加载数据
-                        _self.rest()
-                    }else{
-                        _self.$message({
-                            message: '操作失败',
-                            type: 'error'
-                        });
+            XHSubmit:function(formName) {
+                this.$refs[formName].validate((valid) => {
+                    if (valid) {
+                       if(this.editForm.tqje>this.editForm.extract_money){
+                            this.$message({
+                                showClose: true,
+                                message: '准许提取金额不能大于申请金额！',
+                                type: 'warning'
+                            });
+                        }else{
+                            var _self = this;
+                            _self.loading = true;
+                            var formData = this.editForm;
+                            //alert(formData);
+                            var goUrl = "/sb/extract/XHAuditPass";
+                            axios.post(goUrl, formData).then(function (response) {
+                                // console.log(response.data);
+                                // alert(222);
+                                // self.total=response.data.total;
+                                if (response.data > 0) {
+                                    _self.editFormVisible = false;
+                                    _self.loadingData();//重新加载数据
+                                    _self.rest()
+                                } else {
+                                    _self.$message({
+                                        message: '操作失败',
+                                        type: 'error'
+                                    });
+                                }
+                                _self.loadingData();//重新加载数据
+                            });
+                        }
+                    }else {
+                        console.log('error submit!!');
+                        return false;
                     }
-                    _self.loadingData();//重新加载数据
-                })
+                });
                 console.info(this.editForm);
             },
             //通过保存点击事件
             passSubmit:function(formName){
                         this.$refs[formName].validate((valid) => {
                             if (valid) {
-                                var _self = this;
-                                _self.loading = true;
-                                var formData =this.editForm;
-                                //alert(formData);
-                                var goUrl=this.goUrl;
-                                axios.post(goUrl,formData).then(function(response){
-                                    // console.log(response.data);
-                                    // alert(222);
-                                    // self.total=response.data.total;
-                                    if(response.data>0){
-                                        _self.editFormVisible = false;
+                                if(this.editForm.tqje>this.editForm.extract_money){
+                                    this.$message({
+                                        showClose: true,
+                                        message: '准许提取金额不能大于申请金额！',
+                                        type: 'warning'
+                                    });
+                                }else
+                                {
+                                    var _self = this;
+                                    _self.loading = true;
+                                    var formData = this.editForm;
+                                    //alert(formData);
+                                    var goUrl = this.goUrl;
+                                    axios.post(goUrl, formData).then(function (response) {
+                                        // console.log(response.data);
+                                        // alert(222);
+                                        // self.total=response.data.total;
+                                        if (response.data > 0) {
+                                            _self.editFormVisible = false;
+                                            _self.loadingData();//重新加载数据
+                                            _self.rest()
+                                        } else {
+                                            _self.$message({
+                                                message: '操作失败',
+                                                type: 'error'
+                                            });
+                                        }
                                         _self.loadingData();//重新加载数据
-                                        _self.rest()
-                                    }else{
-                                        _self.$message({
-                                            message: '操作失败',
-                                            type: 'error'
-                                        });
-                                    }
-                                    _self.loadingData();//重新加载数据
-                                })
+                                    })
+                                }
                             } else {
                                 console.log('error submit!!');
                                 return false;

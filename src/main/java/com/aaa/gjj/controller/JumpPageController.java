@@ -350,4 +350,14 @@ public class JumpPageController {
     public String NewsInfo(){
         return "back/information/information";
     }
+
+    /**
+     * 跳转首页
+     * @return
+     */
+    @RequestMapping("First")
+    public String First(){
+        return "back/power/MyHTML";
+    }
+
 }
