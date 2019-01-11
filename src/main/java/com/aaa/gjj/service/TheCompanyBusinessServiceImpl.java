@@ -63,6 +63,7 @@ public class TheCompanyBusinessServiceImpl implements TheCompanyBusinessService 
             detailList.put("c",map.get("ubdRemark"));
             detailList.put("hjys",map.get("hjys"));
             theCompanyBusinessDao.insertDtail(detailList);
+            System.out.println("值为：="+i+"===="+i1+"===="+i2);
             if (i==1&&i1==1&&i2==1){
                 return 1;
             }else {

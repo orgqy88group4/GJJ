@@ -101,7 +101,7 @@ public interface UserDao {
      * @param map
      * @return
      */
-    @Select("<script>select tb_pName,tb_idNUmber,tb_pid,GRZH,dalance,peraccState from tb_person_info a ,tb_paccountutil b  where a.tb_pid = b.pid " +
+    @Select("<script>select tb_pName,tb_idNUmber,tb_pid,GRZH,dalance,peraccState from tb_person_info a ,tb_paccountutil b  where a.tb_pid = b.pid and b.peraccState=1" +
             "<if test=\"tb_pName!=null and tb_pName!=''\"> and tb_pName like concat('%',#{tb_pName},'%')</if>" +
             " limit #{start},#{end}</script>" )
     List<Map> getPage1(Map map);
@@ -111,7 +111,7 @@ public interface UserDao {
      * @param map
      * @return
      */
-    @Select("<script>select count(*) as cnt from tb_person_info a ,tb_paccountutil b where a.tb_pid = b.pid" +
+    @Select("<script>select count(*) as cnt from tb_person_info a ,tb_paccountutil b where a.tb_pid = b.pid and b.peraccState=1" +
             "<if test=\"tb_pName!=null and tb_pName!=''\"> and tb_pName like concat('%',#{tb_pName},'%')</if>" +
             "</script>")
     List<Map> getPageCount1(Map map);

@@ -19,6 +19,7 @@
             <!--vue双向显示所以会给表搜索表单中默认的空值-->
             <el-form-item>
                 <el-button type="success" :plain="true" icon="el-icon-check" round @click="editClick1">新闻添加</el-button>
+                <el-button type="success" :plain="true" icon="el-icon-check" round @click="editClick11">刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -375,6 +376,10 @@
                         _self.loadingData();//重新加载数据
                     })
                 });
+            },
+            editClick11:function () {
+                var _self = this;
+                _self.loadingData();//重新加载数据
             }
         }
     })

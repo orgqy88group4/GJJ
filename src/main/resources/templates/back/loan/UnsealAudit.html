@@ -25,6 +25,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick">查询</el-button>
+                <el-button type="primary" round :plain="true" icon="el-icon-refresh" @click="searchClick1">刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -177,9 +178,14 @@
                 _self.loading = true;
                 var formData = {unseal_id:row.unseal_id,state:row.state,grzh:row.unseal_account,resson:row.reason,audit_name:"通过"};
                 //alert("通过按钮需要向后台传输的数据："+JSON.stringify(formData))
-                axios.post('/sb/Loan/AccountAuditPass',formData).then(function(response){
-                    _self.loadingData();//重新加载数据
+                _self.$confirm('确认通过' + row.unseal_name +' '+ row.audit_state +'吗?', '提示', {
+                    type: 'warning'
+                }).then(function(){
+                    axios.post('/sb/Loan/AccountAuditPass',formData).then(function(response){
+                        _self.loadingData();//重新加载数据
+                    })
                 })
+
             },
             //驳回按钮
             editClickB:function (row) {
@@ -208,6 +214,10 @@
             editFormVisibleQ1:function () {
                 var _self = this;
                 _self.editFormVisibleQ = false;
+                _self.loadingData();//重新加载数据
+            },
+            searchClick1:function () {
+                var _self = this;
                 _self.loadingData();//重新加载数据
             }
         }

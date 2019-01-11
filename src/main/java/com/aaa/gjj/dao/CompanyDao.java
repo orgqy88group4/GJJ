@@ -95,6 +95,14 @@ public interface CompanyDao {
     List<Map> updatePersonInfo(Map map);
 
     /**
+     * 批量补缴按钮
+     * @param GRZH
+     * @return
+     */
+    @Select("select yDrawAmt from tb_paccountutil where GRZH =#{GRZH}")
+    List<Map> updatePersonInfo99(int GRZH);
+
+    /**
      * 补缴按钮
      * @param map
      * @return
@@ -109,6 +117,14 @@ public interface CompanyDao {
      */
     @Update("update tb_paccountutil set dalance=dalance+unitMonPaysum+perMonPaysum,yinterestBal=1 where GRZH =#{GRZH}")
     int updatePersonInfo2(Map map);
+
+    /**
+     * 批量补缴
+     * @param GRZH
+     * @return
+     */
+    @Update("update tb_paccountutil set dalance=dalance+unitMonPaysum+perMonPaysum,yinterestBal=1 where GRZH =#{GRZH}")
+    int updatePersonInfo3(int GRZH);
 
     /**
      *根据单位账号，查找单位名称、缴纳的比例

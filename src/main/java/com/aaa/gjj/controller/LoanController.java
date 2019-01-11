@@ -33,6 +33,7 @@ public class LoanController {
     public Object getgrzh(@RequestBody Map map){
         //先查询该账号在贷款记录表 有没有贷款
         List<Map> getgrzh = loanService.getgrzh();
+        System.out.println("贷款后台返回的值="+getgrzh);
         Map tempMap= new HashMap();
         //贷款数据库不空
         if(getgrzh!=null&&getgrzh.size()>0){
@@ -339,7 +340,6 @@ public class LoanController {
     public Object RejectionOfLoanPass(@RequestBody Map map){
         System.out.println("人员转移审核通过前台传来的值："+map);
         int rejects = loanService.rejects(map);//查询出要转入的公司
-        //List<Map> list = loanService.CheckAuditTable(map);//查询审核表中的记录，插入审核记录表中
         if (rejects==1){
             return 1;
         }else {

@@ -51,9 +51,7 @@ public class AccountInformationController {
     @ResponseBody
     @RequestMapping("/particulars1")
     private Object particulars1(@RequestBody Map map){
-        System.out.println("map参数是"+map);
         List<Map> particulars = Account.particulars1(map);
-        System.out.println("返回前台的值为"+particulars);
         return particulars;
     }
 
@@ -61,11 +59,8 @@ public class AccountInformationController {
     @ResponseBody
     @RequestMapping("/modification1")
     private Object modification1(@RequestBody Map map){
-        System.out.println("页面修改完毕前台传来的值element"+map);
         int modification = Account.modification1(map);
-        System.out.println(modification);
         int modification2 = Account.modification21(map);
-        System.out.println(modification2);
         if(modification==1&&modification2==1){
             return 1;
         }
@@ -75,7 +70,6 @@ public class AccountInformationController {
     @ResponseBody
     @RequestMapping("/UnitInformation1")
     private Object UnitInformation1(@RequestBody Map map){
-        System.out.println("00000"+map);
         List<Map> UnitInformation = Account.UnitInformation1(map);
         Map tempMap = new HashMap();
         tempMap.put("pageDate", UnitInformation);
@@ -94,9 +88,7 @@ public class AccountInformationController {
     @RequestMapping("/unitModification1")
     private Object unitModification1(@RequestBody Map map){
         int unitModification = Account.unitModification1(map);
-        System.out.println(unitModification);
         int unitModification2 = Account.unitModification21(map);
-        System.out.println(unitModification2);
         if(unitModification == 1&&unitModification2 == 1){
             return 1;
         }
@@ -105,7 +97,6 @@ public class AccountInformationController {
     //显示图片
     @RequestMapping("show")
     public ResponseEntity show(String fileName){
-        System.out.println("进入了show");
         try {
             // 由于是读取本机的文件，file是一定要加上的， uploadPath是在application配置文件中的路径
             return ResponseEntity.ok(resourceLoader.getResource("file:" + uploadPath + fileName));

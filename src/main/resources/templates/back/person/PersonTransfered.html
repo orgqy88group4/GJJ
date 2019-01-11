@@ -32,7 +32,7 @@
             <fieldset>
                 <legend><h2>人员转移信息列表</h2></legend>
             <el-row style="align-content: center">
-                <el-form :model="editForm" label-width="180px" :inline="true" class="demo-form-inline" ref="editForm">
+                <el-form :model="editForm" label-width="170px" :inline="true" class="demo-form-inline" ref="editForm">
                     <el-form-item >
                         <el-input v-model="editForm.tb_pid" :readonly="true" type="hidden"  ></el-input>
                     </el-form-item>
@@ -72,7 +72,6 @@
                         <el-button type="warning" :plain="true" icon="el-icon-check" round @click.native="editSubmit" plain >提交审核</el-button>
                     </div>
                 </el-form>
-
             </el-row>
             </fieldset>
         </el-header>
@@ -93,6 +92,7 @@
                             </el-form-item>
                             <el-form-item>
                                 <el-button type="primary" :plain="true" round icon="el-icon-search" @click="searchClick">查询</el-button>
+                                <el-button type="primary" :plain="true" round icon="el-icon-refresh" @click="searchClick99">刷新</el-button>
                             </el-form-item>
 
                         </el-form>
@@ -325,7 +325,7 @@
                             });
                         }else {
                             axios.post(url1,{tb_pid:_self.editForm.tb_pid,selName:_self.editForm.selName,uname:_self.editForm.uname,zy:_self.editForm.resson}).then(function (response) {
-                                alert("后台返回的值是："+JSON.stringify(response.data));
+                                //alert("后台返回的值是："+JSON.stringify(response.data));
                                 if(response.data==1){
                                     _self.loadingData();//重新加载数据
                                 }
@@ -343,7 +343,11 @@
                     });
                     _self.loadingData();//重新加载数据
                 }else {
-                    alert("请填写完整信息");
+                    //alert("请填写完整信息");
+                    _self.$message({
+                        message: '请填写完整信息 !',
+                        type: 'warning'
+                    });
                     _self.loadingData();//重新加载数据
                 };
                 _self.loadingData();//重新加载数据
@@ -355,6 +359,10 @@
             },
             //表格查询事件
             searchClick1:function() {
+                var self = this;
+                self.loadingData();//重新加载数据
+            },
+            searchClick99:function () {
                 var self = this;
                 self.loadingData();//重新加载数据
             }

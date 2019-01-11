@@ -278,7 +278,7 @@
                 var _self = this;
               //_self.editLoading=true;
                 axios.post('/sb/extract/views',{'GRZH':row.GRZH}).then(function(response){
-                    alert("后台的值======"+JSON.stringify(response.data.pageData));
+                    //alert("后台的值======"+JSON.stringify(response.data.pageData));
                     _self.editFormVisibleQ = true;
                     _self.tableDataRYZY =  response.data.pageData;
                     tableView._self.tableDataRYZY;

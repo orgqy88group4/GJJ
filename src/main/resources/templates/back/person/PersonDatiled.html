@@ -25,6 +25,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick1">查询</el-button>
+                <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick11">刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -133,48 +134,50 @@
                         <el-input v-model="editForm.tb_Profession" :disabled="abc" auto-complete="off"></el-input>
                     </el-form-item>
                 </el-aside>
-                <el-main>
-                    <el-form-item label="单位比例">
-                        <el-input v-model="editForm.ubitNrop" :disabled="true" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="个人比例">
-                        <el-input v-model="editForm.indiNrop" :disabled="true" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="电子信箱">
-                        <el-input v-model="editForm.tb_pEmail" :disabled="abc" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="家庭住址">
-                        <el-input v-model="editForm.tb_pAddress" :disabled="abc" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="出生年月">
-                        <el-input v-model="editForm.tb_pDate" :disabled="abc" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="婚姻状态">
-                        <el-select v-model="editForm.tb_pMarriage" :disabled="abc" auto-complete="off">
-                            <el-option label="--请选择--" :disabled="true" value="0"></el-option>
-                            <el-option label="未婚" value="未婚"></el-option>
-                            <el-option label="已婚" value="已婚"></el-option>
-                            <el-option label="离异" value="离异"></el-option>
-                            <el-option label="丧偶" value="丧偶"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="缴存基数">
-                        <el-input v-model="editForm.baseNummber" :disabled="true" auto-complete="off"></el-input>
-                    </el-form-item>
-                    <el-form-item label="开户银行">
-                        <el-select v-model="editForm.KHYH" :disabled="abc" auto-complete="off">
-                            <el-option label="--请选择--" :disabled="true" value="0"></el-option>
-                            <el-option label="中国银行" value="中国银行"></el-option>
-                            <el-option label="工商银行" value="工商银行"></el-option>
-                            <el-option label="建设银行" value="建设银行"></el-option>
-                            <el-option label="农业银行" value="农业银行"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="银行账号">
-                        <el-input v-model="editForm.YHZH" :disabled="abc" auto-complete="off"></el-input>
-                        <el-input v-model="editForm.tb_pid" :disabled="abc" type="hidden" auto-complete="off"></el-input>
-                    </el-form-item>
-                </el-main>
+                <el-container>
+                    <el-aside width="300px">
+                        <el-form-item label="单位比例">
+                            <el-input v-model="editForm.ubitNrop" :disabled="true" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="个人比例">
+                            <el-input v-model="editForm.indiNrop" :disabled="true" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="电子信箱">
+                            <el-input v-model="editForm.tb_pEmail" :disabled="abc" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="家庭住址">
+                            <el-input v-model="editForm.tb_pAddress" :disabled="abc" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="出生年月">
+                            <el-input v-model="editForm.tb_pDate" :disabled="abc" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="婚姻状态">
+                            <el-select v-model="editForm.tb_pMarriage" :disabled="abc" auto-complete="off">
+                                <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                                <el-option label="未婚" value="未婚"></el-option>
+                                <el-option label="已婚" value="已婚"></el-option>
+                                <el-option label="离异" value="离异"></el-option>
+                                <el-option label="丧偶" value="丧偶"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="缴存基数">
+                            <el-input v-model="editForm.baseNummber" :disabled="true" auto-complete="off"></el-input>
+                        </el-form-item>
+                        <el-form-item label="开户银行">
+                            <el-select v-model="editForm.KHYH" :disabled="abc" auto-complete="off">
+                                <el-option label="--请选择--" :disabled="true" value="0"></el-option>
+                                <el-option label="中国银行" value="中国银行"></el-option>
+                                <el-option label="工商银行" value="工商银行"></el-option>
+                                <el-option label="建设银行" value="建设银行"></el-option>
+                                <el-option label="农业银行" value="农业银行"></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item label="银行账号">
+                            <el-input v-model="editForm.YHZH" :disabled="abc" auto-complete="off"></el-input>
+                            <el-input v-model="editForm.tb_pid" :disabled="abc" type="hidden" auto-complete="off"></el-input>
+                        </el-form-item>
+                    </el-aside>
+                </el-container>
             </el-container>
 
 
@@ -184,7 +187,7 @@
         <div slot="footer" class="dialog-footer">
             <el-button type="danger" :plain="true" round  @click.native="unlock">解除锁定</el-button>
             <el-button type="primary" :plain="true" round @click.native="pullupdate">提交更改</el-button>
-            <el-button :plain="true" round @click.native="editFormVisibleQ = false">关闭</el-button>
+            <el-button :plain="true" round @click.native="pullupdate99">关闭</el-button>
         </div>
     </el-dialog>
 </div>
@@ -254,13 +257,12 @@
             loadingData:function() {
                 var _self = this;
                 _self.loading = true;
-                var self = this;
-                var start =(this.currentPage-1)*this.pageSize;
-                var end =this.pageSize;
-                var searchForm={'start':start,'end':end,'tb_pName':this.searchForm.tb_pName};
+                var start =(_self.currentPage-1)*_self.pageSize;
+                var end =_self.pageSize;
+                var searchForm={'start':start,'end':end,'tb_pName':_self.searchForm.tb_pName};
                 axios.post('/sb/AccountInformation1',searchForm).then(function(response){
-                    self.total=response.data.total;
-                    self.tableData = response.data.pageDate;
+                    _self.total=response.data.total;
+                    _self.tableData = response.data.pageDate;
                 });
                 console.log(_self.currentPage);
                 setTimeout(function(){
@@ -292,14 +294,15 @@
                 })
             },
             unlock:function () {
-                this.abc=false;
+                var _self = this;
+                _self.abc=false;
             },
             pullupdate:function () {
                 var _self = this;
                 _self.loading = true;
-                var formData =this.editForm;
+                var formData =_self.editForm;
                 //alert("343435"+JSON.stringify(formData));
-                this.abc=true;
+                _self.abc=true;
                 axios.post('/sb/modification1',formData).then(function(response){
                     //alert(response.data);
                     if(response.data>0){
@@ -307,12 +310,22 @@
                         _self.loadingData();//重新加载数据
                     }
                 })
-                console.info(this.editForm);
+                console.info(_self.editForm);
             },
             //表格查询事件
             searchClick1:function() {
                 var self = this;
                 self.loadingData();//重新加载数据
+            },
+            searchClick11:function () {
+                var self = this;
+                self.searchForm.tb_pName='';
+                self.loadingData();//重新加载数据
+            },
+            pullupdate99:function () {
+                var self = this;
+                self.abc=true;
+                self.editFormVisibleQ = false;
             }
         }
     })

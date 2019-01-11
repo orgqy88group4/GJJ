@@ -327,7 +327,7 @@
                         </el-aside>
                         <el-container>
                             <el-aside width="400px">
-                                <el-form-item label="房屋位置:" prop="hshouseAddress">
+                                <el-form-item label="房屋位置:" prop="hshouseAddress" key="90">
                                     <el-input v-model="editForm.hshouseAddress" @blur="blurSearchForFWZJ1" style="width:220px;height:20px;"  auto-complete="off"></el-input>
                                 </el-form-item>
                                 <el-form-item label="*购房人名称:">
@@ -369,7 +369,7 @@
                     </el-row>
                     <el-container>
                         <el-aside width="400px">
-                            <el-form-item label="*抵押类型:">
+                            <el-form-item label="抵押类型:">
                                 <el-input v-model="editForm.miType" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
                             </el-form-item>
                             <el-form-item label="抵押物地址:">
@@ -557,9 +557,29 @@
             loadingData:function() {
 
             },
-            next:function(){
+            next:function(formName){
                 if (this.active++ > 4) this.active = 4;
             },
+//            next:function (formName) {
+//                var _self = this;
+//                if (_self.editForm.bcRefundType == null || _self.editForm.bcbankname == null) {
+//                    _self.$message({
+//                        showClose: true,
+//                        message: '亲，你还没选择委托银行或者还款方式哦！',
+//                        type: 'error'
+//                    });
+//                } else {
+//                    _self.$refs[formName].validate((valid) => {
+//                        if (valid) {
+//                            if (_self.active++ > 4) _self.active = 4;
+//                        } else {
+//                            console.log('error submit!!');
+//                    return false;
+//                }
+//                });
+//                };
+//            },
+
             upstep:function(){
                 if (this.active-- == 0) this.active = 0;
             },
@@ -569,7 +589,7 @@
                 var _self = this;
                 var url = "/sb/Loan/getgrzh";
                 axios.post(url,{grzh:_self.editForm.GRZH}).then(function (response) {
-                    alert(JSON.stringify(response.data))//true 该账号不能进行重复贷款
+                    //alert(JSON.stringify(response.data))//true 该账号不能进行重复贷款
                     if (response.data.infof==false){
                         axios.post('/sb/Loan/user',{grzh:_self.editForm.GRZH}).then(function (response) {
                             //alert(JSON.stringify(response.data[0]));

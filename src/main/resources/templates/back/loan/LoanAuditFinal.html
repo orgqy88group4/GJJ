@@ -29,6 +29,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick">查询</el-button>
+                <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick1">刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -195,6 +196,7 @@
             //点击驳回按钮
             editClickB:function (row) {
                 var _self = this;
+                _self.editForm.Loan_id=row.Loan_id;
                 _self.editFormVisibleP = true;
             },
             //点击确认驳回按钮
@@ -202,13 +204,18 @@
                 var _self = this;
                 if (_self.editForm.rejectreason!=''&&_self.editForm.rejectreason!=null){
                     var searchForm = {'rejectreason':_self.editForm.rejectreason,status:5,Loan_id:_self.editForm.Loan_id};
-                    //alert("需要往后台传的参数："+JSON.stringify(searchForm));
+                    alert("需要往后台传的参数："+JSON.stringify(searchForm));
                     axios.post('/sb/Loan/sureReject',searchForm).then(function(response){
                         _self.editFormVisibleP = false;
                         _self.loadingData();//重新加载数据
                     })
                 }else {
-                    alert("驳回贷款申请需填写驳回理由");
+                    //alert("驳回贷款申请需填写驳回理由");
+                    _self.$message({
+                        showClose: true,
+                        message: '驳回贷款申请需填写驳回理由',
+                        type: 'warning'
+                    });
                 }
             },
             //点击通过按钮
@@ -221,7 +228,7 @@
                                   repay_bank:_self.editForm.repay_bank,repay_account:_self.editForm.repay_account,status:4
                                 };
                 //alert("传到后台的值："+JSON.stringify(searchForm));
-                this.$confirm('确认通过' + row.pName +'贷款吗?', '提示', {
+                _self.$confirm('确认通过' + row.pName +'贷款吗?', '提示', {
                     type: 'warning'
                 }).then(function(){
                     axios.post('/sb/Loan/finalPass',searchForm).then(function(response){
@@ -231,6 +238,10 @@
                         }
                     })
                 })
+            },
+            searchClick1:function () {
+                var _self = this;
+                _self.loadingData();//重新加载数据
             }
         }
     })

@@ -172,10 +172,19 @@ public class MergerServiceImpl implements MergerService{
     @Override
     public List<Map> accraditation1() {
         List<Map> list = mergeDao.accraditation1();
-        mergeDao.addAccraditationCount(mergeDao.accraditationCount(),"个人贷款");//把信息个数   存入个人贷款类型信息
-        mergeDao.addAccraditationCount(mergeDao.accraditationCountb(),"人员转移审批");//把信息个数   存入人员转移审批类型信息
-        mergeDao.addAccraditationCount(mergeDao.accraditationCountt(),"公积金提取");//把信息个数   存入公积金提取类型信息
-        mergeDao.addAccraditationCount(mergeDao.accraditationCounts(),"封存、启封、销户审批");//把信息个数   存入公积金提取类型信息
+
+        int i = mergeDao.accraditationCount();//查询到个人贷款 记录表 当前信息条数
+        mergeDao.addAccraditationCount(i+"","个人贷款");//把信息个数   存入个人贷款类型信息
+
+        int accraditationCountb = mergeDao.accraditationCountb();  //查询到个人转移 记录表 当前信息条数
+        mergeDao.addAccraditationCount(accraditationCountb+"","人员转移审批");  //把信息个数   存入人员转移审批类型信息
+        //mergeDao.addAccraditationCount(mergeDao.accraditationCountb(),"人员转移审批");//把信息个数   存入人员转移审批类型信息
+
+        int i1 = mergeDao.accraditationCountt();
+        mergeDao.addAccraditationCount(i1+"","公积金提取");//把信息个数   存入公积金提取类型信息
+
+        int i2 = mergeDao.accraditationCounts();
+        mergeDao.addAccraditationCount(i2+"","封存、启封、销户审批");//把信息个数   存入公积金提取类型信息
         return list;
     }
 

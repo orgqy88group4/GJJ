@@ -32,12 +32,8 @@
             <el-form-item label="职工电话:" prop="tb_pIphone" key="3">
                 <el-input v-model="editForm.tb_pIphone" style="width:220px;height:35px;" auto-complete="off"></el-input>
             </el-form-item>
-            <el-form-item label="*职工性别:" prop="tb_pSex" key="13">
-                <el-select v-model="editForm.tb_pSex"  style="width:220px;height:35px;" auto-complete="off">
-                    <el-option label="--请选择--" :disabled="true" value="0"></el-option>
-                    <el-option label="男" value="男"></el-option>
-                    <el-option label="女" value="女"></el-option>
-                </el-select>
+            <el-form-item label="*职工性别:">
+                <el-input v-model="editForm.tb_pSex" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
             </el-form-item>
             <!--<el-form-item label="*证件类型:">-->
                 <!--<el-select v-model="editForm.tb_idcard"  style="width:220px;height:35px;" auto-complete="off">-->
@@ -50,7 +46,7 @@
                 <el-input v-model="editForm.tb_idcard" :disabled="true" style="width:220px;height:35px;" auto-complete="off"></el-input>
             </el-form-item>
             <el-form-item label="证件号码:" prop="tb_idNUmber" key="4">
-                <el-input v-model="editForm.tb_idNUmber"  style="width:220px;height:35px;" auto-complete="off"></el-input>
+                <el-input v-model="editForm.tb_idNUmber" @blur="blurSearchFor3" style="width:220px;height:35px;" auto-complete="off"></el-input>
             </el-form-item>
         </el-aside>
         <el-container>
@@ -82,8 +78,8 @@
                 <el-form-item label="家庭住址:" prop="tb_pAddress" key="6">
                     <el-input v-model="editForm.tb_pAddress"  style="width:220px;height:35px;" auto-complete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="*出生年月:" prop="tb_pDate" key="10">
-                    <el-date-picker type="date" placeholder="出生年月" v-model="editForm.tb_pDate"  style="width:220px;height:20px;" auto-complete="off" value-format="yyyy-MM-dd" format="yyyy-MM-dd"></el-date-picker>
+                <el-form-item label="*出生年月:">
+                    <el-input  v-model="editForm.tb_pDate" :disabled="true" style="width:220px;height:20px;" auto-complete="off"></el-input>
                 </el-form-item>
                 <el-form-item label="*婚姻状态:" prop="tb_pMarriage" key="11">
                     <el-select v-model="editForm.tb_pMarriage"  style="width:220px;height:35px;" auto-complete="off">
@@ -181,7 +177,7 @@
                 ],
                 tb_idNUmber:[
                     {required: true,message: '请输入身份证ID',trigger: 'blur'},
-                    {pattern:/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,trigger: 'blur', message: '你的身份证格式不正确'}
+                    {pattern:/^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,trigger: 'blur', message: '你的身份证格式不正确'}
                 ],
                 tb_pEmail:[
                     {required: true,message: '请输入邮箱',trigger: 'blur'},
@@ -212,14 +208,8 @@
                 tb_Profession:[
                     { required: true, message: '请选择职工职位', trigger: 'change' }
                 ],
-                tb_pDate:[
-                    { type: 'date', required: true, message: '请选择出生日期', trigger: 'change' }
-                ],
                 KHYH:[
                     { required: true, message: '请选择开户银行', trigger: 'change' }
-                ],
-                tb_pSex:[
-                    { required: true, message: '请选择职工性别', trigger: 'change' }
                 ]
             }
         },
@@ -278,6 +268,14 @@
                         return false;
                     }
                 })
+            },
+            blurSearchFor3:function () {
+                var _self = this;
+                //alert(JSON.stringify(_self.editForm.tb_idNUmber));
+                _self.editForm.tb_pDate = _self.editForm.tb_idNUmber.substring(6, 10) + "-" + _self.editForm.tb_idNUmber.substring(10, 12) + "-" + _self.editForm.tb_idNUmber.substring(12, 14);
+                //alert("11="+JSON.stringify(_self.editForm.tb_pDate));_self.editForm.tb_pSex =
+                _self.editForm.tb_pSex = _self.editForm.tb_idNUmber.substring(14,17) % 2 == 0 ? "女" : "男";
+                //alert(JSON.stringify(_self.editForm.tb_pSex));
             }
         }
     })

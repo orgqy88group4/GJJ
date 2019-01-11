@@ -22,6 +22,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button :plain="true" type="primary" icon="el-icon-search" @click="searchClick">查询</el-button>
+                <el-button :plain="true" type="primary" icon="el-icon-refresh" @click="searchClick1">刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -326,7 +327,7 @@
                 _self.$confirm('确认为个人账号为：' + ids +'补缴吗?', '提示', {
                     type: 'warning'
                 }).then(function(){
-                    var  url="/sb/company/payFees2";
+                    var  url="/sb/company/payFees9";
                     //alert(ids);
                     axios.post(url,{GRZH:ids}).then(function (response) {
                         if (response.data==1){
@@ -347,6 +348,10 @@
                     if(e != "cancel")
                         console.log("出现错误：" + e);
                 });
+            },
+            searchClick1:function () {
+                var _self = this;
+                _self.loadingData();//重新加载数据
             }
         }
     })

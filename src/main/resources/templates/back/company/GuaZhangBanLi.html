@@ -28,6 +28,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" round :plain="true" icon="el-icon-search"  @click="searchClick">查询</el-button>
+                <el-button type="primary" round :plain="true" icon="el-icon-search"  @click="searchClick1">刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -135,7 +136,7 @@
                 <el-input v-model="editForm.uARemain" readonly="true"  auto-complete="off" ></el-input>
             </el-form-item>
             <el-form-item label="挂账金额：" prop="gzje">
-                <el-input-number v-model="editForm.gzje" @blur="blurSearchFor" :min="1000" :max="20000" style="width:220px;height:20px;" auto-complete="off" ></el-input-number>
+                <el-input-number v-model="editForm.gzje" @blur="blurSearchFor" :min="1000" :max="300000" style="width:220px;height:20px;" auto-complete="off" ></el-input-number>
             </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -282,7 +283,7 @@
             //充值失焦事件
             blurSearchFor:function () {
                 var _self = this;
-                if (_self.editForm.gzje>=1000&&_self.editForm.gzje<=200000){
+                if (_self.editForm.gzje>=1000&&_self.editForm.gzje<=300000){
                     _self.editForm.uARemain=_self.editForm.gzje+_self.editForm.uARemain;
                 }else{
                     _self.$message({
@@ -291,6 +292,10 @@
                         type: 'warning'
                     });
                 }
+            },
+            searchClick1:function () {
+                var _self = this;
+                _self.loadingData();//重新加载数据
             }
         }
 

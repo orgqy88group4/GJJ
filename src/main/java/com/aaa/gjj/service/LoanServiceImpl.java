@@ -346,6 +346,29 @@ public class LoanServiceImpl implements LoanService {
     public int rejects(Map map) {
         List<Map> rejects = loanDao.rejects(map);//获取转入和转出公司名称和个人账号
         List<Map> list = loanDao.seletId(rejects.get(0).get("transfer_into_unit") + "");//通过转入公司名称查询到要转入公司id
+        List<Map> recordName = loanDao.CheckAuditTable(map);
+        System.out.println("ServiceImpl层，前台传来的值======："+map);
+        System.out.println("返回的值："+recordName);
+        if (recordName.size()>0){
+            Map tempMap = new HashMap();
+            tempMap.put("transfer_out_unit", recordName.get(0).get("transfer_out_unit"));//转出单位
+            tempMap.put("transfer_into_unit",recordName.get(0).get("transfer_into_unit"));//转入单位
+            tempMap.put("auditor",recordName.get(0).get("auditor"));				//申请人
+            tempMap.put("person_account",recordName.get(0).get("person_account"));//个人帐号
+            tempMap.put("transfer_reason",recordName.get(0).get("transfer_reason"));	//转移原因
+            tempMap.put("operator",recordName.get(0).get("operator"));				//操作人			（操作人待添加）
+            tempMap.put("submit_time",recordName.get(0).get("submit_time"));			//提交时间
+            tempMap.put("pname",recordName.get(0).get("pname"));					//待转移人员姓名
+            tempMap.put("idNumber",recordName.get(0).get("idNumber"));			//证件号码
+            tempMap.put("balance",recordName.get(0).get("balance"));			//个人账号余额
+            tempMap.put("state",recordName.get(0).get("state"));//个人账号状态
+            tempMap.put("baseNummber",recordName.get(0).get("baseNummber"));		//个人缴存基数
+            tempMap.put("audit_state",map.get("state"));     //给记录表添加状态
+            System.out.println("需要添加到记录表中的值："+tempMap);
+            if (tempMap.size()>0){
+                loanDao.addInfoToRecord(tempMap);
+            }
+        }
         System.out.println("list返回的值："+list);
         System.out.println("uid="+list.get(0).get("uid"));
         if (rejects.size()>0&&list.size()>0){
@@ -405,9 +428,11 @@ public class LoanServiceImpl implements LoanService {
      * @return
      */
     @Override
-    public List<Map> CheckAuditTable(Map map) {
+    public int CheckAuditTable(Map map) {
+        System.out.println("11111111");
         List<Map> recordName = loanDao.CheckAuditTable(map);
-        System.out.println("ServiceImpl层，前台传来的值："+map);
+        System.out.println("ServiceImpl层，前台传来的值======："+map);
+        System.out.println("返回的值："+recordName);
         if (recordName.size()>0){
             Map tempMap = new HashMap();
             tempMap.put("transfer_out_unit", recordName.get(0).get("transfer_out_unit"));//转出单位
@@ -425,10 +450,10 @@ public class LoanServiceImpl implements LoanService {
             tempMap.put("audit_state",map.get("state"));     //给记录表添加状态
             System.out.println("需要添加到记录表中的值："+tempMap);
             if (tempMap.size()>0){
-                loanDao.addInfoToRecord(tempMap);
+                return loanDao.addInfoToRecord(tempMap);
             }
         }
-        return null;
+        return 0;
     }
 
     /**

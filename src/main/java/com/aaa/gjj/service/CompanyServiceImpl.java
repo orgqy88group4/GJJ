@@ -141,6 +141,23 @@ public class CompanyServiceImpl implements CompanyService{
     }
 
     /**
+     * 批量补缴按钮
+     * @param GRZH
+     * @return
+     */
+    @Override
+    public int updatePersonInfo99(int GRZH) {
+        List<Map> list = companyDao.updatePersonInfo99(GRZH);
+        Map tempMap = new HashMap();
+        tempMap.put("yDrawAmt",list.get(0).get("yDrawAmt"));
+        tempMap.put("GRZH",GRZH);
+        System.out.println("tempMap="+tempMap);
+        companyDao.updatePersonInfo1(tempMap);
+        int i = companyDao.updatePersonInfo3(GRZH);
+        return i;
+    }
+
+    /**
      * 根据单位账号，查找单位名称、缴纳的比例
      * @param DWZH
      * @return

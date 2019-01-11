@@ -25,6 +25,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick">查询</el-button>
+                <el-button type="primary" round :plain="true" icon="el-icon-search" @click="searchClick1">刷新</el-button>
             </el-form-item>
         </el-form>
     </el-row>
@@ -98,9 +99,9 @@
                 var _self = this;
                 _self.loading = true;
                 var self = this;
-                var start =(this.currentPage-1)*this.pageSize;
-                var end =this.pageSize;
-                var searchForm={'start':start,'end':end,'tb_pName':this.searchForm.tb_pName};
+                var start =(self.currentPage-1)*self.pageSize;
+                var end =self.pageSize;
+                var searchForm={'start':start,'end':end,'tb_pName':self.searchForm.tb_pName};
                 //   alert(JSON.stringify(searchForm));
                 axios.post('/sb/AccountMerge/page1',searchForm).then(function(response){
                     _self.total=response.data.total;
@@ -128,6 +129,10 @@
             },
             //表格查询事件
             searchClick:function() {
+                var self = this;
+                self.loadingData();//重新加载数据
+            },
+            searchClick1:function () {
                 var self = this;
                 self.loadingData();//重新加载数据
             }

@@ -130,7 +130,7 @@ public interface MergeDao {
      * @return
      */
     @Update("update accraditation set Accraditation_flux = #{flux} where Accraditation_name= #{name} ")
-    int addAccraditationCount(@Param("flux") int flux,@Param("name") String name);
+    int addAccraditationCount(@Param("flux") String flux,@Param("name") String name);
 
     /**
      * 审批工作类别查询   查询 人员转移审批   共多少条信息

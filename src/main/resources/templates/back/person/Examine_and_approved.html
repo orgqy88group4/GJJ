@@ -16,6 +16,14 @@
     <h2>{{ message }}</h2>
 </div>
 <div id="tableView">
+    <!--列表顶部搜索和工具条-->
+    <el-row>
+        <el-form :inline="true" :model="searchForm" class="demo-form-inline">
+            <el-form-item>
+                <el-button type="primary" round :plain="true" icon="el-icon-refresh" @click="searchClick99">刷新</el-button>
+            </el-form-item>
+        </el-form>
+    </el-row>
     <!--列表-->
     <el-row>
         <el-table :data="tableData" v-loading.body="loading" border @selection-change="selectionChange" style="width: 100%">
@@ -296,7 +304,7 @@
             var self = this;
             //第一进来后进入的发法
             axios.post('/sb/AccountMerge/accraditation1').then(function(response){
-                alert("后台传来的数据"+JSON.stringify(response.data));
+                //alert("后台传来的数据"+JSON.stringify(response.data));
                 self.tableData = response.data;
                 tableView.self.tableData;
             });
@@ -421,6 +429,10 @@
                 M = M<10?("0"+M):M;
                 var str = y+"-"+m+"-"+d+" "+h+":"+M;
                 return str;
+            },
+            searchClick99:function () {
+                var self = this;
+                self.loadingData();//重新加载数据
             }
         }
     })

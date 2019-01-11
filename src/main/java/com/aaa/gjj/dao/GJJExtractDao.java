@@ -212,7 +212,7 @@ public interface GJJExtractDao {
      * @param map
      * @return
      */
-    @Select("select count(*) as cut from tb_agreed_to_extract,tab_extract_application where GRZH= #{GRZH} or (pre_account=#{GRZH} and appl_state=1 )")
+    @Select("select count(*) as cut from tb_agreed_to_extract,tab_extract_application where (GRZH= #{GRZH} and SHZT=1) or (pre_account=#{GRZH} and appl_state=1 )")
     int yanZhengYDTQrenyuan(Map map);
 
     /**

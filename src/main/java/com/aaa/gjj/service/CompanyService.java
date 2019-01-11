@@ -60,6 +60,12 @@ public interface CompanyService {
     int updatePersonInfo(Map map);
 
     /**
+     * 批量补缴按钮
+     * @param GRZH
+     * @return
+     */
+    int updatePersonInfo99(int GRZH);
+    /**
      * 根据单位账号，查找单位名称、缴纳的比例
      * @param DWZH
      * @return

@@ -118,6 +118,22 @@ public class CompanyController {
         System.out.println("补缴按钮前台传来的值："+map);
         return companyService.updatePersonInfo(map);
     }
+    /**
+     * 补缴
+     * @param map
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/payFees9")
+    public Object PayFees9(@RequestBody Map map){
+        System.out.println("批量补缴按钮前台传来的值："+map);
+        int deleteMag = 0;
+        String grzh = (String) map.get("GRZH");
+        for(String GRZH : grzh.split(",")){
+            deleteMag = companyService.updatePersonInfo99(Integer.valueOf(GRZH+""));
+        }
+        return deleteMag;
+    }
 
     /**
      * 根据前台输入的公司账号来查询相应的公司信息

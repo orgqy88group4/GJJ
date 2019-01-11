@@ -16,7 +16,7 @@ public interface LoanDao {
      * 查询出来 个人账号  做唯一性校验 tb_loanapproval贷款记录表
      * @return
      */
-    @Select("select GRZH from tb_loanapproval")
+    @Select("select GRZH from tb_loanapproval where status=2 or status=1")
     List<Map> getgrzh();
     /**
      * 根据前台传来的个人账号，来查询账户信息

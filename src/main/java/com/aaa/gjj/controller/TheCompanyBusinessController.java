@@ -108,8 +108,7 @@ public class TheCompanyBusinessController {
     @RequestMapping("/unitRemit")
     public Object unitRemit(@RequestBody Map map){
         int i = theCompanyBusinessService.unitRemit(map);
-        //System.out.println(""+map1);
-        //return "company/MXCX";
+        System.out.println("汇缴办理后台返回：="+i);
         if(i==1){
             return 1;
         }else{

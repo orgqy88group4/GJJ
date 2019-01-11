@@ -203,7 +203,7 @@ public interface LoanService {
      * @param map
      * @return
      */
-    List<Map> CheckAuditTable(Map map);
+    int CheckAuditTable(Map map);
 
     /**
      * 添加到审核记录表
